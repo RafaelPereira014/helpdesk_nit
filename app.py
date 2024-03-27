@@ -99,7 +99,9 @@ def my_tickets():
 
 @app.route('/admin_panel')
 def admin_panel():
-    return render_template('admin_pannel.html', tickets=tickets, engineers=engineers)
+    tickets = get_all_tickets()  # Fetch all tickets from the database
+    return render_template('admin_pannel.html', tickets=tickets)
+
 
 @app.route('/assign_engineer', methods=['POST'])
 def assign_engineer():
@@ -108,9 +110,12 @@ def assign_engineer():
     # Implement logic to assign engineer to ticket
     return "Engineer assigned successfully."
 
-@app.route('/ticket_details')
-def ticket_details():
-    return render_template('ticket_details.html')
+@app.route('/ticket_details/<int:ticket_id>')
+def ticket_details(ticket_id):
+    # Fetch ticket details from the database based on the ticket ID
+    ticket_details = get_ticket_details(ticket_id)
+    return render_template('ticket_details.html', ticket_details=ticket_details)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

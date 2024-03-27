@@ -16,7 +16,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>My Tickets</h1>
+        <h1>Tickets</h1>
         <table>
             <thead>
                 <tr>
@@ -31,10 +31,10 @@
                 {% for ticket in tickets %}
                 <tr>
                     <td>{{ ticket.id }}</td>
-                    <td>{{ ticket.date_created }}</td>
+                    <td>{{ ticket.date }}</td>
                     <td>{{ ticket.state }}</td>
-                    <td>{{ ticket.description }}</td>
-                    <td>{{ ticket.user_assigned }}</td>
+                    <td><a href="/ticket_details/{{ ticket.id }}">{{ ticket.description }}</a></td>
+                    <td>{{ ticket.attributed_to }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

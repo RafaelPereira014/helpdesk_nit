@@ -20,13 +20,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>Tópico do ticket #numero_do_ticket</h1>
+        <h1>Tópico do ticket #{{ ticket_details.id }}</h1>
         <h2>Informação acerca do ticket</h2>
         <div class="ticket-info">
-            <p><strong>User:</strong> {{ user }}</p> <!-- Replace ticket.user with the appropriate variable -->
-            <p><strong>Contacto:</strong> {{ contacto }}</p> <!-- Replace ticket.description with the appropriate variable -->
-            <p><strong>Description:</strong> {{ description }}</p> <!-- Replace ticket.description with the appropriate variable -->
-
+            <p><strong>User:</strong> {{ ticket_details.name }}</p>
+            <p><strong>Contacto:</strong> {{ ticket_details.contacto }}</p>
+            <p><strong>Description:</strong> {{ ticket_details.description }}</p>
         </div>
         <div class="message-container" id="message-container">
             <!-- Messages will be displayed here -->

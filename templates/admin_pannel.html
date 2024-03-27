@@ -19,33 +19,30 @@
                 <th>User</th>
                 <th>Description</th>
                 <th>State</th>
-                <th>Engineer</th>
+                <th>Atribuido a </th>
             </tr>
         </thead>
-        <tbody>
-            {% for ticket in tickets %}
-            <tr>
-                <td>{{ loop.index }}</td>
-                <td>{{ ticket.date_created }}</td>
-                <td>{{ ticket.user }}</td>
-                <td>{{ ticket.description }}</td>
-                <td>{{ ticket.state }}</td>
-                <td>
-                    <form method="POST" action="/assign_engineer">
-                        <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
-                        <select name="engineer">
-                            <option value="">Select Engineer</option>
-                            {% for engineer in engineers %}
-                                <option value="{{ engineer.id }}">{{ engineer.name }}</option>
-                            {% endfor %}
-                        </select>
-                        <button type="submit">Assign</button>
-                    </form>
-                </td>
-                
-            </tr>
-            {% endfor %}
-        </tbody>
+            <tbody>
+                {% for ticket in tickets %}
+                <tr>
+                    <td>{{ ticket.id }}</td>
+                    <td>{{ ticket.date }}</td>
+                    <td>{{ ticket.user }}</td>
+                    <td>{{ ticket.description }}</td>
+                    <td>
+                        <form  method="post">
+                            <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                            <select name="state">
+                                <option value="open" {% if ticket.state == 'open' %}selected{% endif %}>Open</option>
+                                <option value="closed" {% if ticket.state == 'closed' %}selected{% endif %}>Closed</option>
+                            </select>
+                            <button type="submit">Update State</button>
+                        </form>
+                    </td>
+                    <td>{{ ticket.attributed_to }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
     </table>
     <div class="footer">
         &copy; 2024 SREC-NIT. All rights reserved.

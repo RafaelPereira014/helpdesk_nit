@@ -6,6 +6,24 @@ def connect_to_database():
     """Establishes a connection to the MySQL database."""
     return mysql.connector.connect(**DB_CONFIG)
 
+def is_admin(user_id):
+    """Checks if the user is an Admin"""
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT type FROM Users WHERE id = %s", (user_id,))
+    user_type = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    
+    if user_type == 'admin':
+        return True
+    else:
+        return False
+    
+    
+    
+
+
 def validate_user(username, password):
     """Validates user credentials against the database."""
     conn = connect_to_database()
@@ -16,15 +34,27 @@ def validate_user(username, password):
     conn.close()
     return user
 
-def get_tickets():
-    """Fetches all tickets from the database."""
+def get_ticket_details(ticket_id):
+    """Fetches ticket details from the database based on the ticket ID."""
     conn = connect_to_database()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT id, description, date, state, created_by, attributed_to FROM tickets WHERE id = %s", (ticket_id,))
+    ticket_details = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return ticket_details
+
+def get_all_tickets():
+    """Fetches all tickets from the database."""
+    conn = connect_to_database()  # Assuming you have a function named connect_to_database to establish a connection
+    cursor = conn.cursor(dictionary=True)  # Use dictionary cursor to fetch rows as dictionaries
     cursor.execute("SELECT * FROM tickets")
     tickets = cursor.fetchall()
     cursor.close()
     conn.close()
     return tickets
+
+
 
 
 def create_ticket(topic_id, description, date, state, created_by):
