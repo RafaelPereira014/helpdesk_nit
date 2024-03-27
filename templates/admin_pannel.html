@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
+
+    <title>Admin Panel - Tickets</title>
+    
+</head>
+<body>
+    <h1>Admin Panel - Tickets</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Date Created</th>
+                <th>User</th>
+                <th>Description</th>
+                <th>State</th>
+                <th>Engineer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ ticket.date_created }}</td>
+                <td>{{ ticket.user }}</td>
+                <td>{{ ticket.description }}</td>
+                <td>{{ ticket.state }}</td>
+                <td>
+                    <form method="POST" action="/assign_engineer">
+                        <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                        <select name="engineer">
+                            <option value="">Select Engineer</option>
+                            {% for engineer in engineers %}
+                                <option value="{{ engineer.id }}">{{ engineer.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit">Assign</button>
+                    </form>
+                </td>
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="footer">
+        &copy; 2024 SREC-NIT. All rights reserved.
+    </div>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
+    <script src="https://cdn.tiny.cloud/1/API_KEY/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <body>
+        <div class="container">
+            <p>This is the homepage of our helpdesk ticketing system.</p>
+            <a href="/new_ticket" class="button">Abrir um novo pedido</a>
+            <a href="/my_tickets" class="button">Tickets</a>
+            <a href="/login" class="button">Terminar sessão</a>
+
+        </div>
+    </body>
+    <title>View Ticket</title>
+    
+</head>
+<body>
+    <div class="container">
+        <h1>Tópico do ticket #numero_do_ticket</h1>
+        <h2>Informação acerca do ticket</h2>
+        <div class="ticket-info">
+            <p><strong>User:</strong> {{ user }}</p> <!-- Replace ticket.user with the appropriate variable -->
+            <p><strong>Contacto:</strong> {{ contacto }}</p> <!-- Replace ticket.description with the appropriate variable -->
+            <p><strong>Description:</strong> {{ description }}</p> <!-- Replace ticket.description with the appropriate variable -->
+
+        </div>
+        <div class="message-container" id="message-container">
+            <!-- Messages will be displayed here -->
+        </div>
+        <form id="message-form">
+            <textarea id="message" rows="3" name="chat_message"></textarea><br>
+            <button type="submit">Publicar resposta</button>
+        </form>
+        <button>Close Ticket</button>
+        <!--estado do ticket passa para fechado-->
+            
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize TinyMCE editor
+            tinymce.init({
+                selector: 'textarea#message',
+                plugins: 'autolink lists link image charmap print preview hr anchor',
+                toolbar_mode: 'floating',
+                height: 150, // Adjust the height as needed
+                menubar: false
+            });
+
+            var messageForm = document.getElementById('message-form');
+            var messageInput = tinymce.get('message');
+            var messageContainer = document.getElementById('message-container');
+
+            // Function to append a message to the message container
+            function appendMessage(message, sent) {
+                var messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+                if (sent) {
+                    messageElement.classList.add('user-message');
+                } else {
+                    messageElement.classList.add('engineer-message');
+                }
+                messageElement.innerHTML = message; // Use innerHTML to preserve HTML formatting
+                messageContainer.appendChild(messageElement);
+                // Scroll to bottom of message container
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            }
+
+            // Function to send a message (simulated)
+            function sendMessage(message) {
+                // Here you would send the message to the server and receive a response
+                // For demonstration purposes, I'm just logging the message to the console
+                console.log('Sent message:', message);
+                // After sending, append the message to the message container as sent by user
+                appendMessage(message, true);
+                // Simulate an engineer's response after a short delay
+                setTimeout(function () {
+                    var response = '<p>This is an engineer response.</p>';
+                    appendMessage(response, false);
+                }, 1000);
+            }
+
+            // Event listener for message form submission
+            messageForm.addEventListener('submit', function (event) {
+                event.preventDefault(); // Prevent form submission
+                var message = messageInput.getContent(); // Get message text from TinyMCE
+                if (message.trim() !== '') { // Check if message is not empty
+                    sendMessage(message); // Send the message
+                    messageInput.setContent(''); // Clear the message input
+                }
+            });
+        });
+    </script>
+
+    <div class="footer">
+        &copy; 2024 SREC-NIT. All rights reserved.
+    </div>
+</body>
+</html>

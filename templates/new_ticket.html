@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+    <script src="https://cdn.tiny.cloud/1/API_KEY/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <body>
+        <div class="container">
+            <p>This is the homepage of our helpdesk ticketing system.</p>
+            <a href="/new_ticket" class="button">Abrir um novo pedido</a>
+            <a href="/my_tickets" class="button">Tickets</a>
+        </div>
+    </body>
+</head>
+<script>
+    tinymce.init({
+        selector: 'textarea#description',
+        plugins: 'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+        toolbar_mode: 'floating',
+        height: 300, // Adjust the height as needed
+        menubar: false,
+        images_upload_url: '/upload_image', // URL for image upload
+        file_picker_types: 'file image media',
+        images_upload_handler: function (blobInfo, success, failure) {
+            var xhr, formData;
+
+            xhr = new XMLHttpRequest();
+            xhr.withCredentials = false;
+            xhr.open('POST', '/upload_image'); // URL for image upload
+            xhr.onload = function () {
+                var json;
+
+                if (xhr.status != 200) {
+                    failure('HTTP Error: ' + xhr.status);
+                    return;
+                }
+
+                json = JSON.parse(xhr.responseText);
+
+                if (!json || typeof json.location != 'string') {
+                    failure('Invalid JSON: ' + xhr.responseText);
+                    return;
+                }
+
+                success(json.location);
+            };
+            formData = new FormData();
+            formData.append('file', blobInfo.blob(), blobInfo.filename());
+            xhr.send(formData);
+        }
+    });
+</script>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #ddd;
+        background-color: #fff;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+<body>
+    <form method="POST" action="/submit_ticket">
+       
+        <div class="container">
+            <h1>Abrir novo ticket</h1>
+            <label for="topic">Tópico:</label><br>
+            <select id="topic" name="topic" required>
+                <option value="sales">Vendas</option>
+                <option value="technical">Técnico</option>
+                <option value="billing">Faturamento</option>
+                <!-- Add more options as needed -->
+            </select><br>
+            <label for="title">Título:</label><br>
+            <input type="text" id="title" name="title" required><br>
+            <label for="description">Descrição:</label><br>
+            <textarea id="description" name="description" rows="10" required></textarea><br>
+            <input type="file" id="attachment" name="attachment"><br>
+            <label for="title">Contacto(VOIP ou outro):</label><br>
+            <input type="text" id="title" name="title" required><br>
+            <input type="submit" value="Submit Ticket">
+        </div>
+    </form>
+</body>
+</html>
