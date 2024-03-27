@@ -39,7 +39,15 @@
                             <button type="submit">Update State</button>
                         </form>
                     </td>
-                    <td>{{ ticket.attributed_to }}</td>
+                    <td>
+                        <form  method="post">
+                            <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
+                            <select name="attributed_to">
+                                
+                            </select>
+                            <button type="submit">Atribuir</button>
+                        </form>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
