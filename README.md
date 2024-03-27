@@ -2,5 +2,6 @@
 Project for a self-hosted helpdesk ticketing system for SREC-NIT.
 All rights reserved.
 
-##Requirements
+## Requirements
 > python3
+> mysql database
