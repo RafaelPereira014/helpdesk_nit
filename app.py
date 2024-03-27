@@ -1,18 +1,13 @@
+import mysql.connector
 from flask import Flask, render_template, request, redirect, url_for
+from flask_mysqldb import MySQL
+from db_operations import *
 
 app = Flask(__name__)
 
-# Mock user data (replace this with a proper user authentication system)
-users = {
-    'user1': 'password1',
-    'user2': 'password2'
-}
 
-# Mock ticket data (replace with actual ticket data storage)
-tickets = [
-    {"id": 1, "date_created": "2024-03-30", "user": "User1", "description": "Issue 1"},
-    {"id": 2, "date_created": "2024-03-31", "user": "User2", "description": "Issue 2"}
-]
+
+
 
 # Mock engineer data (replace with actual engineer data storage)
 engineers = [
@@ -21,9 +16,23 @@ engineers = [
     {"id": 3, "name": "Engineer3"}
 ]
 
+
+
+config = {
+    'host': 'localhost',
+    'user': 'root',
+    'password': '',
+    'database': 'helpdesk'
+}
+
+connection = mysql.connector.connect(**config)
+
+mysql = MySQL(app)
+
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -31,7 +40,12 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if username in users and users[username] == password:
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM Users WHERE name = %s AND password = %s", (username, password)) 
+        user = cursor.fetchone()
+        cursor.close()
+        
+        if user:
             # Redirect to init_page upon successful login
             return redirect(url_for('init_page'))
         else:
@@ -41,6 +55,18 @@ def login():
 @app.route('/init_page')
 def init_page():
     return render_template('init.html')
+
+@app.route('/new_ticket', methods=['GET', 'POST'])
+def new_ticket():
+    if request.method == 'POST':
+        description = request.form['description']
+        date = request.form['date']
+        state = request.form['state']
+        created_by = request.form['created_by']
+        attributed_to = request.form['attributed_to']
+        create_ticket(description, date, state, created_by, attributed_to)
+        return redirect(url_for('index'))  # Redirect to homepage after creating ticket
+    return render_template('new_ticket.html')
 
 @app.route('/my_tickets')
 def my_tickets():
@@ -62,9 +88,7 @@ def ticket_details():
     return render_template('ticket_details.html')
 
 
-@app.route('/new_ticket')
-def new_ticket():
-    return render_template('new_ticket.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

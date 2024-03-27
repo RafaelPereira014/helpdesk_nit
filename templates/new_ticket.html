@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/new_ticket.css') }}">
     <script src="https://cdn.tiny.cloud/1/API_KEY/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
     <body>
         <div class="container">
@@ -51,39 +52,6 @@
         }
     });
 </script>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f4f4f4;
-    }
-
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    h1 {
-        text-align: center;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        border: 1px solid #ddd;
-        background-color: #fff;
-    }
-
-    th, td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-    }
-
-    th {
-        background-color: #f2f2f2;
-    }
-</style>
 <body>
     <form method="POST" action="/submit_ticket">
        
@@ -91,10 +59,7 @@
             <h1>Abrir novo ticket</h1>
             <label for="topic">Tópico:</label><br>
             <select id="topic" name="topic" required>
-                <option value="sales">Vendas</option>
-                <option value="technical">Técnico</option>
-                <option value="billing">Faturamento</option>
-                <!-- Add more options as needed -->
+                
             </select><br>
             <label for="title">Título:</label><br>
             <input type="text" id="title" name="title" required><br>

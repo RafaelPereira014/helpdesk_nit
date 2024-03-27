@@ -1,0 +1,24 @@
+
+CREATE TABLE Users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    type VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Tickets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    description TEXT,
+    date DATE,
+    state VARCHAR(50),
+    created_by INT,
+    attributed_to INT,
+    FOREIGN KEY (created_by) REFERENCES Users(id),
+    FOREIGN KEY (attributed_to) REFERENCES Users(id)
+);
+
+CREATE TABLE Topics (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    key_word TEXT
+);
