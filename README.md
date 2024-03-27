@@ -10,24 +10,24 @@ The Helpdesk Ticketing System is a web application designed to streamline the pr
 ### Installation
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your_username/helpdesk-ticketing-system.git
+    git clone git@github.com:RafaelPereira014/helpdesk_nit.git
     ```
 
 2. Navigate to the project directory:
     ```bash
-    cd helpdesk-ticketing-system
+    cd helpdesk_nit
     ```
     
 3. Set up the MySQL database:
     - Create a new database named `helpdesk`.
-    - Import the SQL schema from `database_schema.sql`.
+    - Import the SQL schema from `helpdesk_backup.sql`.
 
 4. Start the Flask server:
     ```bash
     python app.py
     ```
 
-5. Access the application in your web browser at `http://localhost:xxxx`.
+5. Access the application in your web browser at `http://localhost:5000`.
 
 ## Requirements
 - Python 3.x
