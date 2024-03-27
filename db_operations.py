@@ -1,3 +1,4 @@
+from aifc import Error
 from config import DB_CONFIG
 import mysql.connector
 
@@ -26,22 +27,36 @@ def get_tickets():
     return tickets
 
 
-
-def create_ticket(description, date, state, created_by, attributed_to):
+def create_ticket(topic_id, description, date, state, created_by):
+    """Creates a new ticket in the database."""
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO Tickets (description, date, state, created_by) VALUES (%s, %s, %s, %s)",
-                   (description, date, state, created_by))
-    conn.commit()
+    try:
+        cursor.execute("INSERT INTO tickets (topic_id, description, date, state, created_by) VALUES (%s, %s, %s, %s, %s)",
+                       (topic_id, description, date, state, created_by))
+        conn.commit()
+        print("Ticket created successfully")
+    except mysql.connector.Error as e:
+        print("Error creating ticket:", e)
+    finally:
+        cursor.close()
+        conn.close()
+
+def get_user_tickets(user_id):
+    """Fetches tickets associated with the given user ID."""
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT id, date, state, description, attributed_to FROM tickets WHERE created_by = %s", (user_id,))
+    user_tickets = cursor.fetchall()
     cursor.close()
     conn.close()
+    return user_tickets
 
-def get_ticket(ticket_id):
-    """Fetches a specific ticket from the database."""
+
+def get_topics():
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM tickets WHERE id = %s", (ticket_id,))
-    ticket = cursor.fetchone()
+    cursor.execute("SELECT key_word FROM Topics")
+    topics = cursor.fetchone()
     cursor.close()
-    conn.close()
-    return ticket
+    return topics

@@ -30,15 +30,16 @@
             <tbody>
                 {% for ticket in tickets %}
                 <tr>
-                    <td>{{ loop.index }}</td>
+                    <td>{{ ticket.id }}</td>
                     <td>{{ ticket.date_created }}</td>
-                    <td>{{ ticket.status }}</td>
+                    <td>{{ ticket.state }}</td>
                     <td>{{ ticket.description }}</td>
                     <td>{{ ticket.user_assigned }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        
         <div class="footer">
             &copy; 2024 SREC-NIT. All rights reserved.
         </div>

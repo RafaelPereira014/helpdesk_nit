@@ -18,16 +18,15 @@ try:
         # Create a cursor object to execute SQL queries
         cursor = connection.cursor()
 
-        # Execute the SQL query to select all users
-        cursor.execute("SELECT * FROM users")
+        # Execute the SQL query to fetch all tickets
+        cursor.execute("SELECT * FROM Tickets")
 
-        # Fetch all rows from the result set
-        users = cursor.fetchall()
+        # Fetch all rows (tickets) from the result set
+        tickets = cursor.fetchall()
 
-        # Print the list of users
-        print("List of users:")
-        for user in users:
-            print(user)
+        # Print the fetched tickets
+        for ticket in tickets:
+            print(ticket)
 
         # Close the cursor
         cursor.close()
