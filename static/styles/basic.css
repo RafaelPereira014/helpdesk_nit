@@ -35,3 +35,37 @@ th {
     font-size: 14px;
     color: #777;
 }
+.message-container {
+    max-height: 70vh; /* Set maximum height to 70% of viewport height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 10px; /* Add padding for better appearance */
+}
+
+.message {
+    margin-bottom: 20px; /* Add margin between messages */
+    padding: 10px; /* Add padding for better appearance */
+    border-radius: 8px;
+}
+
+.user-message {
+    background-color: #bcd5e5; /* Blue color for user messages */
+    color: white;
+}
+
+.admin-message {
+    background-color: #f0f0f0; /* Grey color for admin messages */
+    color: black;
+}
+
+.message-header {
+    font-weight: bold; /* Make the header bold */
+    margin-bottom: 5px; /* Add margin below the header */
+}
+
+.user-header {
+    color: #3498db; /* Blue color for user header */
+}
+
+.admin-header {
+    color: #555; /* Dark grey color for admin header */
+}

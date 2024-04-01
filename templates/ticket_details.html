@@ -3,56 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Ticket</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
-    <script src="https://cdn.tiny.cloud/1/API_KEY/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-    <body>
-        <div class="container">
-            <p>This is the homepage of our helpdesk ticketing system.</p>
-            <a href="/new_ticket" class="button">Abrir um novo pedido</a>
-            <a href="/my_tickets" class="button">Tickets</a>
-            <a href="/login" class="button">Terminar sessão</a>
-
-        </div>
-    </body>
-    <title>View Ticket</title>
-    
 </head>
 <body>
+    <div class="container">
+        <p>This is the homepage of our helpdesk ticketing system.</p>
+        <a href="/new_ticket" class="button">Abrir um novo pedido</a>
+        <a href="/my_tickets" class="button">Tickets</a>
+        <a href="/login" class="button">Terminar sessão</a>
+    </div>
+
     <div class="container">
         <h1>Tópico do ticket #{{ ticket_details.id }}</h1>
         <h2>Informação acerca do ticket</h2>
         <div class="ticket-info">
-            <p><strong>User:</strong> {{ ticket_details.name }}</p>
+            <p><strong>User:</strong> {{ user_name }}</p>
             <p><strong>Contacto:</strong> {{ ticket_details.contacto }}</p>
             <p><strong>Description:</strong> {{ ticket_details.description }}</p>
         </div>
         <div class="message-container" id="message-container">
             <!-- Messages will be displayed here -->
+            {% for message in ticket_details.messages %}
+            <div class="message {% if message.sender_type == 'user' %}user-message{% else %}admin-message{% endif %}">
+                <div class="message-header {% if message.sender_type == 'user' %}user-header{% else %}admin-header{% endif %}">
+                    {{ message.sender_type }} - {{ message.date }}
+                </div>
+                <div class="message-content">
+                    {{ message.message }}
+                </div>
+            </div>
+            {% endfor %}
         </div>
         <form id="message-form">
             <textarea id="message" rows="3" name="chat_message"></textarea><br>
             <button type="submit">Publicar resposta</button>
         </form>
-        <button>Close Ticket</button>
+        {% if is_admin %}
+        <button id="close-ticket-btn">Close Ticket</button>
+        {% endif %}
         <!--estado do ticket passa para fechado-->
-            
+    </div>
 
+    <div class="footer">
+        &copy; 2024 SREC-NIT. All rights reserved.
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Initialize TinyMCE editor
-            tinymce.init({
-                selector: 'textarea#message',
-                plugins: 'autolink lists link image charmap print preview hr anchor',
-                toolbar_mode: 'floating',
-                height: 150, // Adjust the height as needed
-                menubar: false
-            });
-
             var messageForm = document.getElementById('message-form');
-            var messageInput = tinymce.get('message');
+            var messageInput = document.getElementById('message');
             var messageContainer = document.getElementById('message-container');
 
             // Function to append a message to the message container
@@ -62,42 +63,79 @@
                 if (sent) {
                     messageElement.classList.add('user-message');
                 } else {
-                    messageElement.classList.add('engineer-message');
+                    messageElement.classList.add('admin-message');
                 }
-                messageElement.innerHTML = message; // Use innerHTML to preserve HTML formatting
+                messageElement.innerHTML = message; // Use innerHTML to allow HTML content
                 messageContainer.appendChild(messageElement);
                 // Scroll to bottom of message container
                 messageContainer.scrollTop = messageContainer.scrollHeight;
             }
 
-            // Function to send a message (simulated)
+            // Function to send a message
             function sendMessage(message) {
-                // Here you would send the message to the server and receive a response
-                // For demonstration purposes, I'm just logging the message to the console
-                console.log('Sent message:', message);
-                // After sending, append the message to the message container as sent by user
-                appendMessage(message, true);
-                // Simulate an engineer's response after a short delay
-                setTimeout(function () {
-                    var response = '<p>This is an engineer response.</p>';
-                    appendMessage(response, false);
-                }, 1000);
+                // Send the message to the server
+                fetch('/send_message', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ticket_id: {{ ticket_details.id }},
+                        message: message
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to send message');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Message sent successfully, append it to the message container
+                    appendMessage(message, true);
+                })
+                .catch(error => {
+                    console.error('Error sending message:', error);
+                });
+            }
+            var closeTicketButton = document.getElementById('close-ticket-btn');
+            if (closeTicketButton) {
+                closeTicketButton.addEventListener('click', function () {
+                    var ticketId = {{ ticket_details.id }};
+                    // Send an AJAX request to close the ticket
+                    fetch(`/close_ticket/${ticketId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to close ticket');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Handle successful response (optional)
+                        console.log('Ticket closed successfully');
+                    })
+                    .catch(error => {
+                        // Handle error
+                        console.error('Error closing ticket:', error);
+                    });
+                });
             }
 
             // Event listener for message form submission
             messageForm.addEventListener('submit', function (event) {
                 event.preventDefault(); // Prevent form submission
-                var message = messageInput.getContent(); // Get message text from TinyMCE
-                if (message.trim() !== '') { // Check if message is not empty
+                var message = messageInput.value.trim(); // Get message text from textarea
+                if (message !== '') { // Check if message is not empty
                     sendMessage(message); // Send the message
-                    messageInput.setContent(''); // Clear the message input
+                    messageInput.value = ''; // Clear the message input
                 }
             });
         });
     </script>
-
-    <div class="footer">
-        &copy; 2024 SREC-NIT. All rights reserved.
-    </div>
 </body>
 </html>

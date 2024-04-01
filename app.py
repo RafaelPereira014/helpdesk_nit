@@ -1,19 +1,15 @@
 import datetime
 import secrets
 import mysql.connector
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, jsonify, render_template, request, redirect, url_for
 from db_operations import *
+from flask import session
 
 app = Flask(__name__)
 # Generate a secure secret key
 app.secret_key = secrets.token_bytes(16)
 
-# Mock engineer data (replace with actual engineer data storage)
-engineers = [
-    {"id": 1, "name": "Engineer1"},
-    {"id": 2, "name": "Engineer2"},
-    {"id": 3, "name": "Engineer3"}
-]
+
 
 config = {
     'host': 'localhost',
@@ -35,13 +31,16 @@ def login():
         username = request.form['username']
         password = request.form['password']
         cursor = connection.cursor()
-        cursor.execute("SELECT id FROM Users WHERE name = %s AND password = %s", (username, password))
-        user_id = cursor.fetchone()  # Fetch the user ID from the database
+        cursor.execute("SELECT id, type FROM Users WHERE name = %s AND password = %s", (username, password))
+        user_data = cursor.fetchone()  # Fetch the user ID and type from the database
         cursor.close()
-        if user_id:
-            # Store the user ID in the session
-            session['user_id'] = user_id[0]
-            return redirect(url_for('init_page'))
+        if user_data:
+            user_id, user_type = user_data
+            session['user_id'] = user_id
+            if is_admin(user_id):
+                return redirect(url_for('admin_init'))  # Redirect admin users to admin_init page
+            else:
+                return redirect(url_for('init_page'))  # Redirect non-admin users to init_page
         else:
             error = 'Invalid credentials. Please try again.'
     return render_template('login.html', error=error)
@@ -50,7 +49,10 @@ def login():
 def init_page():
     return render_template('init.html')
 
-from flask import session
+@app.route('/admin_init')
+def admin_init():
+    return render_template('admin_init.html')
+
 
 @app.route('/new_ticket', methods=['GET', 'POST'])
 def new_ticket():
@@ -71,9 +73,6 @@ def new_ticket():
         return redirect(url_for('my_tickets'))  # Redirect to my_tickets page after creating ticket
     return render_template('new_ticket.html')
 
-
-
-from flask import session
 
 @app.route('/my_tickets')
 def my_tickets():
@@ -96,8 +95,34 @@ def my_tickets():
     print(ticket_fields)
     return render_template('my_tickets.html', tickets=ticket_fields)
 
+@app.route('/send_message', methods=['POST'])
+def send_message():
+    data = request.json
+    ticket_id = data['ticket_id']
+    message = data['message']
+    
+    # Get the user's ID from the session
+    user_id = session.get('user_id')
+    
+    # Query the database to get the user's type
+    cursor = connection.cursor()
+    cursor.execute("SELECT type FROM Users WHERE id = %s", (user_id,))
+    user_type = cursor.fetchone()
+    cursor.close()
+    
+    # Set the sender type based on the user's type
+    sender_type = user_type[0] if user_type else 'user'  # Default to 'user' if no type is found
+    
+    # Insert the message into the database
+    cursor = connection.cursor()
+    cursor.execute("INSERT INTO Messages (ticket_id, message, sender_type) VALUES (%s, %s, %s)",
+                   (ticket_id, message, sender_type))
+    connection.commit()
+    cursor.close()
+    
+    return jsonify({'success': True})
 
-@app.route('/admin_panel')
+@app.route('/admin_pannel')
 def admin_panel():
     tickets = get_all_tickets()  # Fetch all tickets from the database
     return render_template('admin_pannel.html', tickets=tickets)
@@ -112,9 +137,22 @@ def assign_engineer():
 
 @app.route('/ticket_details/<int:ticket_id>')
 def ticket_details(ticket_id):
-    # Fetch ticket details from the database based on the ticket ID
+    user_id = session.get('user_id')
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM Users WHERE id = %s", (user_id,))
+    user_name = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    admin_status = is_admin(user_id)
     ticket_details = get_ticket_details(ticket_id)
-    return render_template('ticket_details.html', ticket_details=ticket_details)
+    return render_template('ticket_details.html', ticket_details=ticket_details, is_admin=admin_status, user_name=user_name)
+
+
+@app.route('/close_ticket/<int:ticket_id>', methods=['POST'])
+def close_ticket_route(ticket_id):
+    close_ticket(ticket_id)
+    return jsonify({'success': True})
 
 
 if __name__ == '__main__':

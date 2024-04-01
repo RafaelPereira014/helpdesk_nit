@@ -15,15 +15,11 @@ def is_admin(user_id):
     cursor.close()
     conn.close()
     
-    if user_type == 'admin':
+    if user_type and user_type[0] == 'admin':  # Check if user_type is not None and compare the first element of the tuple
         return True
     else:
         return False
     
-    
-    
-
-
 def validate_user(username, password):
     """Validates user credentials against the database."""
     conn = connect_to_database()
@@ -35,11 +31,17 @@ def validate_user(username, password):
     return user
 
 def get_ticket_details(ticket_id):
-    """Fetches ticket details from the database based on the ticket ID."""
+    """Fetches ticket details and associated messages from the database based on the ticket ID."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("SELECT id, description, date, state, created_by, attributed_to FROM tickets WHERE id = %s", (ticket_id,))
     ticket_details = cursor.fetchone()
+    
+    # Fetch messages associated with the ticket
+    cursor.execute("SELECT message, sender_type FROM Messages WHERE ticket_id = %s", (ticket_id,))
+    messages = cursor.fetchall()
+    ticket_details['messages'] = messages
+    
     cursor.close()
     conn.close()
     return ticket_details
@@ -53,9 +55,6 @@ def get_all_tickets():
     cursor.close()
     conn.close()
     return tickets
-
-
-
 
 def create_ticket(topic_id, description, date, state, created_by):
     """Creates a new ticket in the database."""
@@ -90,3 +89,19 @@ def get_topics():
     topics = cursor.fetchone()
     cursor.close()
     return topics
+
+def get_user_details(ticket_id):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id,name,type FROM Users JOIN ON Tickets.user.id=Users.id WHERE Tickes.ticket_id = %s", ticket_id)
+    user_details = cursor.fetchone()
+    cursor.close()
+    return user_details
+
+def close_ticket(ticket_id):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    update_query = "UPDATE Tickets SET state = 'closed' WHERE id = %s"
+    cursor.execute(update_query,(ticket_id,))
+    cursor.close()
+    return close_ticket

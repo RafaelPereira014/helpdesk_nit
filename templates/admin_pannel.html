@@ -19,7 +19,7 @@
                 <th>User</th>
                 <th>Description</th>
                 <th>State</th>
-                <th>Atribuido a </th>
+                <th>Atribuido a</th>
             </tr>
         </thead>
             <tbody>
@@ -28,26 +28,9 @@
                     <td>{{ ticket.id }}</td>
                     <td>{{ ticket.date }}</td>
                     <td>{{ ticket.user }}</td>
-                    <td>{{ ticket.description }}</td>
-                    <td>
-                        <form  method="post">
-                            <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
-                            <select name="state">
-                                <option value="open" {% if ticket.state == 'open' %}selected{% endif %}>Open</option>
-                                <option value="closed" {% if ticket.state == 'closed' %}selected{% endif %}>Closed</option>
-                            </select>
-                            <button type="submit">Update State</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form  method="post">
-                            <input type="hidden" name="ticket_id" value="{{ ticket.id }}">
-                            <select name="attributed_to">
-                                
-                            </select>
-                            <button type="submit">Atribuir</button>
-                        </form>
-                    </td>
+                    <td><a href="/ticket_details/{{ ticket.id }}">{{ ticket.description }}</a></td>
+                    <td>{{ ticket.state }}</td>
+                    <td>{{ ticket.name }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
