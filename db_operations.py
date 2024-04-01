@@ -34,7 +34,7 @@ def get_ticket_details(ticket_id):
     """Fetches ticket details and associated messages from the database based on the ticket ID."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT id, description, date, state, created_by, attributed_to FROM tickets WHERE id = %s", (ticket_id,))
+    cursor.execute("SELECT id, description, date, state, created_by, attributed_to,contacto,title FROM tickets WHERE id = %s", (ticket_id,))
     ticket_details = cursor.fetchone()
     
     # Fetch messages associated with the ticket
@@ -56,13 +56,13 @@ def get_all_tickets():
     conn.close()
     return tickets
 
-def create_ticket(topic_id, description, date, state, created_by):
+def create_ticket(topic_id, description, date, state, created_by,contacto,title):
     """Creates a new ticket in the database."""
     conn = connect_to_database()
     cursor = conn.cursor()
     try:
-        cursor.execute("INSERT INTO tickets (topic_id, description, date, state, created_by) VALUES (%s, %s, %s, %s, %s)",
-                       (topic_id, description, date, state, created_by))
+        cursor.execute("INSERT INTO tickets (topic_id, description, date, state, created_by,contacto,title) VALUES (%s, %s, %s, %s, %s,%s,%s)",
+                       (topic_id, description, date, state, created_by,contacto,title))
         conn.commit()
         print("Ticket created successfully")
     except mysql.connector.Error as e:
@@ -75,7 +75,7 @@ def get_user_tickets(user_id):
     """Fetches tickets associated with the given user ID."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT id, date, state, description, attributed_to FROM tickets WHERE created_by = %s", (user_id,))
+    cursor.execute("SELECT id, date, state, description, attributed_to,contacto,title FROM tickets WHERE created_by = %s", (user_id,))
     user_tickets = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -99,9 +99,58 @@ def get_user_details(ticket_id):
     return user_details
 
 def close_ticket(ticket_id):
+    """Closes a ticket by updating its state to 'closed' and adds a message."""
+    try:
+        # Close the ticket
+        conn = connect_to_database()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE Tickets SET state = 'closed' WHERE id = %s", (ticket_id,))
+        conn.commit()
+        
+        # Add a message indicating that the ticket has been closed
+        
+        print("Ticket closed and message added successfully")
+    except Exception as e:
+        print("Error closing ticket:", e)
+    finally:
+        cursor.close()
+        conn.close()
+
+def reopen_ticket(ticket_id):
     conn = connect_to_database()
     cursor = conn.cursor()
-    update_query = "UPDATE Tickets SET state = 'closed' WHERE id = %s"
-    cursor.execute(update_query,(ticket_id,))
+    cursor.execute("UPDATE Tickets SET state = 'open' WHERE id = %s", (ticket_id,))
+    conn.commit()
     cursor.close()
-    return close_ticket
+    conn.close()
+    return reopen_ticket
+
+def is_closed(ticket_id):
+    """Checks if the ticket is closed"""
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT state FROM Ticket WHERE id = %s", (ticket_id,))
+    ticket_state = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    
+    if ticket_state == 'closed':  # Check if user_type is not None and compare the first element of the tuple
+        return True
+    else:
+        return False
+    
+def add_message_to_ticket(ticket_id, message):
+    """Adds a message to the conversation of a ticket."""
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    try:
+        # Add the message to the Messages table
+        cursor.execute("INSERT INTO Messages (ticket_id, message, sender_type) VALUES (%s, %s, 'admin')",
+                       (ticket_id, message))
+        conn.commit()
+        print("Message added to ticket successfully")
+    except mysql.connector.Error as e:
+        print("Error adding message to ticket:", e)
+    finally:
+        cursor.close()
+        conn.close()

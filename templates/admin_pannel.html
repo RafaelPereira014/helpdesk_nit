@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
 
     <title>Admin Panel - Tickets</title>
+    <a href="/login" class="button-logout">Terminar sessão</a>
     
 </head>
 <body>
@@ -27,10 +28,10 @@
                 <tr>
                     <td>{{ ticket.id }}</td>
                     <td>{{ ticket.date }}</td>
-                    <td>{{ ticket.user }}</td>
-                    <td><a href="/ticket_details/{{ ticket.id }}">{{ ticket.description }}</a></td>
+                    <td>{{ ticket.created_by_user }}</td>
+                    <td><a href="/ticket_details/{{ ticket.id }}">{{ ticket.title }}</a></td>
                     <td>{{ ticket.state }}</td>
-                    <td>{{ ticket.name }}</td>
+                    <td>{{ ticket.attributed_to }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

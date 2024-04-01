@@ -4,6 +4,8 @@ import mysql.connector
 from flask import Flask, jsonify, render_template, request, redirect, url_for
 from db_operations import *
 from flask import session
+from flask import redirect
+from datetime import datetime
 
 app = Flask(__name__)
 # Generate a secure secret key
@@ -30,6 +32,8 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        session['logged_in'] = True
+        session['username'] = request.form['username']
         cursor = connection.cursor()
         cursor.execute("SELECT id, type FROM Users WHERE name = %s AND password = %s", (username, password))
         user_data = cursor.fetchone()  # Fetch the user ID and type from the database
@@ -43,6 +47,7 @@ def login():
                 return redirect(url_for('init_page'))  # Redirect non-admin users to init_page
         else:
             error = 'Invalid credentials. Please try again.'
+
     return render_template('login.html', error=error)
 
 @app.route('/init_page')
@@ -65,10 +70,12 @@ def new_ticket():
         created_by = session.get('user_id')
         
         # Generate current date and time
-        date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        contacto = request.form['contacto']
+        title = request.form['title']
         
         # Call the create_ticket function with the correct parameters
-        create_ticket(topic_id, description, date, state, created_by)
+        create_ticket(topic_id, description, date, state, created_by,contacto,title)
         
         return redirect(url_for('my_tickets'))  # Redirect to my_tickets page after creating ticket
     return render_template('new_ticket.html')
@@ -90,7 +97,8 @@ def my_tickets():
             'date': ticket['date'],  # Replace with actual field name from the database
             'state': ticket['state'],  # Replace with actual field name from the database
             'description': ticket['description'],  # Replace with actual field name from the database
-            'attributed_tp': ticket['attributed_to'],  # Replace with actual field name from the database
+            'attributed_to': ticket['attributed_to'],  # Replace with actual field name from the database
+            'title': ticket['title'],
         })
     print(ticket_fields)
     return render_template('my_tickets.html', tickets=ticket_fields)
@@ -125,22 +133,16 @@ def send_message():
 @app.route('/admin_pannel')
 def admin_panel():
     tickets = get_all_tickets()  # Fetch all tickets from the database
+    
     return render_template('admin_pannel.html', tickets=tickets)
 
-
-@app.route('/assign_engineer', methods=['POST'])
-def assign_engineer():
-    ticket_id = int(request.form['ticket_id'])
-    engineer_id = int(request.form['engineer'])
-    # Implement logic to assign engineer to ticket
-    return "Engineer assigned successfully."
 
 @app.route('/ticket_details/<int:ticket_id>')
 def ticket_details(ticket_id):
     user_id = session.get('user_id')
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT name FROM Users WHERE id = %s", (user_id,))
+    cursor.execute("SELECT u.name FROM Users u JOIN Tickets t ON u.id = t.created_by WHERE t.id = %s", (ticket_id,))
     user_name = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -148,11 +150,30 @@ def ticket_details(ticket_id):
     ticket_details = get_ticket_details(ticket_id)
     return render_template('ticket_details.html', ticket_details=ticket_details, is_admin=admin_status, user_name=user_name)
 
-
 @app.route('/close_ticket/<int:ticket_id>', methods=['POST'])
 def close_ticket_route(ticket_id):
+    # Add a message indicating that the ticket has been closed by the admin
+    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    close_message = f"Ticket closed by admin at {current_time}"
+    add_message_to_ticket(ticket_id, close_message)
+
+    # Update the ticket's state to "closed"
     close_ticket(ticket_id)
+
     return jsonify({'success': True})
+
+@app.route('/reopen_ticket/<int:ticket_id>', methods=['POST'])
+def reopen_ticket_route(ticket_id):
+    # Add a message indicating that the ticket has been closed by the admin
+    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    reopen_message = f"Ticket reopened by admin at {current_time}"
+    add_message_to_ticket(ticket_id, reopen_message)
+
+    # Update the ticket's state to "closed"
+    reopen_ticket(ticket_id)
+
+    return jsonify({'success': True})
+
 
 
 if __name__ == '__main__':

@@ -10,13 +10,16 @@
 <body>
     <div class="container">
         <p>This is the homepage of our helpdesk ticketing system.</p>
-        <a href="/new_ticket" class="button">Abrir um novo pedido</a>
-        <a href="/my_tickets" class="button">Tickets</a>
+        <a href="/admin_pannel" class="button">Voltar ao painel</a>
+        {% if not is_admin %}
+            <a href="/new_ticket" class="button">Abrir um novo pedido</a>
+            <a href="/my_tickets" class="button">Tickets</a>
+        {% endif %}
         <a href="/login" class="button">Terminar sessão</a>
     </div>
 
     <div class="container">
-        <h1>Tópico do ticket #{{ ticket_details.id }}</h1>
+        <h1>{{ticket_details.title}} #{{ ticket_details.id }}</h1>
         <h2>Informação acerca do ticket</h2>
         <div class="ticket-info">
             <p><strong>User:</strong> {{ user_name }}</p>
@@ -42,6 +45,7 @@
         </form>
         {% if is_admin %}
         <button id="close-ticket-btn">Close Ticket</button>
+        <button id="reopen-ticket-btn">Reopen Ticket</button>
         {% endif %}
         <!--estado do ticket passa para fechado-->
     </div>
@@ -125,6 +129,34 @@
                     });
                 });
             }
+            var closeTicketButton = document.getElementById('reopen-ticket-btn');
+            if (closeTicketButton) {
+                closeTicketButton.addEventListener('click', function () {
+                    var ticketId = {{ ticket_details.id }};
+                    // Send an AJAX request to close the ticket
+                    fetch(`/reopen_ticket/${ticketId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to reopen ticket');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Handle successful response (optional)
+                        console.log('Ticket reopened successfully');
+                    })
+                    .catch(error => {
+                        // Handle error
+                        console.error('Error reopening ticket:', error);
+                    });
+                });
+            }
+
 
             // Event listener for message form submission
             messageForm.addEventListener('submit', function (event) {

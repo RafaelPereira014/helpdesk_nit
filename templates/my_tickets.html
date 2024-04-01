@@ -20,11 +20,11 @@
         <table>
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Date Created</th>
-                    <th>State</th>
-                    <th>Description</th>
-                    <th>User Assigned</th>
+                    <th>#Pedido</th>
+                    <th>Data de criação</th>
+                    <th>Estado</th>
+                    <th>Assunto</th>
+                    <th>Atrubuido a</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,7 +33,7 @@
                     <td>{{ ticket.id }}</td>
                     <td>{{ ticket.date }}</td>
                     <td>{{ ticket.state }}</td>
-                    <td><a href="/ticket_details/{{ ticket.id }}">{{ ticket.description }}</a></td>
+                    <td><a href="/ticket_details/{{ ticket.id }}">{{ ticket.title }}</a></td>
                     <td>{{ ticket.attributed_to }}</td>
                 </tr>
                 {% endfor %}
