@@ -6,10 +6,11 @@
     <title>Helpdesk Ticketing System</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
 </head>
 <body>
     <div class="container">
-        <p>This is the homepage of our helpdesk ticketing system.</p>
+        <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo-main" class="logo-main">
         <a href="/admin_pannel" class="button">Admin Panel</a>
         <a href="/pannel_group" class="button">Group Panel</a>
         <a href="/logout" class="button">Terminar sessão</a>

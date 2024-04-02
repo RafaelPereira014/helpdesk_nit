@@ -64,6 +64,11 @@ body {
     margin-bottom: 20px;
 }
 .logo {
-    width: 100px; /* Adjust the width as needed */
+    width: 320px; /* Adjust the width as needed */
+    margin-bottom: 20px; /* Add margin to separate the logo from the form */
+}
+
+.logo-main {
+    width: 300px; /* Adjust the width as needed */
     margin-bottom: 20px; /* Add margin to separate the logo from the form */
 }
