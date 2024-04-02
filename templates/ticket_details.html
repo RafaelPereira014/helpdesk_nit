@@ -6,32 +6,55 @@
     <title>View Ticket</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
+    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+
 </head>
 <body>
     <div class="container">
         <p>This is the homepage of our helpdesk ticketing system.</p>
+        {% if is_admin %}
         <a href="/admin_pannel" class="button">Voltar ao painel</a>
+        {%endif%}
+       
+        
         {% if not is_admin %}
             <a href="/new_ticket" class="button">Abrir um novo pedido</a>
             <a href="/my_tickets" class="button">Tickets</a>
         {% endif %}
-        <a href="/login" class="button">Terminar sessão</a>
+        <a href="/logout" class="button">Terminar sessão</a>
     </div>
 
     <div class="container">
         <h1>{{ticket_details.title}} #{{ ticket_details.id }}</h1>
         <h2>Informação acerca do ticket</h2>
         <div class="ticket-info">
-            <p><strong>User:</strong> {{ user_name }}</p>
-            <p><strong>Contacto:</strong> {{ ticket_details.contacto }}</p>
-            <p><strong>Description:</strong> {{ ticket_details.description }}</p>
+            <table>
+                <tr>
+                    <td><strong>Utilizador:</strong></td>
+                    <td>{{ user_name }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Contacto:</strong></td>
+                    <td>{{ ticket_details.contacto }}</td>
+                </tr>
+                <tr>
+                    <td><strong>Descrição:</strong></td>
+                    <td>{{ ticket_details.description }}</td>
+                </tr>
+            </table>
         </div>
+        
+        
         <div class="message-container" id="message-container">
             <!-- Messages will be displayed here -->
             {% for message in ticket_details.messages %}
             <div class="message {% if message.sender_type == 'user' %}user-message{% else %}admin-message{% endif %}">
                 <div class="message-header {% if message.sender_type == 'user' %}user-header{% else %}admin-header{% endif %}">
-                    {{ message.sender_type }} - {{ message.date }}
+                    {% if message.sender_type == 'user' %}
+                        {{ user_name }} - {{ message.sent_at }}
+                    {% else %}
+                        Admin - {{ message.sent_at }}
+                    {% endif %}
                 </div>
                 <div class="message-content">
                     {{ message.message }}
@@ -39,6 +62,7 @@
             </div>
             {% endfor %}
         </div>
+        
         <form id="message-form">
             <textarea id="message" rows="3" name="chat_message"></textarea><br>
             <button type="submit">Publicar resposta</button>
@@ -129,9 +153,9 @@
                     });
                 });
             }
-            var closeTicketButton = document.getElementById('reopen-ticket-btn');
-            if (closeTicketButton) {
-                closeTicketButton.addEventListener('click', function () {
+            var reopenTicketButton = document.getElementById('reopen-ticket-btn');
+            if (reopenTicketButton) {
+                reopenTicketButton.addEventListener('click', function () {
                     var ticketId = {{ ticket_details.id }};
                     // Send an AJAX request to close the ticket
                     fetch(`/reopen_ticket/${ticketId}`, {

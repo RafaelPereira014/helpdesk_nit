@@ -1,10 +1,14 @@
-from aifc import Error
-from config import DB_CONFIG
-import mysql.connector
+# Database Operations
+
+from config import DB_CONFIG  # Import the database configuration
+import mysql.connector  # Import MySQL Connector Python module
 
 def connect_to_database():
     """Establishes a connection to the MySQL database."""
     return mysql.connector.connect(**DB_CONFIG)
+
+
+# User Authentication and Authorization
 
 def is_admin(user_id):
     """Checks if the user is an Admin"""
@@ -30,15 +34,27 @@ def validate_user(username, password):
     conn.close()
     return user
 
+def get_user_group(user_id):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT group_id FROM users WHERE id = %s" (user_id,))
+    user_group = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return user_group
+
+
+# Ticket Operations
+
 def get_ticket_details(ticket_id):
     """Fetches ticket details and associated messages from the database based on the ticket ID."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT id, description, date, state, created_by, attributed_to,contacto,title FROM tickets WHERE id = %s", (ticket_id,))
+    cursor.execute("SELECT id, description, date, state, created_by, attributed_to, contacto, title FROM tickets WHERE id = %s", (ticket_id,))
     ticket_details = cursor.fetchone()
     
     # Fetch messages associated with the ticket
-    cursor.execute("SELECT message, sender_type FROM Messages WHERE ticket_id = %s", (ticket_id,))
+    cursor.execute("SELECT message, sender_type, sent_at FROM Messages WHERE ticket_id = %s", (ticket_id,))
     messages = cursor.fetchall()
     ticket_details['messages'] = messages
     
@@ -48,21 +64,31 @@ def get_ticket_details(ticket_id):
 
 def get_all_tickets():
     """Fetches all tickets from the database."""
-    conn = connect_to_database()  # Assuming you have a function named connect_to_database to establish a connection
-    cursor = conn.cursor(dictionary=True)  # Use dictionary cursor to fetch rows as dictionaries
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
     cursor.execute("SELECT * FROM tickets")
     tickets = cursor.fetchall()
     cursor.close()
     conn.close()
     return tickets
 
-def create_ticket(topic_id, description, date, state, created_by,contacto,title):
+def get_all_tickets_group(group_id):
+    """Fetches all tickets from the database."""
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM tickets WHERE group_id = %s", (group_id,))
+    tickets = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return tickets
+
+def create_ticket(topic_id, description, date, state, created_by, contacto, title):
     """Creates a new ticket in the database."""
     conn = connect_to_database()
     cursor = conn.cursor()
     try:
-        cursor.execute("INSERT INTO tickets (topic_id, description, date, state, created_by,contacto,title) VALUES (%s, %s, %s, %s, %s,%s,%s)",
-                       (topic_id, description, date, state, created_by,contacto,title))
+        cursor.execute("INSERT INTO tickets (topic_id, description, date, state, created_by, contacto, title) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                       (topic_id, description, date, state, created_by, contacto, title))
         conn.commit()
         print("Ticket created successfully")
     except mysql.connector.Error as e:
@@ -75,12 +101,16 @@ def get_user_tickets(user_id):
     """Fetches tickets associated with the given user ID."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT id, date, state, description, attributed_to,contacto,title FROM tickets WHERE created_by = %s", (user_id,))
+    cursor.execute("SELECT id, date, state, description, attributed_to, contacto, title FROM tickets WHERE created_by = %s", (user_id,))
     user_tickets = cursor.fetchall()
     cursor.close()
     conn.close()
     return user_tickets
 
+
+
+
+# Miscellaneous Operations
 
 def get_topics():
     conn = connect_to_database()
@@ -93,7 +123,7 @@ def get_topics():
 def get_user_details(ticket_id):
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT id,name,type FROM Users JOIN ON Tickets.user.id=Users.id WHERE Tickes.ticket_id = %s", ticket_id)
+    cursor.execute("SELECT id, name, type FROM Users JOIN ON Tickets.user.id=Users.id WHERE Tickes.ticket_id = %s", ticket_id)
     user_details = cursor.fetchone()
     cursor.close()
     return user_details
@@ -101,14 +131,10 @@ def get_user_details(ticket_id):
 def close_ticket(ticket_id):
     """Closes a ticket by updating its state to 'closed' and adds a message."""
     try:
-        # Close the ticket
         conn = connect_to_database()
         cursor = conn.cursor()
         cursor.execute("UPDATE Tickets SET state = 'closed' WHERE id = %s", (ticket_id,))
         conn.commit()
-        
-        # Add a message indicating that the ticket has been closed
-        
         print("Ticket closed and message added successfully")
     except Exception as e:
         print("Error closing ticket:", e)
@@ -144,7 +170,6 @@ def add_message_to_ticket(ticket_id, message):
     conn = connect_to_database()
     cursor = conn.cursor()
     try:
-        # Add the message to the Messages table
         cursor.execute("INSERT INTO Messages (ticket_id, message, sender_type) VALUES (%s, %s, 'admin')",
                        (ticket_id, message))
         conn.commit()
@@ -154,3 +179,29 @@ def add_message_to_ticket(ticket_id, message):
     finally:
         cursor.close()
         conn.close()
+        
+def get_group_name(ticket_id):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    
+    try:
+        # Fetch the topic ID associated with the ticket
+        cursor.execute("SELECT topic_id FROM tickets WHERE id = %s", (ticket_id,))
+        topic_id = cursor.fetchone()[0]
+        
+        # Fetch the group ID associated with the topic
+        cursor.execute("SELECT group_id FROM Topics WHERE id = %s", (topic_id,))
+        group_id = cursor.fetchone()[0]
+        
+        # Fetch the group name based on the group ID
+        cursor.execute("SELECT name FROM `Groups` WHERE id = %s", (group_id,))
+        group_name = cursor.fetchone()
+        
+        return group_name[0] if group_name else None  # Return the group name or None if not found
+    except Exception as e:
+        print("Error fetching group name:", e)
+        return None
+    finally:
+        cursor.close()
+        conn.close()
+

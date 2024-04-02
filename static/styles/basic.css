@@ -36,8 +36,7 @@ th {
     color: #777;
 }
 .message-container {
-    max-height: 70vh; /* Set maximum height to 70% of viewport height */
-    overflow-y: auto; /* Enable vertical scrolling */
+    
     padding: 10px; /* Add padding for better appearance */
 }
 
@@ -48,14 +47,19 @@ th {
 }
 
 .user-message {
-    background-color: #859baa; /* Blue color for user messages */
+    background-color: #a3b9ca; /* Blue color for user messages */
     color: white;
+    float: left; /* Float user messages to the left */
+    clear: both; /* Clear the float */
 }
 
 .admin-message {
     background-color: #f0f0f0; /* Grey color for admin messages */
     color: black;
+    float: right; /* Float admin messages to the right */
+    clear: both; /* Clear the float */
 }
+
 
 .message-header {
     font-weight: bold; /* Make the header bold */
@@ -69,3 +73,30 @@ th {
 .admin-header {
     color: #555; /* Dark grey color for admin header */
 }
+
+.ticket-info table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ticket-info td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.ticket-info td:first-child {
+    width: 120px;
+    font-weight: bold;
+    color: #333;
+}
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+

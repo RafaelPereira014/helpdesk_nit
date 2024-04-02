@@ -1,4 +1,5 @@
 import datetime
+from functools import wraps
 import secrets
 import mysql.connector
 from flask import Flask, jsonify, render_template, request, redirect, url_for
@@ -32,23 +33,25 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        session['logged_in'] = True
-        session['username'] = request.form['username']
         cursor = connection.cursor()
         cursor.execute("SELECT id, type FROM Users WHERE name = %s AND password = %s", (username, password))
         user_data = cursor.fetchone()  # Fetch the user ID and type from the database
         cursor.close()
         if user_data:
-            user_id, user_type = user_data
-            session['user_id'] = user_id
-            if is_admin(user_id):
+            session['user_id'] = user_data[0]  # Store user ID in session
+            session['user_type'] = user_data[1]  # Store user type in session
+            if is_admin(user_data[0]):
                 return redirect(url_for('admin_init'))  # Redirect admin users to admin_init page
             else:
                 return redirect(url_for('init_page'))  # Redirect non-admin users to init_page
         else:
             error = 'Invalid credentials. Please try again.'
-
     return render_template('login.html', error=error)
+
+@app.route('/logout')
+def logout():
+    session.clear()  # Clear session data
+    return redirect(url_for('index'))  # Redirect to homepage after logout
 
 @app.route('/init_page')
 def init_page():
@@ -70,7 +73,7 @@ def new_ticket():
         created_by = session.get('user_id')
         
         # Generate current date and time
-        date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        date = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
         contacto = request.form['contacto']
         title = request.form['title']
         
@@ -92,6 +95,7 @@ def my_tickets():
     ticket_fields = []  # List to store ticket fields
 
     for ticket in tickets:
+        group_name = get_group_name(ticket['id'])
         ticket_fields.append({
             'id': ticket['id'],  # Assuming the ticket dictionary has an 'id' field
             'date': ticket['date'],  # Replace with actual field name from the database
@@ -99,8 +103,11 @@ def my_tickets():
             'description': ticket['description'],  # Replace with actual field name from the database
             'attributed_to': ticket['attributed_to'],  # Replace with actual field name from the database
             'title': ticket['title'],
+            'group_name': group_name
         })
-    print(ticket_fields)
+    #print(ticket_fields)
+    
+    
     return render_template('my_tickets.html', tickets=ticket_fields)
 
 @app.route('/send_message', methods=['POST'])
@@ -130,11 +137,32 @@ def send_message():
     
     return jsonify({'success': True})
 
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get('user_type') != 'admin':
+            return redirect(url_for('index'))  # Redirect non-admin users to the homepage
+        return f(*args, **kwargs)
+    return decorated_function
+
 @app.route('/admin_pannel')
+@admin_required
 def admin_panel():
     tickets = get_all_tickets()  # Fetch all tickets from the database
-    
     return render_template('admin_pannel.html', tickets=tickets)
+
+@app.route('/pannel_group')
+@admin_required
+def group_panel():
+    user_id = session['user_id']
+    
+    # Fetch the group_id associated with the user
+    group_id = get_user_group(user_id)
+    
+    # Fetch tickets based on the group_id
+    tickets = get_all_tickets_group(group_id)
+    
+    return render_template('pannel_group.html', tickets=tickets)
 
 
 @app.route('/ticket_details/<int:ticket_id>')
@@ -143,7 +171,12 @@ def ticket_details(ticket_id):
     conn = connect_to_database()
     cursor = conn.cursor()
     cursor.execute("SELECT u.name FROM Users u JOIN Tickets t ON u.id = t.created_by WHERE t.id = %s", (ticket_id,))
-    user_name = cursor.fetchone()
+    user_tuple = cursor.fetchone()
+    if user_tuple:
+        user_name = user_tuple[0]  # Access the first element of the tuple
+    else:
+        # Handle the case when no user is found
+        user_name = None  # or any default value you want
     cursor.close()
     conn.close()
     admin_status = is_admin(user_id)
@@ -154,7 +187,7 @@ def ticket_details(ticket_id):
 def close_ticket_route(ticket_id):
     # Add a message indicating that the ticket has been closed by the admin
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    close_message = f"Ticket closed by admin at {current_time}"
+    close_message = f"Ticket fechado pelo admin at {current_time}"
     add_message_to_ticket(ticket_id, close_message)
 
     # Update the ticket's state to "closed"

@@ -10,7 +10,7 @@
             <p>This is the homepage of our helpdesk ticketing system.</p>
             <a href="/new_ticket" class="button">Abrir um novo pedido</a>
             <a href="/my_tickets" class="button">Tickets</a>
-            <a href="/login" class="button">Terminar sessão</a>
+            <a href="/logout" class="button">Terminar sessão</a>
         </div>
     </body>
 </head>
@@ -34,7 +34,7 @@
                     <td>{{ ticket.date }}</td>
                     <td>{{ ticket.state }}</td>
                     <td><a href="/ticket_details/{{ ticket.id }}">{{ ticket.title }}</a></td>
-                    <td>{{ ticket.attributed_to }}</td>
+                    <td>{{ ticket.group_name }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
