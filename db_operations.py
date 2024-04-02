@@ -28,7 +28,7 @@ def validate_user(username, password):
     """Validates user credentials against the database."""
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
+    cursor.execute("SELECT * FROM Users WHERE username = %s AND password = %s", (username, password))
     user = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -37,11 +37,13 @@ def validate_user(username, password):
 def get_user_group(user_id):
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT group_id FROM users WHERE id = %s" (user_id,))
+    cursor.execute("SELECT group_id FROM Users WHERE id = %s", (user_id,))
     user_group = cursor.fetchone()
     cursor.close()
     conn.close()
-    return user_group
+    return user_group[0] if user_group else None
+
+
 
 
 # Ticket Operations
@@ -50,7 +52,7 @@ def get_ticket_details(ticket_id):
     """Fetches ticket details and associated messages from the database based on the ticket ID."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT id, description, date, state, created_by, attributed_to, contacto, title FROM tickets WHERE id = %s", (ticket_id,))
+    cursor.execute("SELECT id, description, date, state, created_by, attributed_to, contacto, title,closed_by FROM tickets WHERE id = %s", (ticket_id,))
     ticket_details = cursor.fetchone()
     
     # Fetch messages associated with the ticket
@@ -82,13 +84,26 @@ def get_all_tickets_group(group_id):
     conn.close()
     return tickets
 
+
+
 def create_ticket(topic_id, description, date, state, created_by, contacto, title):
     """Creates a new ticket in the database."""
     conn = connect_to_database()
     cursor = conn.cursor()
     try:
-        cursor.execute("INSERT INTO tickets (topic_id, description, date, state, created_by, contacto, title) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                       (topic_id, description, date, state, created_by, contacto, title))
+        # Fetch the group_id associated with the provided topic_id
+        cursor.execute("SELECT group_id FROM Topics WHERE id = %s", (topic_id,))
+        group_id = cursor.fetchone()[0]
+
+        # Fetch the name of the user based on the created_by ID
+        cursor.execute("SELECT name FROM Users WHERE id = %s", (created_by,))
+        created_by_user = cursor.fetchone()[0]
+
+        # Insert the new ticket with the fetched group_id and created_by_user
+        cursor.execute("""
+            INSERT INTO Tickets (topic_id, description, date, state, created_by, contacto, title, group_id, created_by_user)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (topic_id, description, date, state, created_by, contacto, title, group_id, created_by_user))
         conn.commit()
         print("Ticket created successfully")
     except mysql.connector.Error as e:
@@ -96,6 +111,7 @@ def create_ticket(topic_id, description, date, state, created_by, contacto, titl
     finally:
         cursor.close()
         conn.close()
+
 
 def get_user_tickets(user_id):
     """Fetches tickets associated with the given user ID."""
@@ -106,6 +122,25 @@ def get_user_tickets(user_id):
     cursor.close()
     conn.close()
     return user_tickets
+
+def get_creator_name(ticket_id):
+    try:
+        conn = connect_to_database()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT Users.name
+            FROM Users
+            JOIN Tickets ON Users.id = Tickets.created_by
+            WHERE Tickets.id = %s
+        """, (ticket_id,))
+        creator_name = cursor.fetchone()
+        return creator_name[0] if creator_name else None  # Return None if no user found
+    except Exception as e:
+        print("Error:", e)
+    finally:
+        cursor.close()
+        conn.close()
+
 
 
 
@@ -128,19 +163,24 @@ def get_user_details(ticket_id):
     cursor.close()
     return user_details
 
-def close_ticket(ticket_id):
-    """Closes a ticket by updating its state to 'closed' and adds a message."""
+def close_ticket(user_id,ticket_id):
+    """Closes a ticket by updating its state to 'closed' and sets the 'closed_by' field."""
     try:
+        # Close the ticket and set the 'closed_by' field to the name of the admin-user
         conn = connect_to_database()
         cursor = conn.cursor()
-        cursor.execute("UPDATE Tickets SET state = 'closed' WHERE id = %s", (ticket_id,))
+        cursor.execute("SELECT name FROM Users WHERE id = %s", (user_id,))
+        user_name = cursor.fetchone()[0]
+        
+        cursor.execute("UPDATE Tickets SET state = 'closed', closed_by = %s WHERE id = %s", (user_name, ticket_id))
         conn.commit()
-        print("Ticket closed and message added successfully")
+        print("Ticket closed successfully")
     except Exception as e:
         print("Error closing ticket:", e)
     finally:
         cursor.close()
         conn.close()
+
 
 def reopen_ticket(ticket_id):
     conn = connect_to_database()

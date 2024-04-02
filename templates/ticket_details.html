@@ -13,7 +13,7 @@
     <div class="container">
         <p>This is the homepage of our helpdesk ticketing system.</p>
         {% if is_admin %}
-        <a href="/admin_pannel" class="button">Voltar ao painel</a>
+        <a href="{{ request.referrer }}" class="button">Voltar</a>
         {%endif%}
        
         
@@ -53,7 +53,7 @@
                     {% if message.sender_type == 'user' %}
                         {{ user_name }} - {{ message.sent_at }}
                     {% else %}
-                        Admin - {{ message.sent_at }}
+                        {{ticket_details.closed_by}} - {{ message.sent_at }}
                     {% endif %}
                 </div>
                 <div class="message-content">

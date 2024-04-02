@@ -7,6 +7,7 @@ from db_operations import *
 from flask import session
 from flask import redirect
 from datetime import datetime
+from flask import request
 
 app = Flask(__name__)
 # Generate a secure secret key
@@ -152,15 +153,18 @@ def admin_panel():
     return render_template('admin_pannel.html', tickets=tickets)
 
 @app.route('/pannel_group')
-@admin_required
 def group_panel():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))  # Redirect to login page if user is not logged in
+
     user_id = session['user_id']
-    
+    print(user_id)
     # Fetch the group_id associated with the user
     group_id = get_user_group(user_id)
-    
+    print(group_id)
     # Fetch tickets based on the group_id
     tickets = get_all_tickets_group(group_id)
+    print(tickets)
     
     return render_template('pannel_group.html', tickets=tickets)
 
@@ -185,15 +189,21 @@ def ticket_details(ticket_id):
 
 @app.route('/close_ticket/<int:ticket_id>', methods=['POST'])
 def close_ticket_route(ticket_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))  # Redirect to login page if user is not logged in
+
+    user_id = session['user_id']
     # Add a message indicating that the ticket has been closed by the admin
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     close_message = f"Ticket fechado pelo admin at {current_time}"
     add_message_to_ticket(ticket_id, close_message)
 
     # Update the ticket's state to "closed"
-    close_ticket(ticket_id)
+    close_ticket(user_id,ticket_id)
 
     return jsonify({'success': True})
+
+
 
 @app.route('/reopen_ticket/<int:ticket_id>', methods=['POST'])
 def reopen_ticket_route(ticket_id):

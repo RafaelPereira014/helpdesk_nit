@@ -1,4 +1,5 @@
 import mysql.connector
+from db_operations import *
 
 # MySQL connection configuration
 config = {
@@ -19,7 +20,7 @@ try:
         cursor = connection.cursor()
 
         # Execute the SQL query to fetch all tickets
-        cursor.execute("SELECT * FROM Users")
+        cursor.execute("SELECT * FROM Tickets")
 
         # Fetch all rows (tickets) from the result set
         tickets = cursor.fetchall()

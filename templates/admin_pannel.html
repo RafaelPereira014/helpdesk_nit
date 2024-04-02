@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
 
     <title>Admin Panel - Tickets</title>
-    <a href="/logout" class="button-logout">Terminar sessão</a>
+    <a href="/logout" class="button">Terminar sessão</a>
+    <a href="/admin_init" class="button">Voltar</a>
+
     
 </head>
 <body>
@@ -15,12 +17,12 @@
     <table>
         <thead>
             <tr>
-                <th>#</th>
-                <th>Date Created</th>
-                <th>User</th>
-                <th>Description</th>
-                <th>State</th>
-                <th>Atribuido a</th>
+                <th>Pedido #</th>
+                <th>Data de criação</th>
+                <th>Utilizador</th>
+                <th>Titulo</th>
+                <th>Estado</th>
+                <th>Fechado por</th>
             </tr>
         </thead>
             <tbody>
@@ -31,7 +33,7 @@
                     <td>{{ ticket.created_by_user }}</td>
                     <td><a href="/ticket_details/{{ ticket.id }}">{{ ticket.title }}</a></td>
                     <td>{{ ticket.state }}</td>
-                    <td>{{ ticket.group_name }}</td>
+                    <td>{{ ticket.closed_by }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
