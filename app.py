@@ -98,7 +98,7 @@ def my_tickets():
     for ticket in tickets:
         group_name = get_group_name(ticket['id'])
         ticket_fields.append({
-            'id': ticket['id'],  # Assuming the ticket dictionary has an 'id' field
+            'id': ticket['id'],  # Assuming the ticket dictionary has an 'id' fieldgrou
             'date': ticket['date'],  # Replace with actual field name from the database
             'state': ticket['state'],  # Replace with actual field name from the database
             'description': ticket['description'],  # Replace with actual field name from the database

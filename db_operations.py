@@ -90,7 +90,7 @@ def get_all_tickets_group(group_id):
     """Fetches all tickets from the database."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM tickets WHERE group_id = %s", (group_id,))
+    cursor.execute("SELECT * FROM tickets WHERE group_id = %s ORDER BY id DESC", (group_id,))
     tickets = cursor.fetchall()
     cursor.close()
     conn.close()
