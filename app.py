@@ -194,7 +194,7 @@ def close_ticket_route(ticket_id):
 
     user_id = session['user_id']
     # Add a message indicating that the ticket has been closed by the admin
-    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    current_time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
     close_message = f"Ticket fechado pelo admin at {current_time}"
     add_message_to_ticket(ticket_id, close_message)
 
@@ -208,7 +208,7 @@ def close_ticket_route(ticket_id):
 @app.route('/reopen_ticket/<int:ticket_id>', methods=['POST'])
 def reopen_ticket_route(ticket_id):
     # Add a message indicating that the ticket has been closed by the admin
-    current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    current_time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
     reopen_message = f"Ticket reopened by admin at {current_time}"
     add_message_to_ticket(ticket_id, reopen_message)
 

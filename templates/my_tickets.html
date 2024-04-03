@@ -5,44 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
-    <body>
-        <div class="container">
-            <p>This is the homepage of our helpdesk ticketing system.</p>
-            <a href="/new_ticket" class="button">Abrir um novo pedido</a>
-            <a href="/my_tickets" class="button">Tickets</a>
-            <a href="/logout" class="button">Terminar sessão</a>
-        </div>
-    </body>
 </head>
 <body>
     <div class="container">
+        <p>This is the homepage of our helpdesk ticketing system.</p>
+        <a href="/new_ticket" class="button">Abrir um novo pedido</a>
+        <a href="/my_tickets" class="button">Tickets</a>
+        <a href="/logout" class="button">Terminar sessão</a>
+    </div>
+
+    <div class="container">
         <h1>Tickets</h1>
-        <table>
+        <table id="ticket-table">
             <thead>
                 <tr>
                     <th>#Pedido</th>
                     <th>Data de criação</th>
                     <th>Estado</th>
                     <th>Assunto</th>
-                    <th>Atrubuido a</th>
+                    <th>Atribuído a</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for ticket in tickets %}
-                <tr>
-                    <td>{{ ticket.id }}</td>
-                    <td>{{ ticket.date }}</td>
-                    <td>{{ ticket.state }}</td>
-                    <td><a href="/ticket_details/{{ ticket.id }}">{{ ticket.title }}</a></td>
-                    <td>{{ ticket.group_name }}</td>
-                </tr>
-                {% endfor %}
+            <tbody id="ticket-table-body">
+                <!-- Ticket data will be inserted here -->
             </tbody>
         </table>
+        
+        <div id="pagination">
+            <button id="prev-btn">Anterior</button>
+            <span id="page-num">1</span>
+            <button id="next-btn">Próximo</button>
+        </div>
         
         <div class="footer">
             &copy; 2024 SREC-NIT. All rights reserved.
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var tickets = [ 
+            {% for ticket in tickets %}
+            {
+                id: "{{ ticket.id }}",
+                date: "{{ ticket.date }}",
+                state: "{{ ticket.state }}",
+                title: "{{ ticket.title }}",
+                group_name: "{{ ticket.group_name }}"
+            },
+            {% endfor %}]; // Sample ticket data
+            var currentPage = 1;
+            var ticketsPerPage = 15; // Number of tickets to display per page
+
+            var tableBody = document.getElementById('ticket-table-body');
+            var prevButton = document.getElementById('prev-btn');
+            var nextButton = document.getElementById('next-btn');
+            var pageNumSpan = document.getElementById('page-num');
+
+            // Function to display tickets for the current page
+            function displayTickets() {
+                var startIdx = (currentPage - 1) * ticketsPerPage;
+                var endIdx = Math.min(startIdx + ticketsPerPage, tickets.length);
+
+                tableBody.innerHTML = ''; // Clear previous entries
+
+                for (var i = startIdx; i < endIdx; i++) {
+                    var ticket = tickets[i];
+                    var row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${ticket.id}</td>
+                        <td>${ticket.date}</td>
+                        <td>${ticket.state}</td>
+                        <td><a href="/ticket_details/${ticket.id}">${ticket.title}</a></td>
+                        <td>${ticket.group_name}</td>
+                    `;
+                    tableBody.appendChild(row);
+                }
+
+                pageNumSpan.textContent = currentPage;
+            }
+
+            // Function to navigate to the previous page
+            function goToPrevPage() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayTickets();
+                }
+            }
+
+            // Function to navigate to the next page
+            function goToNextPage() {
+                var totalPages = Math.ceil(tickets.length / ticketsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayTickets();
+                }
+            }
+
+            // Event listeners for pagination buttons
+            prevButton.addEventListener('click', goToPrevPage);
+            nextButton.addEventListener('click', goToNextPage);
+
+            // Initial display
+            displayTickets();
+        });
+    </script>
 </body>
 </html>

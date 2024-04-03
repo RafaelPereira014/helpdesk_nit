@@ -77,10 +77,10 @@ def get_ticket_details(ticket_id):
     return ticket_details
 
 def get_all_tickets():
-    """Fetches all tickets from the database."""
+    """Fetches all tickets from the database ordered by creation date (newest to oldest)."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM tickets")
+    cursor.execute("SELECT * FROM tickets ORDER BY id DESC")
     tickets = cursor.fetchall()
     cursor.close()
     conn.close()
@@ -129,7 +129,7 @@ def get_user_tickets(user_id):
     """Fetches tickets associated with the given user ID."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT id, date, state, description, attributed_to, contacto, title FROM tickets WHERE created_by = %s", (user_id,))
+    cursor.execute("SELECT id, date, state, description, attributed_to, contacto, title FROM tickets WHERE created_by = %s ORDER BY id DESC", (user_id,))
     user_tickets = cursor.fetchall()
     cursor.close()
     conn.close()

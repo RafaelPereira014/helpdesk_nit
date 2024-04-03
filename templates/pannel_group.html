@@ -6,12 +6,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
 
-    <title>Group Panel - Tickets</title>
+    <title>Admin Panel - Tickets</title>
     <a href="/logout" class="button">Terminar sessão</a>
-    <a href="/admin_init" class="button">Voltar ao painel </a>
-
-
-    
+    <a href="/admin_init" class="button">Voltar</a>
 </head>
 <body>
     <h1>Group Panel - Tickets</h1>
@@ -26,21 +23,89 @@
                 <th>Fechado por</th>
             </tr>
         </thead>
-            <tbody>
-                {% for ticket in tickets %}
-                <tr>
-                    <td>{{ ticket.id }}</td>
-                    <td>{{ ticket.date }}</td>
-                    <td>{{ ticket.created_by_user }}</td>
-                    <td><a href="/ticket_details/{{ ticket.id }}">{{ ticket.title }}</a></td>
-                    <td>{{ ticket.state }}</td>
-                    <td>{{ ticket.closed_by }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
+        <tbody id="ticket-table-body">
+            <!-- Ticket data will be inserted here -->
+        </tbody>
     </table>
+    <div id="pagination">
+        <button id="prev-btn">Anterior</button>
+        <span id="page-num">[1]</span>
+        <button id="next-btn">Próximo</button>
+    </div>
     <div class="footer">
         &copy; 2024 SREC-NIT. All rights reserved.
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var tickets = [
+                {% for ticket in tickets %}
+                {
+                    id: "{{ ticket.id }}",
+                    date: "{{ ticket.date }}",
+                    created_by_user: "{{ ticket.created_by_user }}",
+                    title: "{{ ticket.title }}",
+                    state: "{{ ticket.state }}",
+                    closed_by: "{{ ticket.closed_by }}"
+                },
+                {% endfor %}
+            ];
+            var currentPage = 1;
+            var ticketsPerPage = 15; // Number of tickets to display per page
+
+            var tableBody = document.getElementById('ticket-table-body');
+            var prevButton = document.getElementById('prev-btn');
+            var nextButton = document.getElementById('next-btn');
+            var pageNumSpan = document.getElementById('page-num');
+
+            // Function to display tickets for the current page
+            function displayTickets() {
+                var startIdx = (currentPage - 1) * ticketsPerPage;
+                var endIdx = Math.min(startIdx + ticketsPerPage, tickets.length);
+
+                tableBody.innerHTML = ''; // Clear previous entries
+
+                for (var i = startIdx; i < endIdx; i++) {
+                    var ticket = tickets[i];
+                    var row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${ticket.id}</td>
+                        <td>${ticket.date}</td>
+                        <td>${ticket.created_by_user}</td>
+                        <td><a href="/ticket_details/${ticket.id}">${ticket.title}</a></td>
+                        <td>${ticket.state}</td>
+                        <td>${ticket.closed_by}</td>
+                    `;
+                    tableBody.appendChild(row);
+                }
+
+                pageNumSpan.textContent = currentPage;
+            }
+
+            // Function to navigate to the previous page
+            function goToPrevPage() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayTickets();
+                }
+            }
+
+            // Function to navigate to the next page
+            function goToNextPage() {
+                var totalPages = Math.ceil(tickets.length / ticketsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayTickets();
+                }
+            }
+
+            // Event listeners for pagination buttons
+            prevButton.addEventListener('click', goToPrevPage);
+            nextButton.addEventListener('click', goToNextPage);
+
+            // Initial display
+            displayTickets();
+        });
+    </script>
 </body>
 </html>
