@@ -6,6 +6,8 @@
     <title>View Ticket</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/popup.css') }}">
+
     <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
 
 </head>
@@ -65,14 +67,22 @@
         
         <form id="message-form">
             <textarea id="message" rows="3" name="chat_message"></textarea><br>
-            <button type="submit">Publicar resposta</button>
+            <button type="submit" class="button">Publicar resposta</button>
         </form>
         {% if is_admin %}
-        <button id="close-ticket-btn">Close Ticket</button>
-        <button id="reopen-ticket-btn">Reopen Ticket</button>
+        <button id="close-ticket-btn" class="button">Close Ticket</button>
+        <button id="reopen-ticket-btn" class="button">Reopen Ticket</button>
         {% endif %}
         <!--estado do ticket passa para fechado-->
     </div>
+
+    <div id="loading-modal" class="modal">
+        <div class="modal-content">
+          <div class="loader"></div>
+          <p>Aguarde enquanto a mensagem é submetida.</p>
+        </div>
+      </div>
+      
 
     <div class="footer">
         &copy; 2024 SREC-NIT. All rights reserved.
@@ -83,24 +93,45 @@
             var messageForm = document.getElementById('message-form');
             var messageInput = document.getElementById('message');
             var messageContainer = document.getElementById('message-container');
-
+        
+            // Function to render messages
+            function renderMessages(messages) {
+                messages.forEach(message => {
+                    var senderType = message.sender_type;
+                    var sentAt = message.sent_at;
+                    var messageContent = message.message;
+                    appendMessage(messageContent, senderType, sentAt);
+                });
+            }
+        
             // Function to append a message to the message container
-            function appendMessage(message, sent) {
+            function appendMessage(messageContent, senderType, sentAt) {
                 var messageElement = document.createElement('div');
                 messageElement.classList.add('message');
-                if (sent) {
+                if (senderType === 'user') {
                     messageElement.classList.add('user-message');
-                } else {
+                } else if (senderType === 'admin') {
                     messageElement.classList.add('admin-message');
                 }
-                messageElement.innerHTML = message; // Use innerHTML to allow HTML content
+                var messageHeader = document.createElement('div');
+                messageHeader.classList.add('message-header');
+                messageHeader.innerText = senderType + ' - ' + sentAt;
+                var messageContentElement = document.createElement('div');
+                messageContentElement.classList.add('message-content');
+                messageContentElement.innerText = messageContent;
+                messageElement.appendChild(messageHeader);
+                messageElement.appendChild(messageContentElement);
                 messageContainer.appendChild(messageElement);
                 // Scroll to bottom of message container
                 messageContainer.scrollTop = messageContainer.scrollHeight;
             }
-
+        
             // Function to send a message
             function sendMessage(message) {
+                // Show loading modal
+                var loadingModal = document.getElementById('loading-modal');
+                loadingModal.style.display = 'block';
+        
                 // Send the message to the server
                 fetch('/send_message', {
                     method: 'POST',
@@ -119,13 +150,32 @@
                     return response.json();
                 })
                 .then(data => {
+                    // Hide loading modal
+                    loadingModal.style.display = 'none';
                     // Message sent successfully, append it to the message container
-                    appendMessage(message, true);
+                    appendMessage(message, 'user', new Date().toLocaleString());
+                    // Show popup and reload after 2 seconds
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
                 })
                 .catch(error => {
+                    // Hide loading modal
+                    loadingModal.style.display = 'none';
                     console.error('Error sending message:', error);
                 });
             }
+        
+            // Event listener for message form submission
+            messageForm.addEventListener('submit', function (event) {
+                event.preventDefault(); // Prevent form submission
+                var message = messageInput.value.trim(); // Get message text from textarea
+                if (message !== '') { // Check if message is not empty
+                    sendMessage(message); // Send the message
+                    messageInput.value = ''; // Clear the message input
+                }
+            });
+        
             var closeTicketButton = document.getElementById('close-ticket-btn');
             if (closeTicketButton) {
                 closeTicketButton.addEventListener('click', function () {
@@ -146,6 +196,8 @@
                     .then(data => {
                         // Handle successful response (optional)
                         console.log('Ticket closed successfully');
+                        // Append close ticket message
+                        appendMessage('Ticket closed', 'admin', new Date().toLocaleString());
                     })
                     .catch(error => {
                         // Handle error
@@ -173,6 +225,8 @@
                     .then(data => {
                         // Handle successful response (optional)
                         console.log('Ticket reopened successfully');
+                        // Append reopen ticket message
+                        appendMessage('Ticket reopened', 'admin', new Date().toLocaleString());
                     })
                     .catch(error => {
                         // Handle error
@@ -180,18 +234,8 @@
                     });
                 });
             }
-
-
-            // Event listener for message form submission
-            messageForm.addEventListener('submit', function (event) {
-                event.preventDefault(); // Prevent form submission
-                var message = messageInput.value.trim(); // Get message text from textarea
-                if (message !== '') { // Check if message is not empty
-                    sendMessage(message); // Send the message
-                    messageInput.value = ''; // Clear the message input
-                }
-            });
         });
+        
     </script>
 </body>
 </html>
