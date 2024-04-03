@@ -17,19 +17,22 @@ The Helpdesk Ticketing System is a web application designed to streamline the pr
     ```bash
     cd helpdesk_nit
     ```
-    
-3. Set up the MySQL database:
+2. Install requirements:
+    ```bash
+    pip install -r requirements.txt
+    ```   
+4. Set up the MySQL database:
     - Create a new database named `helpdesk`.
     - Import the SQL schema from `helpdesk_backup.sql`.
 
-4. Start the Flask server:
+5. Start the Flask server:
     ```bash
     python app.py
     ```
 
-5. Access the application in your web browser at `http://localhost:5000`.
+6. Access the application in your web browser at `http://localhost:5000`.
 
-## Requirements
+## Major Requirements
 - Python 3.x
 - Flask
 - MySQL Server
