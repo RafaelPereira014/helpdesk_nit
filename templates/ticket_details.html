@@ -7,8 +7,18 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/popup.css') }}">
+    <script src="https://cdn.tiny.cloud/1/hcsdmgk5ojfti5cengfoxv1zfkb2t21ei6ue2obbe85k8lst/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+        <script>
+        // Initialize TinyMCE
+        tinymce.init({
+            selector: '#description',
+            plugins: 'advlist autolink lists link image charmap print preview hr anchor',
+            toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+            height: 300  // Specify the height of the TinyMCE editor
+        });
+    </script>
+    
 
-    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
 
 </head>
 <body>
@@ -42,7 +52,7 @@
                 </tr>
                 <tr>
                     <td><strong>Descrição:</strong></td>
-                    <td>{{ ticket_details.description }}</td>
+                    <td>{{ ticket_details.description | safe }}</td>
                 </tr>
             </table>
         </div>
@@ -87,6 +97,8 @@
     <div class="footer">
         &copy; 2024 SREC-NIT. All rights reserved.
     </div>
+
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
