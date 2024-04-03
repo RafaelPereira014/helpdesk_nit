@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+    
 </head>
 <body>
     <div class="container">
-        <p>This is the homepage of our helpdesk ticketing system.</p>
+        <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo" class="logo-main">
         <a href="/new_ticket" class="button">Abrir um novo pedido</a>
         <a href="/my_tickets" class="button">Tickets</a>
         <a href="/logout" class="button">Terminar sessão</a>
@@ -32,9 +34,9 @@
         </table>
         
         <div id="pagination">
-            <button id="prev-btn">Anterior</button>
+            <button id="prev-btn" class="button">Anterior</button>
             <span id="page-num">1</span>
-            <button id="next-btn">Próximo</button>
+            <button id="next-btn" class="button">Próximo</button>
         </div>
         
         <div class="footer">

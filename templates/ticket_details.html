@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/popup.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
     <script src="https://cdn.tiny.cloud/1/hcsdmgk5ojfti5cengfoxv1zfkb2t21ei6ue2obbe85k8lst/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
         <script>
         // Initialize TinyMCE
@@ -23,7 +24,7 @@
 </head>
 <body>
     <div class="container">
-        <p>This is the homepage of our helpdesk ticketing system.</p>
+        <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo" class="logo-main">
         {% if is_admin %}
         <a href="/admin_init" class="button">Voltar ao painel </a>
 
