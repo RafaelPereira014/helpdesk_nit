@@ -128,11 +128,11 @@ def send_message():
     
     # Set the sender type based on the user's type
     sender_type = user_type[0] if user_type else 'user'  # Default to 'user' if no type is found
-    
+    sender_name = get_username(user_id)
     # Insert the message into the database
     cursor = connection.cursor()
-    cursor.execute("INSERT INTO Messages (ticket_id, message, sender_type) VALUES (%s, %s, %s)",
-                   (ticket_id, message, sender_type))
+    cursor.execute("INSERT INTO Messages (ticket_id, message, sender_type,sender_name) VALUES (%s, %s, %s,%s)",
+                   (ticket_id, message, sender_type,sender_name))
     connection.commit()
     cursor.close()
     

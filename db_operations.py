@@ -1,6 +1,7 @@
 # Database Operations
 
 from config import DB_CONFIG  # Import the database configuration
+from flask import session
 import mysql.connector  # Import MySQL Connector Python module
 
 def connect_to_database():
@@ -43,6 +44,17 @@ def get_user_group(user_id):
     conn.close()
     return user_group[0] if user_group else None
 
+def get_username(user_id):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM Users WHERE id = %s", (user_id,))
+    user_name = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
+    return user_name
+
+
+
 
 
 
@@ -56,7 +68,7 @@ def get_ticket_details(ticket_id):
     ticket_details = cursor.fetchone()
     
     # Fetch messages associated with the ticket
-    cursor.execute("SELECT message, sender_type, sent_at FROM Messages WHERE ticket_id = %s", (ticket_id,))
+    cursor.execute("SELECT message, sender_type, sent_at,sender_name FROM Messages WHERE ticket_id = %s", (ticket_id,))
     messages = cursor.fetchall()
     ticket_details['messages'] = messages
     

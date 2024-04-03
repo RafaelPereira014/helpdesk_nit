@@ -15,7 +15,8 @@
     <div class="container">
         <p>This is the homepage of our helpdesk ticketing system.</p>
         {% if is_admin %}
-        <a href="{{ request.referrer }}" class="button">Voltar</a>
+        <a href="/admin_init" class="button">Voltar ao painel </a>
+
         {%endif%}
        
         
@@ -27,7 +28,7 @@
     </div>
 
     <div class="container">
-        <h1>{{ticket_details.title}} #{{ ticket_details.id }}</h1>
+        <h1>{{ ticket_details.title }} #{{ ticket_details.id }}</h1>
         <h2>Informação acerca do ticket</h2>
         <div class="ticket-info">
             <table>
@@ -45,8 +46,7 @@
                 </tr>
             </table>
         </div>
-        
-        
+    
         <div class="message-container" id="message-container">
             <!-- Messages will be displayed here -->
             {% for message in ticket_details.messages %}
@@ -55,7 +55,7 @@
                     {% if message.sender_type == 'user' %}
                         {{ user_name }} - {{ message.sent_at }}
                     {% else %}
-                        {{ticket_details.closed_by}} - {{ message.sent_at }}
+                        {{ message.sender_name }} - {{ message.sent_at }}
                     {% endif %}
                 </div>
                 <div class="message-content">
@@ -64,9 +64,9 @@
             </div>
             {% endfor %}
         </div>
-        
+    
         <form id="message-form">
-            <textarea id="message" rows="3" name="chat_message"></textarea><br>
+            <textarea id="message" rows="6" name="chat_message"></textarea><br>
             <button type="submit" class="button">Publicar resposta</button>
         </form>
         {% if is_admin %}
@@ -75,7 +75,7 @@
         {% endif %}
         <!--estado do ticket passa para fechado-->
     </div>
-
+    
     <div id="loading-modal" class="modal">
         <div class="modal-content">
           <div class="loader"></div>
@@ -93,19 +93,21 @@
             var messageForm = document.getElementById('message-form');
             var messageInput = document.getElementById('message');
             var messageContainer = document.getElementById('message-container');
+            var currentAdminId = "{{ current_admin_id }}"; // Get the ID of the current admin from the server
         
             // Function to render messages
             function renderMessages(messages) {
                 messages.forEach(message => {
                     var senderType = message.sender_type;
                     var sentAt = message.sent_at;
+                    var senderName = message.sender_name; // Add sender's name to message object
                     var messageContent = message.message;
-                    appendMessage(messageContent, senderType, sentAt);
+                    appendMessage(messageContent, senderType, senderName, sentAt);
                 });
             }
         
             // Function to append a message to the message container
-            function appendMessage(messageContent, senderType, sentAt) {
+            function appendMessage(messageContent, senderType, senderName, sentAt) {
                 var messageElement = document.createElement('div');
                 messageElement.classList.add('message');
                 if (senderType === 'user') {
@@ -115,7 +117,7 @@
                 }
                 var messageHeader = document.createElement('div');
                 messageHeader.classList.add('message-header');
-                messageHeader.innerText = senderType + ' - ' + sentAt;
+                messageHeader.innerText = senderName + ' - ' + sentAt; // Display sender's name
                 var messageContentElement = document.createElement('div');
                 messageContentElement.classList.add('message-content');
                 messageContentElement.innerText = messageContent;
@@ -128,10 +130,6 @@
         
             // Function to send a message
             function sendMessage(message) {
-                // Show loading modal
-                var loadingModal = document.getElementById('loading-modal');
-                loadingModal.style.display = 'block';
-        
                 // Send the message to the server
                 fetch('/send_message', {
                     method: 'POST',
@@ -139,8 +137,9 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        ticket_id: {{ ticket_details.id }},
-                        message: message
+                        ticket_id: "{{ ticket_details.id }}",
+                        message: message,
+                        sender_id: currentAdminId // Include sender's ID
                     })
                 })
                 .then(response => {
@@ -150,18 +149,14 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Hide loading modal
-                    loadingModal.style.display = 'none';
                     // Message sent successfully, append it to the message container
-                    appendMessage(message, 'user', new Date().toLocaleString());
+                    appendMessage(message, 'admin', 'You', new Date().toLocaleString()); // Display 'You' as sender
                     // Show popup and reload after 2 seconds
                     setTimeout(() => {
                         location.reload();
                     }, 2000);
                 })
                 .catch(error => {
-                    // Hide loading modal
-                    loadingModal.style.display = 'none';
                     console.error('Error sending message:', error);
                 });
             }
@@ -177,9 +172,11 @@
             });
         
             var closeTicketButton = document.getElementById('close-ticket-btn');
-            if (closeTicketButton) {
+            if (closeTicketButton && currentAdminId === "{{ ticket_details.admin_id }}") {
                 closeTicketButton.addEventListener('click', function () {
-                    var ticketId = {{ ticket_details.id }};
+                    var message = "This ticket has been closed.";
+                    sendMessage(message); // Send the message
+                    var ticketId = "{{ ticket_details.id }}";
                     // Send an AJAX request to close the ticket
                     fetch(`/close_ticket/${ticketId}`, {
                         method: 'POST',
@@ -196,8 +193,6 @@
                     .then(data => {
                         // Handle successful response (optional)
                         console.log('Ticket closed successfully');
-                        // Append close ticket message
-                        appendMessage('Ticket closed', 'admin', new Date().toLocaleString());
                     })
                     .catch(error => {
                         // Handle error
@@ -205,11 +200,14 @@
                     });
                 });
             }
+        
             var reopenTicketButton = document.getElementById('reopen-ticket-btn');
-            if (reopenTicketButton) {
+            if (reopenTicketButton && currentAdminId === "{{ ticket_details.admin_id }}") {
                 reopenTicketButton.addEventListener('click', function () {
-                    var ticketId = {{ ticket_details.id }};
-                    // Send an AJAX request to close the ticket
+                    var message = "This ticket has been reopened.";
+                    sendMessage(message); // Send the message
+                    var ticketId = "{{ ticket_details.id }}";
+                    // Send an AJAX request to reopen the ticket
                     fetch(`/reopen_ticket/${ticketId}`, {
                         method: 'POST',
                         headers: {
@@ -225,8 +223,6 @@
                     .then(data => {
                         // Handle successful response (optional)
                         console.log('Ticket reopened successfully');
-                        // Append reopen ticket message
-                        appendMessage('Ticket reopened', 'admin', new Date().toLocaleString());
                     })
                     .catch(error => {
                         // Handle error
@@ -235,6 +231,7 @@
                 });
             }
         });
+        
         
     </script>
 </body>
