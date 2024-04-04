@@ -30,7 +30,7 @@
 <body>
     <div class="container">
         <h1>Abrir novo ticket</h1>
-        <form method="POST" action="/new_ticket">
+        <form method="POST" action="/new_ticket" id="ticket_form">
             <label for="topic">Tópico de ajuda:</label>
             <select id="topic_id" name="topic_id" required>
                 <option value="1">Password</option>
@@ -39,13 +39,36 @@
             </select>
             <label for="title">Título:</label>
             <input type="text" id="title" name="title" required>
-            <label for="description">Descrição:</label>
-            <!-- Replace textarea with div for TinyMCE -->
-            <div id="description" name="description" required></div>
+            <!-- Div for description -->
+            <div id="description_div">
+                <label for="description">Descrição:</label>
+                <!-- Replace textarea with div for TinyMCE -->
+                <div id="description" name="description" required></div>
+            </div>
             <label for="contacto">Contacto (VOIP ou outro):</label>
             <input type="text" id="contacto" name="contacto" required>
             <button type="submit">Submeter ticket</button>
         </form>
     </div>
+
+    <script>
+        // Function to show or hide description field based on selected topic
+        function toggleDescription() {
+            var topicSelect = document.getElementById('topic_id');
+            var descriptionDiv = document.getElementById('description_div');
+
+            if (topicSelect.value === '1') {
+                descriptionDiv.style.display = 'none'; // Hide description field for topic 1
+            } else {
+                descriptionDiv.style.display = 'block'; // Show description field for other topics
+            }
+        }
+
+        // Add event listener to topic select to call toggleDescription function on change
+        document.getElementById('topic_id').addEventListener('change', toggleDescription);
+
+        // Call toggleDescription function on page load to initialize based on initial topic value
+        toggleDescription();
+    </script>
 </body>
 </html>
