@@ -20,7 +20,7 @@ try:
         cursor = connection.cursor()
 
         # Execute the SQL query to fetch all tickets
-        cursor.execute("SELECT * FROM Tickets")
+        cursor.execute("SELECT * FROM `Groups`")
 
         # Fetch all rows (tickets) from the result set
         tickets = cursor.fetchall()

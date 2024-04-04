@@ -125,7 +125,7 @@ CREATE TABLE `Topics` (
   PRIMARY KEY (`id`),
   KEY `fk_topics_group_id` (`group_id`),
   CONSTRAINT `fk_topics_group_id` FOREIGN KEY (`group_id`) REFERENCES `Groups` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -134,7 +134,7 @@ CREATE TABLE `Topics` (
 
 LOCK TABLES `Topics` WRITE;
 /*!40000 ALTER TABLE `Topics` DISABLE KEYS */;
-INSERT INTO `Topics` VALUES (1,'password',1),(2,'sighrara',1),(3,'certificados',2);
+INSERT INTO `Topics` VALUES (1,'password',1),(2,'sighrara',1),(3,'certificados',2),(4,'Criar conta EDU',1),(5,'Reset MFA EDU',1),(6,'Reset password EDU',1),(7,'Adicionar MACaddress a controladora',1);
 /*!40000 ALTER TABLE `Topics` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -179,4 +179,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-04 16:59:58
+-- Dump completed on 2024-04-04 17:34:29

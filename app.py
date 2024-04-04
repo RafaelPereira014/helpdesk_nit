@@ -245,6 +245,9 @@ def reopen_ticket_route(ticket_id):
 
     return jsonify({'success': True})
 
+@app.route('/accountform')
+def create_accountEDU_page():
+    return render_template('/new_forms/create_accountform.html')
 
 
 if __name__ == '__main__':
