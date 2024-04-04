@@ -68,7 +68,7 @@ def get_ticket_details(ticket_id):
     ticket_details = cursor.fetchone()
     
     # Fetch messages associated with the ticket
-    cursor.execute("SELECT message, sender_type, sent_at,sender_name FROM Messages WHERE ticket_id = %s", (ticket_id,))
+    cursor.execute("SELECT message, sender_type, sent_at,sender_name FROM messages WHERE ticket_id = %s", (ticket_id,))
     messages = cursor.fetchall()
     ticket_details['messages'] = messages
     
@@ -96,7 +96,23 @@ def get_all_tickets_group(group_id):
     conn.close()
     return tickets
 
-
+def opened_ticket_per_group(group_id):
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT group_id, COUNT(*) AS num_opened_tickets FROM tickets WHERE state = 'open' GROUP BY group_id")
+    opened_tickets_per_group = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return opened_tickets_per_group
+    
+def closed_ticket_per_group(group_id):
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT group_id, COUNT(*) AS num_opened_tickets FROM tickets WHERE state = 'closed' GROUP BY group_id")
+    closed_tickets_per_group = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return closed_tickets_per_group
 
 def create_ticket(topic_id, description, date, state, created_by, contacto, title):
     """Creates a new ticket in the database."""
@@ -113,7 +129,7 @@ def create_ticket(topic_id, description, date, state, created_by, contacto, titl
 
         # Insert the new ticket with the fetched group_id and created_by_user
         cursor.execute("""
-            INSERT INTO Tickets (topic_id, description, date, state, created_by, contacto, title, group_id, created_by_user)
+            INSERT INTO tickets (topic_id, description, date, state, created_by, contacto, title, group_id, created_by_user)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (topic_id, description, date, state, created_by, contacto, title, group_id, created_by_user))
         conn.commit()
@@ -142,8 +158,8 @@ def get_creator_name(ticket_id):
         cursor.execute("""
             SELECT Users.name
             FROM Users
-            JOIN Tickets ON Users.id = Tickets.created_by
-            WHERE Tickets.id = %s
+            JOIN tickets ON Users.id = tickets.created_by
+            WHERE tickets.id = %s
         """, (ticket_id,))
         creator_name = cursor.fetchone()
         return creator_name[0] if creator_name else None  # Return None if no user found
@@ -153,8 +169,21 @@ def get_creator_name(ticket_id):
         cursor.close()
         conn.close()
 
+def no_open_tickets():
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM tickets WHERE state = 'open'")
+    num_open_tickets = cursor.fetchone()[0]
+    cursor.close()
+    return num_open_tickets
 
-
+def no_closed_tickets():
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM tickets WHERE state = 'closed'")
+    num_closed_tickets = cursor.fetchone()[0]
+    cursor.close()
+    return num_closed_tickets
 
 
 # Miscellaneous Operations
@@ -170,7 +199,7 @@ def get_topics():
 def get_user_details(ticket_id):
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, type FROM Users JOIN ON Tickets.user.id=Users.id WHERE Tickes.ticket_id = %s", ticket_id)
+    cursor.execute("SELECT id, name, type FROM Users JOIN ON tickets.user.id=Users.id WHERE Tickes.ticket_id = %s", ticket_id)
     user_details = cursor.fetchone()
     cursor.close()
     return user_details
@@ -184,7 +213,7 @@ def close_ticket(user_id,ticket_id):
         cursor.execute("SELECT name FROM Users WHERE id = %s", (user_id,))
         user_name = cursor.fetchone()[0]
         
-        cursor.execute("UPDATE Tickets SET state = 'closed', closed_by = %s WHERE id = %s", (user_name, ticket_id))
+        cursor.execute("UPDATE tickets SET state = 'closed', closed_by = %s WHERE id = %s", (user_name, ticket_id))
         conn.commit()
         print("Ticket closed successfully")
     except Exception as e:
@@ -197,7 +226,7 @@ def close_ticket(user_id,ticket_id):
 def reopen_ticket(ticket_id):
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("UPDATE Tickets SET state = 'open' WHERE id = %s", (ticket_id,))
+    cursor.execute("UPDATE tickets SET state = 'open' WHERE id = %s", (ticket_id,))
     conn.commit()
     cursor.close()
     conn.close()
@@ -205,6 +234,7 @@ def reopen_ticket(ticket_id):
 
 def is_closed(ticket_id):
     """Checks if the ticket is closed"""
+    closed =0;
     conn = connect_to_database()
     cursor = conn.cursor()
     cursor.execute("SELECT state FROM Ticket WHERE id = %s", (ticket_id,))
@@ -213,6 +243,7 @@ def is_closed(ticket_id):
     conn.close()
     
     if ticket_state == 'closed':  # Check if user_type is not None and compare the first element of the tuple
+        closed+=1;
         return True
     else:
         return False
@@ -222,7 +253,7 @@ def add_message_to_ticket(ticket_id, message):
     conn = connect_to_database()
     cursor = conn.cursor()
     try:
-        cursor.execute("INSERT INTO Messages (ticket_id, message, sender_type) VALUES (%s, %s, 'admin')",
+        cursor.execute("INSERT INTO messages (ticket_id, message, sender_type) VALUES (%s, %s, 'admin')",
                        (ticket_id, message))
         conn.commit()
         print("Message added to ticket successfully")

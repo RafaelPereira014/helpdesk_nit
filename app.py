@@ -98,7 +98,7 @@ def my_tickets():
     for ticket in tickets:
         group_name = get_group_name(ticket['id'])
         ticket_fields.append({
-            'id': ticket['id'],  # Assuming the ticket dictionary has an 'id' fieldgrou
+            'id': ticket['id'],  # Assuming the ticket dictionary has an 'id' field
             'date': ticket['date'],  # Replace with actual field name from the database
             'state': ticket['state'],  # Replace with actual field name from the database
             'description': ticket['description'],  # Replace with actual field name from the database
@@ -150,7 +150,9 @@ def admin_required(f):
 @admin_required
 def admin_panel():
     tickets = get_all_tickets()  # Fetch all tickets from the database
-    return render_template('admin_pannel.html', tickets=tickets)
+    open_tickets = no_open_tickets()
+    closed_tickets = no_closed_tickets()
+    return render_template('admin_pannel.html', tickets=tickets,open_tickets=open_tickets,closed_tickets=closed_tickets)
 
 @app.route('/pannel_group')
 def group_panel():
@@ -158,15 +160,14 @@ def group_panel():
         return redirect(url_for('login'))  # Redirect to login page if user is not logged in
 
     user_id = session['user_id']
-    print(user_id)
     # Fetch the group_id associated with the user
     group_id = get_user_group(user_id)
-    print(group_id)
     # Fetch tickets based on the group_id
     tickets = get_all_tickets_group(group_id)
-    print(tickets)
+    closed_tickets = closed_ticket_per_group(group_id)
+    opened_tickets = opened_ticket_per_group(group_id)
     
-    return render_template('pannel_group.html', tickets=tickets)
+    return render_template('pannel_group.html', tickets=tickets,closed_tickets=closed_tickets,opened_tickets=opened_tickets)
 
 
 @app.route('/ticket_details/<int:ticket_id>')
