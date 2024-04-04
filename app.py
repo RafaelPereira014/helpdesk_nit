@@ -8,10 +8,20 @@ from flask import session
 from flask import redirect
 from datetime import datetime
 from flask import request
+from flask_mail import Mail, Message
+
 
 app = Flask(__name__)
 # Generate a secure secret key
 app.secret_key = secrets.token_bytes(16)
+app.config['MAIL_SERVER']='pegasus.azores.gov.pt'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USERNAME'] = 's0204helpdesk'
+app.config['MAIL_PASSWORD'] = 'RL3kieLAziocp7iK'
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+
+mail=Mail(app)
 
 
 
@@ -19,7 +29,7 @@ config = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'helpdesk'
+    'database': 'helpdesk2'
 }
 
 connection = mysql.connector.connect(**config)
@@ -79,7 +89,17 @@ def new_ticket():
         title = request.form['title']
         
         # Call the create_ticket function with the correct parameters
-        create_ticket(topic_id, description, date, state, created_by,contacto,title)
+        create_ticket(topic_id, description, date, state, created_by, contacto, title)
+        ticket_id = get_ticketid(description)
+        
+        # Retrieve the email of the user who created the ticket
+        user_email = get_user_email_by_user(created_by)
+        
+        # Send an email notification to the user
+        if user_email:
+            msg = Message('Ticket criado', sender='noreply@azores.gov.pt', recipients=[user_email])
+            msg.body = f"O seu ticket #{ticket_id} foi criado com sucesso."
+            mail.send(msg)
         
         return redirect(url_for('my_tickets'))  # Redirect to my_tickets page after creating ticket
     return render_template('new_ticket.html')
@@ -201,6 +221,13 @@ def close_ticket_route(ticket_id):
 
     # Update the ticket's state to "closed"
     close_ticket(user_id,ticket_id)
+    user_email = get_user_email_by_ticket(ticket_id)
+        
+    # Send an email notification to the user
+    if user_email:
+        msg = Message('Ticket fechado', sender='noreply@azores.gov.pt', recipients=[user_email])
+        msg.body = f"O seu ticket #{ticket_id} foi fechado."
+        mail.send(msg)
 
     return jsonify({'success': True})
 

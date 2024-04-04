@@ -3,6 +3,11 @@
 from config import DB_CONFIG  # Import the database configuration
 from flask import session
 import mysql.connector  # Import MySQL Connector Python module
+from flask_mail import Message
+
+
+
+
 
 def connect_to_database():
     """Establishes a connection to the MySQL database."""
@@ -185,6 +190,14 @@ def no_closed_tickets():
     cursor.close()
     return num_closed_tickets
 
+def get_ticketid(description):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM tickets WHERE description = %s", (description,))
+    num_closed_tickets = cursor.fetchone()[0]
+    cursor.close()
+    return num_closed_tickets
+
 
 # Miscellaneous Operations
 
@@ -288,3 +301,46 @@ def get_group_name(ticket_id):
         cursor.close()
         conn.close()
 
+
+
+#SMTP 
+
+def get_user_email_by_user(user_id):
+    """Fetches the email of the user with the given ID."""
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT email FROM users WHERE id = %s", (user_id,))
+    user_email = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    if user_email:
+        return user_email[0]  # Return the email if found
+    return None  # Return None if user not found or email is not available
+
+def get_user_email_by_ticket(ticket_id):
+    """Fetches the email of the user who created the ticket with the given ID."""
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    
+    # Fetch the user ID who created the ticket
+    cursor.execute("SELECT created_by FROM tickets WHERE id = %s", (ticket_id,))
+    ticket_creator = cursor.fetchone()
+    
+    # If ticket_creator is not None and contains the user ID
+    if ticket_creator:
+        user_id = ticket_creator[0]  # Extract the user ID from the tuple
+        
+        # Fetch the email of the user with the extracted user ID
+        cursor.execute("SELECT email FROM users WHERE id = %s", (user_id,))
+        user_email = cursor.fetchone()
+        
+        # Close the cursor and connection
+        cursor.close()
+        conn.close()
+        
+        # If user_email is not None, return the email, otherwise return None
+        if user_email:
+            return user_email[0]  # Return the email if found
+    
+    # If ticket_creator is None or user_email is None, return None
+    return None

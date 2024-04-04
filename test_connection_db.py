@@ -6,7 +6,7 @@ config = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'helpdesk'
+    'database': 'helpdesk2'
 }
 
 try:
