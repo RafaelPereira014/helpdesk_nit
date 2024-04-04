@@ -131,7 +131,7 @@ def send_message():
     sender_name = get_username(user_id)
     # Insert the message into the database
     cursor = connection.cursor()
-    cursor.execute("INSERT INTO Messages (ticket_id, message, sender_type,sender_name) VALUES (%s, %s, %s,%s)",
+    cursor.execute("INSERT INTO messages (ticket_id, message, sender_type,sender_name) VALUES (%s, %s, %s,%s)",
                    (ticket_id, message, sender_type,sender_name))
     connection.commit()
     cursor.close()
@@ -175,7 +175,7 @@ def ticket_details(ticket_id):
     user_id = session.get('user_id')
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT u.name FROM Users u JOIN Tickets t ON u.id = t.created_by WHERE t.id = %s", (ticket_id,))
+    cursor.execute("SELECT u.name FROM Users u JOIN tickets t ON u.id = t.created_by WHERE t.id = %s", (ticket_id,))
     user_tuple = cursor.fetchone()
     if user_tuple:
         user_name = user_tuple[0]  # Access the first element of the tuple
