@@ -198,22 +198,23 @@ def get_ticketid(description):
     cursor.close()
     return num_closed_tickets
 
-def claim_ticket(user_id,ticket_id):
+def claim_ticket(user_id, ticket_id):
     try:
         conn = connect_to_database()
         cursor = conn.cursor() 
+        # Update the attributed_to field
         cursor.execute("UPDATE tickets SET attributed_to = %s WHERE id = %s", (user_id, ticket_id))
+        # Update the state to "em execucao"
+        cursor.execute("UPDATE tickets SET state = %s WHERE id = %s", ("em execucao", ticket_id))
         conn.commit()
-        print("Ticket attributed successfully")
+        print("Ticket attributed successfully and state updated to 'em execucao'")
     except Exception as e:
-        print("Error  ticket:", e)
+        print("Error attributing ticket:", e)
     finally:
         cursor.close()
         conn.close()
 
-    
-    return 0
-
+        
 def attributed_to(user_id):
     conn = connect_to_database()
     cursor = conn.cursor()
