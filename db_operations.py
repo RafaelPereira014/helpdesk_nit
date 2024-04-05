@@ -252,7 +252,7 @@ def get_topics():
 def get_user_details(ticket_id):
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, type FROM Users JOIN ON tickets.user.id=Users.id WHERE Tickes.ticket_id = %s", ticket_id)
+    cursor.execute("SELECT id, name, type,uo FROM Users JOIN ON tickets.user.id=Users.id WHERE Tickes.ticket_id = %s", ticket_id)
     user_details = cursor.fetchone()
     cursor.close()
     return user_details

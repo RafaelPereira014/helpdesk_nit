@@ -6,7 +6,7 @@ config = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'helpdesk2'
+    'database': 'helpdesk3'
 }
 
 try:
@@ -20,7 +20,7 @@ try:
         cursor = connection.cursor()
 
         # Execute the SQL query to fetch all tickets
-        cursor.execute("SELECT * FROM tickets ")
+        cursor.execute("SELECT * FROM users ")
 
         # Fetch all rows (tickets) from the result set
         tickets = cursor.fetchall()

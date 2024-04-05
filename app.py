@@ -29,7 +29,7 @@ config = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'helpdesk2'
+    'database': 'helpdesk3'
 }
 
 connection = mysql.connector.connect(**config)

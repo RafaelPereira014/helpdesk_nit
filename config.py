@@ -3,5 +3,5 @@ DB_CONFIG = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'helpdesk2'
+    'database': 'helpdesk3'
 }
