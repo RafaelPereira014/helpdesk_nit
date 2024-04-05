@@ -12,33 +12,36 @@
         // Initialize TinyMCE
         tinymce.init({
             selector: '#description',
-            plugins: 'advlist autolink lists link image charmap print preview hr anchor',
+            plugins: 'advlist autolink lists link image charmap print preview hr anchor table',
             toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
             height: 300  // Specify the height of the TinyMCE editor
         });
     </script>
-    <body>
-        <div class="container">
-            <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo" class="logo-main">
-            <a href="/new_ticket" class="button">Abrir um novo pedido</a>
-            <a href="/my_tickets" class="button">Tickets</a>
-            <a href="/logout" class="button">Terminar sessão</a>
-        </div>
-    </body>
-    <title>Abrir novo ticket - Helpdesk Ticketing System</title>
 </head>
 <body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo" class="logo-main">
+        <a href="/new_ticket" class="button">Abrir um novo pedido</a>
+        <a href="/my_tickets" class="button">Tickets</a>
+        <a href="/logout" class="button">Terminar sessão</a>
+    </div>
     <div class="container">
         <h1>Abrir novo ticket</h1>
         <form method="POST" action="/new_ticket" id="ticket_form">
             <label for="topic">Tópico de ajuda:</label>
             <select id="topic_id" name="topic_id" required>
-                <option value="1">Password</option>
-                <option value="2">Sighrara</option>
-                <option value="3">Certificados</option>
+                <option value="0">-</option>
+                <option value="4">Criar conta EDU</option>
+                <option value="5">Reset MFA EDU</option>
+                <option value="6">Reset password EDU</option>
+                <option value="7">Adicionar MACaddress a controladora</option>
             </select>
             <label for="title">Título:</label>
             <input type="text" id="title" name="title" required>
+            <div id="file_download" style="display: none;">
+                <label>Ficheiro de template</label>
+                <a href="{{ url_for('static', filename='files/Criacao_de_Contas-template.xlsx') }}" download>Criacao_de_Contas-template.xlsx</a>
+            </div>
             <!-- Div for description -->
             <div id="description_div">
                 <label for="description">Descrição:</label>
@@ -47,6 +50,8 @@
             </div>
             <label for="contacto">Contacto (VOIP ou outro):</label>
             <input type="text" id="contacto" name="contacto" required>
+            <!-- Download link for default file -->
+            
             <button type="submit">Submeter ticket</button>
         </form>
     </div>
@@ -56,17 +61,35 @@
         function toggleDescription() {
             var topicSelect = document.getElementById('topic_id');
             var descriptionDiv = document.getElementById('description_div');
+            var fileDownload = document.getElementById('file_download');
+    
+            if (topicSelect.value === '4') {
+                setDefaultMessage('<b>Insira aqui a tabela com os valores.</b>');
+                fileDownload.style.display = 'block'; // Show download link for topic 4
+            } else if(topicSelect.value === '5'){
+                setDefaultMessage('<b>Nome completo: </b><br><b>User: </b>');
+                fileDownload.style.display = 'none'; // Show download link for topic 4
 
-            if (topicSelect.value === '1') {
-                descriptionDiv.style.display = 'none'; // Hide description field for topic 1
-            } else {
-                descriptionDiv.style.display = 'block'; // Show description field for other topics
+            } else if(topicSelect.value === '6'){
+                setDefaultMessage('<b>Nome completo: </b><br><b>User: </b>');
+                fileDownload.style.display = 'none'; // Show download link for topic 4
+            } else if(topicSelect.value === '7'){
+                setDefaultMessage('<b>Insira aqui a lista com os MACaddress. </b>');
+                fileDownload.style.display = 'none'; // Show download link for topic 4
+            } else  {
+                setDefaultMessage('');
+                fileDownload.style.display = 'none'; // Hide download link for other topics
             }
         }
-
+    
+        // Function to set default message in the editor
+        function setDefaultMessage(message) {
+            tinymce.get('description').setContent(message);
+        }
+    
         // Add event listener to topic select to call toggleDescription function on change
         document.getElementById('topic_id').addEventListener('change', toggleDescription);
-
+    
         // Call toggleDescription function on page load to initialize based on initial topic value
         toggleDescription();
     </script>

@@ -53,7 +53,7 @@
                 date: "{{ ticket.date }}",
                 state: "{{ ticket.state }}",
                 title: "{{ ticket.title }}",
-                group_name: "{{ ticket.group_name }}"
+                attributed: "{{ ticket.attributed_name}}"
             },
             {% endfor %}]; // Sample ticket data
             var currentPage = 1;
@@ -79,7 +79,7 @@
                         <td>${ticket.date}</td>
                         <td>${ticket.state}</td>
                         <td><a href="/ticket_details/${ticket.id}">${ticket.title}</a></td>
-                        <td>${ticket.group_name}</td>
+                        <td>${ticket.attributed}</td>
                     `;
                     tableBody.appendChild(row);
                 }

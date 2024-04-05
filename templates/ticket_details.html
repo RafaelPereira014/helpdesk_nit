@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/popup.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
     <script src="https://cdn.tiny.cloud/1/hcsdmgk5ojfti5cengfoxv1zfkb2t21ei6ue2obbe85k8lst/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-        <script>
+    <script>
         // Initialize TinyMCE
         tinymce.init({
             selector: '#description',
@@ -18,22 +18,16 @@
             height: 300  // Specify the height of the TinyMCE editor
         });
     </script>
-    
-
-
 </head>
 <body>
     <div class="container">
         <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo" class="logo-main">
         {% if is_admin %}
         <a href="/admin_init" class="button">Voltar ao painel </a>
-
-        {%endif%}
-       
-        
+        {% endif %}
         {% if not is_admin %}
-            <a href="/new_ticket" class="button">Abrir um novo pedido</a>
-            <a href="/my_tickets" class="button">Tickets</a>
+        <a href="/new_ticket" class="button">Abrir um novo pedido</a>
+        <a href="/my_tickets" class="button">Tickets</a>
         {% endif %}
         <a href="/logout" class="button">Terminar sessão</a>
     </div>
@@ -57,16 +51,16 @@
                 </tr>
             </table>
         </div>
-    
+
         <div class="message-container" id="message-container">
             <!-- Messages will be displayed here -->
             {% for message in ticket_details.messages %}
             <div class="message {% if message.sender_type == 'user' %}user-message{% else %}admin-message{% endif %}">
                 <div class="message-header {% if message.sender_type == 'user' %}user-header{% else %}admin-header{% endif %}">
                     {% if message.sender_type == 'user' %}
-                        {{ user_name }} - {{ message.sent_at }}
+                    {{ user_name }} - {{ message.sent_at }}
                     {% else %}
-                        {{ message.sender_name }} - {{ message.sent_at }}
+                    {{ message.sender_name }} - {{ message.sent_at }}
                     {% endif %}
                 </div>
                 <div class="message-content">
@@ -75,31 +69,29 @@
             </div>
             {% endfor %}
         </div>
-    
+
         <form id="message-form">
             <textarea id="message" rows="6" name="chat_message"></textarea><br>
             <button type="submit" class="button">Publicar resposta</button>
         </form>
         {% if is_admin %}
-        <button id="close-ticket-btn" class="button">Close Ticket</button>
-        <button id="reopen-ticket-btn" class="button">Reopen Ticket</button>
+        <button id="accept-ticket-btn" class="button">Aceitar Ticket</button> <!-- Button to accept the ticket -->
+        <button id="close-ticket-btn" class="button">Fechar Ticket</button>
+        <button id="reopen-ticket-btn" class="button">Reabrir Ticket</button>
         {% endif %}
         <!--estado do ticket passa para fechado-->
     </div>
-    
+
     <div id="loading-modal" class="modal">
         <div class="modal-content">
-          <div class="loader"></div>
-          <p>Aguarde enquanto a mensagem é submetida.</p>
+            <div class="loader"></div>
+            <p>Aguarde enquanto a mensagem é submetida.</p>
         </div>
-      </div>
-      
+    </div>
 
     <div class="footer">
         &copy; 2024 SREC-NIT. All rights reserved.
     </div>
-
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -107,7 +99,7 @@
             var messageInput = document.getElementById('message');
             var messageContainer = document.getElementById('message-container');
             var currentAdminId = "{{ current_admin_id }}"; // Get the ID of the current admin from the server
-        
+
             // Function to render messages
             function renderMessages(messages) {
                 messages.forEach(message => {
@@ -118,7 +110,7 @@
                     appendMessage(messageContent, senderType, senderName, sentAt);
                 });
             }
-        
+
             // Function to append a message to the message container
             function appendMessage(messageContent, senderType, senderName, sentAt) {
                 var messageElement = document.createElement('div');
@@ -140,40 +132,40 @@
                 // Scroll to bottom of message container
                 messageContainer.scrollTop = messageContainer.scrollHeight;
             }
-        
+
             // Function to send a message
             function sendMessage(message) {
                 // Send the message to the server
                 fetch('/send_message', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        ticket_id: "{{ ticket_details.id }}",
-                        message: message,
-                        sender_id: currentAdminId // Include sender's ID
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            ticket_id: "{{ ticket_details.id }}",
+                            message: message,
+                            sender_id: currentAdminId // Include sender's ID
+                        })
                     })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to send message');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Message sent successfully, append it to the message container
-                    appendMessage(message, 'admin', 'You', new Date().toLocaleString()); // Display 'You' as sender
-                    // Show popup and reload after 2 seconds
-                    setTimeout(() => {
-                        location.reload();
-                    }, 2000);
-                })
-                .catch(error => {
-                    console.error('Error sending message:', error);
-                });
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to send message');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Message sent successfully, append it to the message container
+                        appendMessage(message, 'admin', 'You', new Date().toLocaleString()); // Display 'You' as sender
+                        // Show popup and reload after 2 seconds
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2000);
+                    })
+                    .catch(error => {
+                        console.error('Error sending message:', error);
+                    });
             }
-        
+
             // Event listener for message form submission
             messageForm.addEventListener('submit', function (event) {
                 event.preventDefault(); // Prevent form submission
@@ -183,7 +175,7 @@
                     messageInput.value = ''; // Clear the message input
                 }
             });
-        
+
             var closeTicketButton = document.getElementById('close-ticket-btn');
             if (closeTicketButton && currentAdminId === "{{ ticket_details.admin_id }}") {
                 closeTicketButton.addEventListener('click', function () {
@@ -192,28 +184,28 @@
                     var ticketId = "{{ ticket_details.id }}";
                     // Send an AJAX request to close the ticket
                     fetch(`/close_ticket/${ticketId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to close ticket');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        // Handle successful response (optional)
-                        console.log('Ticket closed successfully');
-                    })
-                    .catch(error => {
-                        // Handle error
-                        console.error('Error closing ticket:', error);
-                    });
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Failed to close ticket');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            // Handle successful response (optional)
+                            console.log('Ticket closed successfully');
+                        })
+                        .catch(error => {
+                            // Handle error
+                            console.error('Error closing ticket:', error);
+                        });
                 });
             }
-        
+
             var reopenTicketButton = document.getElementById('reopen-ticket-btn');
             if (reopenTicketButton && currentAdminId === "{{ ticket_details.admin_id }}") {
                 reopenTicketButton.addEventListener('click', function () {
@@ -222,30 +214,59 @@
                     var ticketId = "{{ ticket_details.id }}";
                     // Send an AJAX request to reopen the ticket
                     fetch(`/reopen_ticket/${ticketId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to reopen ticket');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        // Handle successful response (optional)
-                        console.log('Ticket reopened successfully');
-                    })
-                    .catch(error => {
-                        // Handle error
-                        console.error('Error reopening ticket:', error);
-                    });
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Failed to reopen ticket');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            // Handle successful response (optional)
+                            console.log('Ticket reopened successfully');
+                        })
+                        .catch(error => {
+                            // Handle error
+                            console.error('Error reopening ticket:', error);
+                        });
+                });
+            }
+
+            // Function to handle accepting the ticket
+            var acceptTicketButton = document.getElementById('accept-ticket-btn');
+            if (acceptTicketButton && currentAdminId === "{{ ticket_details.admin_id }}") {
+                acceptTicketButton.addEventListener('click', function () {
+                    var message = "This ticket has been accepted by you.";
+                    sendMessage(message); // Send the message
+                    var ticketId = "{{ ticket_details.id }}";
+                    // Send an AJAX request to update the ticket with the current admin's ID
+                    fetch(`/accept_ticket/${ticketId}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Failed to accept ticket');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            // Handle successful response (optional)
+                            console.log('Ticket accepted successfully');
+                        })
+                        .catch(error => {
+                            // Handle error
+                            console.error('Error accepting ticket:', error);
+                        });
                 });
             }
         });
-        
-        
     </script>
 </body>
 </html>

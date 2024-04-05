@@ -117,6 +117,7 @@ def my_tickets():
 
     for ticket in tickets:
         group_name = get_group_name(ticket['id'])
+        attributed_name = attributed_to_by_ticket(ticket['id'])
         ticket_fields.append({
             'id': ticket['id'],  # Assuming the ticket dictionary has an 'id' field
             'date': ticket['date'],  # Replace with actual field name from the database
@@ -124,7 +125,8 @@ def my_tickets():
             'description': ticket['description'],  # Replace with actual field name from the database
             'attributed_to': ticket['attributed_to'],  # Replace with actual field name from the database
             'title': ticket['title'],
-            'group_name': group_name
+            'group_name': group_name,
+            'attributed_name': attributed_name
         })
     #print(ticket_fields)
     
@@ -244,6 +246,29 @@ def reopen_ticket_route(ticket_id):
     reopen_ticket(ticket_id)
 
     return jsonify({'success': True})
+
+@app.route('/accept_ticket/<int:ticket_id>', methods=['POST'])
+def accept_ticket_route(ticket_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))  # Redirect to login page if user is not logged in
+
+    user_id = session['user_id']
+    # Add a message indicating that the ticket has been closed by the admin
+    current_time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+    accept_message = f"Ticket accepted by admin at {current_time}"
+    add_message_to_ticket(ticket_id, accept_message)
+    #claim the ticket
+    claim_ticket(user_id,ticket_id)
+    attributed_to(user_id)
+    user_email = get_user_email_by_ticket(ticket_id)
+    if user_email:
+        msg = Message('Ticket aceite', sender='noreply@azores.gov.pt', recipients=[user_email])
+        msg.body = f"O seu ticket #{ticket_id} foi aceite."
+        mail.send(msg)
+    
+
+    return jsonify({'success': True})
+
 
 @app.route('/accountform')
 def create_accountEDU_page():

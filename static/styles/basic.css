@@ -98,5 +98,18 @@ textarea {
     box-sizing: border-box;
 }
 
+.claim-ticket-btn {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.claim-ticket-btn:hover {
+    background-color: #0056b3;
+}
+
 
 

@@ -198,6 +198,45 @@ def get_ticketid(description):
     cursor.close()
     return num_closed_tickets
 
+def claim_ticket(user_id,ticket_id):
+    try:
+        conn = connect_to_database()
+        cursor = conn.cursor() 
+        cursor.execute("UPDATE tickets SET attributed_to = %s WHERE id = %s", (user_id, ticket_id))
+        conn.commit()
+        print("Ticket attributed successfully")
+    except Exception as e:
+        print("Error  ticket:", e)
+    finally:
+        cursor.close()
+        conn.close()
+
+    
+    return 0
+
+def attributed_to(user_id):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM Users WHERE id = %s", (user_id,))
+    user_attributed = cursor.fetchone()[0]
+    cursor.close()
+    return user_attributed
+
+def attributed_to_by_ticket(ticket_id):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT attributed_to FROM tickets WHERE id = %s", (ticket_id,))
+    user_attributed_id = cursor.fetchone()[0]
+    cursor.execute("SELECT name FROM Users WHERE id = %s", (user_attributed_id,))
+    user_tuple = cursor.fetchone()
+    if user_tuple:
+        user_name = user_tuple[0]  # Access the first element of the tuple
+    else:
+        # Handle the case when no user is found
+        user_name = None  # or any default value you want
+    cursor.close()
+    conn.close()
+    return user_name
 
 # Miscellaneous Operations
 
