@@ -119,7 +119,7 @@ def closed_ticket_per_group(group_id):
     conn.close()
     return closed_tickets_per_group
 
-def create_ticket(topic_id, description, date, state, created_by, contacto, title):
+def create_ticket(topic_id, description, date, state, created_by, contacto, title,UnidadeOrg):
     """Creates a new ticket in the database."""
     conn = connect_to_database()
     cursor = conn.cursor()
@@ -134,9 +134,9 @@ def create_ticket(topic_id, description, date, state, created_by, contacto, titl
 
         # Insert the new ticket with the fetched group_id and created_by_user
         cursor.execute("""
-            INSERT INTO tickets (topic_id, description, date, state, created_by, contacto, title, group_id, created_by_user)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """, (topic_id, description, date, state, created_by, contacto, title, group_id, created_by_user))
+            INSERT INTO tickets (topic_id, description, date, state, created_by, contacto, title, group_id, created_by_user,UnidadeOrg)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (topic_id, description, date, state, created_by, contacto, title, group_id, created_by_user,UnidadeOrg))
         conn.commit()
         print("Ticket created successfully")
     except mysql.connector.Error as e:

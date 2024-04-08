@@ -79,6 +79,7 @@ def new_ticket():
         topic_id = request.form['topic_id']
         description = request.form['description']
         state = "open"
+        uni_org = request.form['UnidadeOrg']
         
         # Get the user ID of the currently logged-in user from the session
         created_by = session.get('user_id')
@@ -89,7 +90,7 @@ def new_ticket():
         title = request.form['title']
         
         # Call the create_ticket function with the correct parameters
-        create_ticket(topic_id, description, date, state, created_by, contacto, title)
+        create_ticket(topic_id, description, date, state, created_by, contacto, title,uni_org)
         ticket_id = get_ticketid(description)
         
         # Retrieve the email of the user who created the ticket
