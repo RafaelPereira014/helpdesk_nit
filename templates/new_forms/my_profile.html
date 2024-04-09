@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Helpdesk Ticketing System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo-main" class="logo-main">
+        <a href="/init_page" class="button">Inicio</a>
+        <a href="/new_ticket" class="button">Abrir um novo pedido</a>
+        <a href="/my_tickets" class="button">Tickets</a>
+        <a href="/logout" class="button">Terminar sessão</a>
+
+        <h1>My Profile</h1>
+        <div class="profile-info">
+            <h3>Nome de Utilizador: {{ user_name }}</h3> <!-- Replace 'username' with the variable holding the username -->
+            <form action="/change_password" method="post">
+
+                <label for="current_password">Password Atual:</label>
+                <input type="password" id="current_password" name="current_password" required>
+
+                <label for="new_password">Nova Password:</label>
+                <input type="password" id="new_password" name="new_password" required>
+
+                <label for="confirm_password">Confirmar Nova Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+
+                <button type="submit" class="button">Alterar Password</button>
+            </form>
+        </div>
+    </div>
+    <div class="footer">
+        &copy; 2024 SREC-NIT. All rights reserved.
+    </div>
+</body>
+</html>
