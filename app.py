@@ -45,7 +45,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         cursor = connection.cursor()
-        cursor.execute("SELECT id, type FROM Users WHERE name = %s AND password = %s", (username, password))
+        cursor.execute("SELECT id, type FROM users WHERE name = %s AND password = %s", (username, password))
         user_data = cursor.fetchone()  # Fetch the user ID and type from the database
         cursor.close()
         if user_data:
@@ -75,6 +75,9 @@ def profile_page():
 
     user_id = session['user_id']
     user_name = get_username(user_id)
+    user_password = get_passowrd(user_id)
+    
+    
     return render_template('new_forms/my_profile.html',user_name=user_name)
 
 @app.route('/admin_init')
@@ -113,6 +116,8 @@ def new_ticket():
         
         return redirect(url_for('my_tickets'))  # Redirect to my_tickets page after creating ticket
     return render_template('new_ticket.html')
+
+
 
 
 @app.route('/my_tickets')
@@ -154,7 +159,7 @@ def send_message():
     
     # Query the database to get the user's type
     cursor = connection.cursor()
-    cursor.execute("SELECT type FROM Users WHERE id = %s", (user_id,))
+    cursor.execute("SELECT type FROM users WHERE id = %s", (user_id,))
     user_type = cursor.fetchone()
     cursor.close()
     
@@ -213,7 +218,7 @@ def ticket_details(ticket_id):
     user_id = session.get('user_id')
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT u.name FROM Users u JOIN tickets t ON u.id = t.created_by WHERE t.id = %s", (ticket_id,))
+    cursor.execute("SELECT u.name FROM users u JOIN tickets t ON u.id = t.created_by WHERE t.id = %s", (ticket_id,))
     user_tuple = cursor.fetchone()
     if user_tuple:
         user_name = user_tuple[0]  # Access the first element of the tuple

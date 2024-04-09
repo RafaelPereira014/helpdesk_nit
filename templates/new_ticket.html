@@ -15,10 +15,12 @@
         tinymce.init({
             selector: '#description',
             plugins: 'advlist autolink lists link image charmap print preview hr anchor table',
-            toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-            height: 300  // Specify the height of the TinyMCE editor
+            toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | image | help',
+            height: 300, // Specify the height of the TinyMCE editor
+            images_upload_url: '/upload_image', // URL for server-side image upload handler (optional)
         });
     </script>
+    
 </head>
 <body>
     <div class="container">

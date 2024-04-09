@@ -20,7 +20,7 @@ def is_admin(user_id):
     """Checks if the user is an Admin"""
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT type FROM Users WHERE id = %s", (user_id,))
+    cursor.execute("SELECT type FROM users WHERE id = %s", (user_id,))
     user_type = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -34,7 +34,7 @@ def validate_user(username, password):
     """Validates user credentials against the database."""
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Users WHERE username = %s AND password = %s", (username, password))
+    cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
     user = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -43,7 +43,7 @@ def validate_user(username, password):
 def get_user_group(user_id):
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT group_id FROM Users WHERE id = %s", (user_id,))
+    cursor.execute("SELECT group_id FROM users WHERE id = %s", (user_id,))
     user_group = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -52,11 +52,31 @@ def get_user_group(user_id):
 def get_username(user_id):
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT name FROM Users WHERE id = %s", (user_id,))
+    cursor.execute("SELECT name FROM users WHERE id = %s", (user_id,))
     user_name = cursor.fetchone()[0]
     cursor.close()
     conn.close()
     return user_name
+
+def get_passowrd(user_id):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT password FROM users WHERE id = %s", (user_id,))
+    user_password = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
+    return user_password
+
+
+def new_passowrd(user_id,password):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE users SET password = %s WHERE id = %s", (password, user_id))
+    new_password = cursor.fetchone()[0]
+    cursor.close()
+    conn.close()
+    return new_password
+    
 
 
 
@@ -141,7 +161,7 @@ def create_ticket(topic_id, description, date, state, created_by, contacto, titl
         group_id = cursor.fetchone()[0]
 
         # Fetch the name of the user based on the created_by ID
-        cursor.execute("SELECT name FROM Users WHERE id = %s", (created_by,))
+        cursor.execute("SELECT name FROM users WHERE id = %s", (created_by,))
         created_by_user = cursor.fetchone()[0]
 
         # Insert the new ticket with the fetched group_id and created_by_user
@@ -173,9 +193,9 @@ def get_creator_name(ticket_id):
         conn = connect_to_database()
         cursor = conn.cursor()
         cursor.execute("""
-            SELECT Users.name
-            FROM Users
-            JOIN tickets ON Users.id = tickets.created_by
+            SELECT users.name
+            FROM users
+            JOIN tickets ON users.id = tickets.created_by
             WHERE tickets.id = %s
         """, (ticket_id,))
         creator_name = cursor.fetchone()
@@ -229,7 +249,7 @@ def claim_ticket(user_id, ticket_id):
         conn.commit()
         cursor.execute("""
             UPDATE tickets AS t
-            JOIN Users AS u ON t.attributed_to = u.id
+            JOIN users AS u ON t.attributed_to = u.id
             SET t.attributed_to_name = u.name
         """)
         
@@ -245,7 +265,7 @@ def claim_ticket(user_id, ticket_id):
 def attributed_to(user_id):
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT name FROM Users WHERE id = %s", (user_id,))
+    cursor.execute("SELECT name FROM users WHERE id = %s", (user_id,))
     user_attributed = cursor.fetchone()[0]
     cursor.close()
     return user_attributed
@@ -255,7 +275,7 @@ def attributed_to_by_ticket(ticket_id):
     cursor = conn.cursor()
     cursor.execute("SELECT attributed_to FROM tickets WHERE id = %s", (ticket_id,))
     user_attributed_id = cursor.fetchone()[0]
-    cursor.execute("SELECT name FROM Users WHERE id = %s", (user_attributed_id,))
+    cursor.execute("SELECT name FROM users WHERE id = %s", (user_attributed_id,))
     user_tuple = cursor.fetchone()
     if user_tuple:
         user_name = user_tuple[0]  # Access the first element of the tuple
@@ -279,7 +299,7 @@ def get_topics():
 def get_user_details(ticket_id):
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, name, type,uo FROM Users JOIN ON tickets.user.id=Users.id WHERE Tickes.ticket_id = %s", ticket_id)
+    cursor.execute("SELECT id, name, type,uo FROM users JOIN ON tickets.user.id=users.id WHERE Tickes.ticket_id = %s", ticket_id)
     user_details = cursor.fetchone()
     cursor.close()
     return user_details
@@ -290,7 +310,7 @@ def close_ticket(user_id,ticket_id):
         # Close the ticket and set the 'closed_by' field to the name of the admin-user
         conn = connect_to_database()
         cursor = conn.cursor()
-        cursor.execute("SELECT name FROM Users WHERE id = %s", (user_id,))
+        cursor.execute("SELECT name FROM users WHERE id = %s", (user_id,))
         user_name = cursor.fetchone()[0]
         
         cursor.execute("UPDATE tickets SET state = 'closed', closed_by = %s WHERE id = %s", (user_name, ticket_id))
