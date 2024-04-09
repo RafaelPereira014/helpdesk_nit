@@ -17,8 +17,11 @@
 </head>
 <body>
     <h1>Group Panel - Tickets</h1>
-    <button id="aberto-btn"  class="fa fa-file-text-o">Aberto({{ open_tickets }})</button>
+    <button id="all-btn" class="filter-button">Todos</button>
+    <button id="aberto-btn"  class="fa fa-file-text-o">Aberto({{ opened_tickets }})</button>
     <button id="fechado-btn"  class="fa fa-file-text-o">Fechado({{ closed_tickets }})</button>
+    <button id="executing-btn"  class="fa fa-file-text-o">Em execucao({{ executing_tickets }})</button>
+
     <table>
         <thead>
             <tr>
@@ -62,21 +65,39 @@
             ];
             var currentPage = 1;
             var ticketsPerPage = 15; // Number of tickets to display per page
+            var currentFilter = 'all'; // Default filter option
+
 
             var tableBody = document.getElementById('ticket-table-body');
             var prevButton = document.getElementById('prev-btn');
             var nextButton = document.getElementById('next-btn');
             var pageNumSpan = document.getElementById('page-num');
+            var abertoButton = document.getElementById('aberto-btn');
+            var fechadoButton = document.getElementById('fechado-btn');
+            var executingButton = document.getElementById('executing-btn');
+
+            var allButton = document.getElementById('all-btn');
 
             // Function to display tickets for the current page
             function displayTickets() {
+                var filteredTickets;
+                if (currentFilter === 'aberto') {
+                    filteredTickets = tickets.filter(ticket => ticket.state === 'open');
+                } else if (currentFilter === 'fechado') {
+                    filteredTickets = tickets.filter(ticket => ticket.state === 'closed');
+                }else if (currentFilter === 'em execucao') {
+                    filteredTickets = tickets.filter(ticket => ticket.state === 'em execucao');
+                }else {
+                    filteredTickets = tickets;
+                }
+
                 var startIdx = (currentPage - 1) * ticketsPerPage;
-                var endIdx = Math.min(startIdx + ticketsPerPage, tickets.length);
+                var endIdx = Math.min(startIdx + ticketsPerPage, filteredTickets.length);
 
                 tableBody.innerHTML = ''; // Clear previous entries
 
                 for (var i = startIdx; i < endIdx; i++) {
-                    var ticket = tickets[i];
+                    var ticket = filteredTickets[i];
                     var row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${ticket.id}</td>
@@ -113,6 +134,32 @@
             // Event listeners for pagination buttons
             prevButton.addEventListener('click', goToPrevPage);
             nextButton.addEventListener('click', goToNextPage);
+
+            abertoButton.addEventListener('click', function () {
+                currentFilter = 'aberto';
+                currentPage = 1; // Reset page number when changing filter
+                displayTickets();
+            });
+
+            fechadoButton.addEventListener('click', function () {
+                currentFilter = 'fechado';
+                currentPage = 1; // Reset page number when changing filter
+                displayTickets();
+            });
+
+            executingButton.addEventListener('click', function () {
+                currentFilter = 'em execucao';
+                currentPage = 1; // Reset page number when changing filter
+                displayTickets();
+            });
+
+
+            
+            allButton.addEventListener('click', function () {
+                currentFilter = 'all';
+                currentPage = 1; // Reset page number when changing filter
+                displayTickets();
+            });
 
             // Initial display
             displayTickets();

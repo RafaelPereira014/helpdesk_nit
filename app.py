@@ -194,8 +194,9 @@ def group_panel():
     tickets = get_all_tickets_group(group_id)
     closed_tickets = get_closed_tickets_count_by_group(group_id)
     opened_tickets = get_opened_tickets_count_by_group(group_id)
+    executing_tickets = get_executing_tickets_count_by_group(group_id)
     
-    return render_template('pannel_group.html', tickets=tickets,closed_tickets=closed_tickets,opened_tickets=opened_tickets)
+    return render_template('pannel_group.html', tickets=tickets,closed_tickets=closed_tickets,opened_tickets=opened_tickets,executing_tickets=executing_tickets)
 
 
 @app.route('/ticket_details/<int:ticket_id>')

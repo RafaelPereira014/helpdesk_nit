@@ -121,6 +121,16 @@ def get_closed_tickets_count_by_group(group_id):
     conn.close()
     return closed_tickets_count['closed_tickets_count'] if closed_tickets_count else 0
 
+def get_executing_tickets_count_by_group(group_id):
+    """Fetches the number of opened tickets for a specific group."""
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT COUNT(*) AS executing_tickets_count FROM tickets WHERE state = 'em execucao' AND group_id = %s", (group_id,))
+    executing_tickets_count = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return executing_tickets_count['executing_tickets_count'] if executing_tickets_count else 0
+
 def create_ticket(topic_id, description, date, state, created_by, contacto, title,UnidadeOrg):
     """Creates a new ticket in the database."""
     conn = connect_to_database()
