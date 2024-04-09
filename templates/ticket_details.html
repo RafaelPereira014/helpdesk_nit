@@ -240,7 +240,7 @@
             var acceptTicketButton = document.getElementById('accept-ticket-btn');
             if (acceptTicketButton && currentAdminId === "{{ ticket_details.admin_id }}") {
                 acceptTicketButton.addEventListener('click', function () {
-                    var message = "This ticket has been accepted by you.";
+                    var message = "This ticket has been accepted.";
                     sendMessage(message); // Send the message
                     var ticketId = "{{ ticket_details.id }}";
                     // Send an AJAX request to update the ticket with the current admin's ID

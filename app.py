@@ -29,7 +29,7 @@ config = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'helpdesk3'
+    'database': 'helpdesk4'
 }
 
 connection = mysql.connector.connect(**config)
@@ -224,9 +224,9 @@ def close_ticket_route(ticket_id):
 
     user_id = session['user_id']
     # Add a message indicating that the ticket has been closed by the admin
-    current_time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    close_message = f"Ticket fechado pelo admin at {current_time}"
-    add_message_to_ticket(ticket_id, close_message)
+    #current_time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+    # close_message = f"Ticket fechado at {current_time}"
+    # add_message_to_ticket(ticket_id, close_message)
 
     # Update the ticket's state to "closed"
     close_ticket(user_id,ticket_id)
@@ -245,9 +245,9 @@ def close_ticket_route(ticket_id):
 @app.route('/reopen_ticket/<int:ticket_id>', methods=['POST'])
 def reopen_ticket_route(ticket_id):
     # Add a message indicating that the ticket has been closed by the admin
-    current_time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    reopen_message = f"Ticket reopened by admin at {current_time}"
-    add_message_to_ticket(ticket_id, reopen_message)
+    # current_time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+    # reopen_message = f"Ticket reopened by admin at {current_time}"
+    # add_message_to_ticket(ticket_id, reopen_message)
 
     # Update the ticket's state to "closed"
     reopen_ticket(ticket_id)
@@ -261,9 +261,9 @@ def accept_ticket_route(ticket_id):
 
     user_id = session['user_id']
     # Add a message indicating that the ticket has been closed by the admin
-    current_time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    accept_message = f"Ticket accepted by admin at {current_time}"
-    add_message_to_ticket(ticket_id, accept_message)
+    # current_time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+    # accept_message = f"Ticket accepted by admin at {current_time}"
+    # add_message_to_ticket(ticket_id, accept_message)
     #claim the ticket
     claim_ticket(user_id,ticket_id)
     attributed_to(user_id)

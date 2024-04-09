@@ -227,6 +227,13 @@ def claim_ticket(user_id, ticket_id):
         # Update the state to "em execucao"
         cursor.execute("UPDATE tickets SET state = %s WHERE id = %s", ("em execucao", ticket_id))
         conn.commit()
+        cursor.execute("""
+            UPDATE tickets AS t
+            JOIN Users AS u ON t.attributed_to = u.id
+            SET t.attributed_to_name = u.name
+        """)
+        
+        conn.commit()
         print("Ticket attributed successfully and state updated to 'em execucao'")
     except Exception as e:
         print("Error attributing ticket:", e)
