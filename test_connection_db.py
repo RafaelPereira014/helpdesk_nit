@@ -19,16 +19,16 @@ try:
         # Create a cursor object to execute SQL queries
         cursor = connection.cursor()
 
-        group_id='2'
+        group_id='1'
         # Execute the SQL query to fetch all tickets
-        cursor.execute("SELECT * from tickets")
-
+        # cursor.execute("SELECT email FROM users WHERE group_id = %s", (group_id,))
+        # emails = cursor.fetchall()
+        # print(emails)
+        
+        cursor.execute("SELECT email FROM users where group_id = %s", (group_id,))
+        name = cursor.fetchall()
+        print(name)
         # Fetch all rows (tickets) from the result set
-        tickets = cursor.fetchall()
-
-        # Print the fetched tickets
-        for ticket in tickets:
-            print(ticket)
 
         # Close the cursor
         cursor.close()

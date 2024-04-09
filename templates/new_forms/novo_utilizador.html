@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Helpdesk Ticketing System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}"> 
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+</head>
+<body>
+    <div class="container">
+        <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo-main" class="logo-main">
+        <a href="/admin_init" class="button">Inicio</a>
+        <a href="/admin_pannel" class="button">Admin Panel</a>
+        <a href="/pannel_group" class="button">Group Panel</a>
+        <a href="/my_profile" class="button">Meu perfil</a>
+        <a href="/logout" class="button">Terminar sessão</a>
+
+        <h1>Create New User</h1>
+            <form method="POST">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required><br>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required><br>
+
+                <label for="type">User Type:</label>
+                <select id="type" name="type" required onchange="toggleGroupField()">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select><br>
+
+                <div id="group" style="display: none;">
+                    <label for="group_id">Group:</label>
+                    <input type="text" id="group_id" name="group_id"><br>
+                </div>
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required><br>
+
+                <button type="submit">Create User</button>
+            </form>
+
+            <script>
+                function toggleGroupField() {
+                    var userTypeSelect = document.getElementById('type');
+                    var groupField = document.getElementById('group');
+
+                    if (userTypeSelect.value === 'admin') {
+                        groupField.style.display = 'block';
+                    } else {
+                        groupField.style.display = 'none';
+                    }
+                }
+            </script>
+    </div>
+    <div class="footer">
+        &copy; 2024 SREC-NIT. All rights reserved.
+    </div>
+</body>
+</html>

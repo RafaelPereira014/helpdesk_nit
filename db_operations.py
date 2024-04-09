@@ -431,3 +431,28 @@ def get_user_email_by_ticket(ticket_id):
     
     # If ticket_creator is None or user_email is None, return None
     return None
+
+def get_emails_by_group(topic_id):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT group_id FROM tickets WHERE topic_id = %s", (topic_id,))
+    group_ids = cursor.fetchall()  # Fetch all group IDs for the given topic
+    
+    # Extract group IDs from the result
+    group_ids = [row[0] for row in group_ids]
+    
+    # Query emails for all retrieved group IDs
+    emails = []
+    for group_id in group_ids:
+        cursor.execute("SELECT email FROM users WHERE group_id = %s", (group_id,))
+        emails.extend(cursor.fetchall())
+    
+    cursor.close()
+    conn.close()
+    
+    email_list = [row[0] for row in emails]  # Extract emails from the result
+    
+    return email_list
+
+
+

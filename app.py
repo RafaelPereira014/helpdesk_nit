@@ -80,6 +80,8 @@ def profile_page():
     
     return render_template('new_forms/my_profile.html',user_name=user_name)
 
+
+
 @app.route('/admin_init')
 def admin_init():
     return render_template('admin_init.html')
@@ -107,12 +109,23 @@ def new_ticket():
         
         # Retrieve the email of the user who created the ticket
         user_email = get_user_email_by_user(created_by)
-        
         # Send an email notification to the user
+        admin_emails = get_emails_by_group(topic_id)
+
         if user_email:
             msg = Message('Ticket criado', sender='noreply@azores.gov.pt', recipients=[user_email])
             msg.body = f"O seu ticket #{ticket_id} foi criado com sucesso."
             mail.send(msg)
+            
+        if admin_emails:
+            unique_admin_emails = set(admin_emails)  # Remove duplicates if any
+            for admin_email in unique_admin_emails:
+                msg = Message('Novo ticket aberto', sender='noreply@azores.gov.pt', recipients=[admin_email])
+                msg.body = f"Foi recebido um novo ticket com o número #{ticket_id}."
+                mail.send(msg)
+
+
+
         
         return redirect(url_for('my_tickets'))  # Redirect to my_tickets page after creating ticket
     return render_template('new_ticket.html')
@@ -195,6 +208,41 @@ def admin_panel():
         attributed_name = attributed_to_by_ticket(ticket['id'])
 
     return render_template('admin_pannel.html', tickets=tickets,open_tickets=open_tickets,closed_tickets=closed_tickets,executing_tickets=executing_tickets,attributed_name=attributed_name)
+
+@app.route('/new_user', methods=['GET', 'POST'])
+@admin_required
+def new_user():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))  # Redirect to login page if user is not logged in
+
+    if request.method == 'POST':
+        # Extract user details from the form
+        name = request.form['name']
+        password = request.form['password']
+        type = request.form['type']
+        group = request.form.get('group_id', None)
+        email = request.form['email']
+
+        # Here, you would add code to insert the new user into the database
+        try:
+            conn = connect_to_database()
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO users (name, password, type, group_id, email) VALUES (%s, %s, %s, %s, %s)",
+                            (name, password, type, group, email))
+            conn.commit()
+            cursor.close()
+            conn.close()
+            return redirect(url_for('admin_init'))  # Redirect to dashboard after user creation
+        except Exception as e:
+            print("Error creating user:", e)
+            return "Error creating user. Please try again later."
+
+
+    # Render the form for adding a new user
+    return render_template('new_forms/novo_utilizador.html')
+    
+    
+    
 
 @app.route('/pannel_group')
 def group_panel():
