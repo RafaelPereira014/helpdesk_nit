@@ -21,7 +21,7 @@ try:
 
         group_id='2'
         # Execute the SQL query to fetch all tickets
-        cursor.execute("SELECT * from Users")
+        cursor.execute("SELECT * from tickets")
 
         # Fetch all rows (tickets) from the result set
         tickets = cursor.fetchall()

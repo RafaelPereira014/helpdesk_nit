@@ -55,7 +55,8 @@
                     UnidadeOrg: "{{ ticket.UnidadeOrg }}",
                     title: "{{ ticket.title }}",
                     state: "{{ ticket.state }}",
-                    closed_by: "{{ ticket.attributed_to }}"
+                    closed_by: "{{ ticket.closed_by }}",
+                    attributed_to_name: "{{ ticket.attributed_to_name }}"
                 },
                 {% endfor %}
             ];
@@ -84,7 +85,7 @@
                         <td>${ticket.UnidadeOrg}</td>
                         <td><a href="/ticket_details/${ticket.id}">${ticket.title}</a></td>
                         <td>${ticket.state}</td>
-                        <td>${ticket.closed_by}</td>
+                        <td>${ticket.state === 'closed' ? ticket.closed_by : ticket.attributed_to_name}</td>
                     `;
                     tableBody.appendChild(row);
                 }

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/new_ticket.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
     <!-- Include TinyMCE stylesheet -->
@@ -56,6 +58,9 @@
             
             <button type="submit">Submeter ticket</button>
         </form>
+        <div class="footer">
+            &copy; 2024 SREC-NIT. All rights reserved.
+        </div>
     </div>
 
     <script>

@@ -176,7 +176,11 @@ def admin_panel():
     open_tickets = no_open_tickets()
     closed_tickets = no_closed_tickets()
     executing_tickets = no_execution_tickets()
-    return render_template('admin_pannel.html', tickets=tickets,open_tickets=open_tickets,closed_tickets=closed_tickets,executing_tickets=executing_tickets)
+    
+    for ticket in tickets:
+        attributed_name = attributed_to_by_ticket(ticket['id'])
+
+    return render_template('admin_pannel.html', tickets=tickets,open_tickets=open_tickets,closed_tickets=closed_tickets,executing_tickets=executing_tickets,attributed_name=attributed_name)
 
 @app.route('/pannel_group')
 def group_panel():
