@@ -16,10 +16,10 @@
 </head>
 <body>
     <h1>Admin Panel - Tickets</h1>
+    <button id="all-btn" class="filter-button">Todos</button>
      <button id="aberto-btn"  class="fa fa-file-text-o">Aberto({{ open_tickets }})</button>
      <button id="fechado-btn"  class="fa fa-file-text-o">Fechado({{ closed_tickets }})</button>
-     
-     <button id="all-btn" class="filter-button">Todos</button>
+     <button id="executing-btn"  class="fa fa-file-text-o">Em execucao({{ executing_tickets }})</button>
 
 
    
@@ -59,7 +59,8 @@
                     UnidadeOrg: "{{ ticket.UnidadeOrg }}",
                     title: "{{ ticket.title }}",
                     state: "{{ ticket.state }}",
-                    closed_by: "{{ ticket.closed_by }}"
+                    closed_by: "{{ ticket.closed_by }}",
+                    attributed_to: "{{ ticket.attributed_to }}"
                 },
                 {% endfor %}
             ];
@@ -73,6 +74,7 @@
             var pageNumSpan = document.getElementById('page-num');
             var abertoButton = document.getElementById('aberto-btn');
             var fechadoButton = document.getElementById('fechado-btn');
+            var executingButton = document.getElementById('executing-btn');
             var allButton = document.getElementById('all-btn');
 
             // Function to display tickets for the current page based on the selected filter option
@@ -82,7 +84,9 @@
                     filteredTickets = tickets.filter(ticket => ticket.state === 'open');
                 } else if (currentFilter === 'fechado') {
                     filteredTickets = tickets.filter(ticket => ticket.state === 'closed');
-                } else {
+                }else if (currentFilter === 'em execucao') {
+                    filteredTickets = tickets.filter(ticket => ticket.state === 'em execucao');
+                }else {
                     filteredTickets = tickets;
                 }
 
@@ -101,8 +105,8 @@
                         <td>${ticket.UnidadeOrg}</td>
                         <td><a href="/ticket_details/${ticket.id}">${ticket.title}</a></td>
                         <td>${ticket.state}</td>
-                        <td>${ticket.closed_by}</td>
-                    `;
+                        <td>${ticket.state === 'closed' ? ticket.closed_by : ticket.attributed_to}</td>
+                        `;
                     tableBody.appendChild(row);
                 }
 
@@ -139,6 +143,12 @@
 
             fechadoButton.addEventListener('click', function () {
                 currentFilter = 'fechado';
+                currentPage = 1; // Reset page number when changing filter
+                displayTickets();
+            });
+
+            executingButton.addEventListener('click', function () {
+                currentFilter = 'em execucao';
                 currentPage = 1; // Reset page number when changing filter
                 displayTickets();
             });

@@ -101,23 +101,25 @@ def get_all_tickets_group(group_id):
     conn.close()
     return tickets
 
-def opened_ticket_per_group(group_id):
+def get_opened_tickets_count_by_group(group_id):
+    """Fetches the number of opened tickets for a specific group."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT group_id, COUNT(*) AS num_opened_tickets FROM tickets WHERE state = 'open' GROUP BY group_id")
-    opened_tickets_per_group = cursor.fetchall()
+    cursor.execute("SELECT COUNT(*) AS opened_tickets_count FROM tickets WHERE state = 'open' AND group_id = %s", (group_id,))
+    opened_tickets_count = cursor.fetchone()
     cursor.close()
     conn.close()
-    return opened_tickets_per_group
-    
-def closed_ticket_per_group(group_id):
+    return opened_tickets_count['opened_tickets_count'] if opened_tickets_count else 0
+
+def get_closed_tickets_count_by_group(group_id):
+    """Fetches the number of opened tickets for a specific group."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT group_id, COUNT(*) AS num_opened_tickets FROM tickets WHERE state = 'closed' GROUP BY group_id")
-    closed_tickets_per_group = cursor.fetchall()
+    cursor.execute("SELECT COUNT(*) AS closed_tickets_count FROM tickets WHERE state = 'closed' AND group_id = %s", (group_id,))
+    closed_tickets_count = cursor.fetchone()
     cursor.close()
     conn.close()
-    return closed_tickets_per_group
+    return closed_tickets_count['closed_tickets_count'] if closed_tickets_count else 0
 
 def create_ticket(topic_id, description, date, state, created_by, contacto, title,UnidadeOrg):
     """Creates a new ticket in the database."""
@@ -189,6 +191,14 @@ def no_closed_tickets():
     num_closed_tickets = cursor.fetchone()[0]
     cursor.close()
     return num_closed_tickets
+
+def no_execution_tickets():
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM tickets WHERE state = 'em execucao'")
+    num_execution_tickets = cursor.fetchone()[0]
+    cursor.close()
+    return num_execution_tickets
 
 def get_ticketid(description):
     conn = connect_to_database()

@@ -175,7 +175,8 @@ def admin_panel():
     tickets = get_all_tickets()  # Fetch all tickets from the database
     open_tickets = no_open_tickets()
     closed_tickets = no_closed_tickets()
-    return render_template('admin_pannel.html', tickets=tickets,open_tickets=open_tickets,closed_tickets=closed_tickets)
+    executing_tickets = no_execution_tickets()
+    return render_template('admin_pannel.html', tickets=tickets,open_tickets=open_tickets,closed_tickets=closed_tickets,executing_tickets=executing_tickets)
 
 @app.route('/pannel_group')
 def group_panel():
@@ -187,8 +188,8 @@ def group_panel():
     group_id = get_user_group(user_id)
     # Fetch tickets based on the group_id
     tickets = get_all_tickets_group(group_id)
-    closed_tickets = closed_ticket_per_group(group_id)
-    opened_tickets = opened_ticket_per_group(group_id)
+    closed_tickets = get_closed_tickets_count_by_group(group_id)
+    opened_tickets = get_opened_tickets_count_by_group(group_id)
     
     return render_template('pannel_group.html', tickets=tickets,closed_tickets=closed_tickets,opened_tickets=opened_tickets)
 

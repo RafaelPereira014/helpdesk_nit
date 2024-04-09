@@ -19,8 +19,9 @@ try:
         # Create a cursor object to execute SQL queries
         cursor = connection.cursor()
 
+        group_id='2'
         # Execute the SQL query to fetch all tickets
-        cursor.execute("SELECT * FROM tickets ORDER BY id DESC")
+        cursor.execute("SELECT * from Users")
 
         # Fetch all rows (tickets) from the result set
         tickets = cursor.fetchall()

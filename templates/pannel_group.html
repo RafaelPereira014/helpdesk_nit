@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 
     <title>Admin Panel - Tickets</title>
     <a href="/logout" class="button">Terminar sessão</a>
@@ -12,17 +17,18 @@
 </head>
 <body>
     <h1>Group Panel - Tickets</h1>
-    <i class="fa fa-file-text-o">Aberto({{opened_tickets}})</i>
-    <i class="fa fa-file-text" >Fechado ({{closed_tickets}})</i>
+    <button id="aberto-btn"  class="fa fa-file-text-o">Aberto({{ open_tickets }})</button>
+    <button id="fechado-btn"  class="fa fa-file-text-o">Fechado({{ closed_tickets }})</button>
     <table>
         <thead>
             <tr>
                 <th>Pedido #</th>
                 <th>Data de criação</th>
                 <th>Utilizador</th>
+                <th>Unidade Org.</th>
                 <th>Titulo</th>
                 <th>Estado</th>
-                <th>Fechado por</th>
+                <th>Atribuido a/Fechado por</th>
             </tr>
         </thead>
         <tbody id="ticket-table-body">
@@ -46,9 +52,10 @@
                     id: "{{ ticket.id }}",
                     date: "{{ ticket.date }}",
                     created_by_user: "{{ ticket.created_by_user }}",
+                    UnidadeOrg: "{{ ticket.UnidadeOrg }}",
                     title: "{{ ticket.title }}",
                     state: "{{ ticket.state }}",
-                    closed_by: "{{ ticket.closed_by }}"
+                    closed_by: "{{ ticket.attributed_to }}"
                 },
                 {% endfor %}
             ];
@@ -74,6 +81,7 @@
                         <td>${ticket.id}</td>
                         <td>${ticket.date}</td>
                         <td>${ticket.created_by_user}</td>
+                        <td>${ticket.UnidadeOrg}</td>
                         <td><a href="/ticket_details/${ticket.id}">${ticket.title}</a></td>
                         <td>${ticket.state}</td>
                         <td>${ticket.closed_by}</td>
