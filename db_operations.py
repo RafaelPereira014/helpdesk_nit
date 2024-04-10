@@ -76,6 +76,21 @@ def new_passowrd(user_id,password):
     cursor.close()
     conn.close()
     return new_password
+
+def check_email_contains_edu(user_id):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT email FROM users WHERE user_id = %s", (user_id,))
+    user_email = cursor.fetchone()
+    cursor.close()
+    conn.close()
+
+    if user_email:
+        return "@edu" in user_email[0]
+    else:
+        return False
+
+
     
 
 

@@ -87,9 +87,14 @@ def admin_init():
     return render_template('admin_init.html')
 
 
+from flask import render_template
+
 @app.route('/new_ticket', methods=['GET', 'POST'])
 def new_ticket():
+    is_edu = False  # Initialize is_edu variable
+
     if request.method == 'POST':
+        # Your existing code for creating a new ticket
         topic_id = request.form['topic_id']
         description = request.form['description']
         state = "open"
@@ -111,6 +116,7 @@ def new_ticket():
         user_email = get_user_email_by_user(created_by)
         # Send an email notification to the user
         admin_emails = get_emails_by_group(topic_id)
+        is_edu = check_email_contains_edu(created_by)
 
         if user_email:
             msg = Message('Ticket criado', sender='noreply@azores.gov.pt', recipients=[user_email])
@@ -124,11 +130,11 @@ def new_ticket():
                 msg.body = f"Foi recebido um novo ticket com o número #{ticket_id}."
                 mail.send(msg)
 
-
-
-        
         return redirect(url_for('my_tickets'))  # Redirect to my_tickets page after creating ticket
-    return render_template('new_ticket.html')
+
+    # Pass is_edu to the template for rendering
+    return render_template('new_ticket.html', is_edu=is_edu)
+
 
 
 

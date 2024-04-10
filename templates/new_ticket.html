@@ -35,10 +35,15 @@
             <label for="topic">Tópico de ajuda:</label>
             <select id="topic_id" name="topic_id" required>
                 <option value="0">-</option>
+                {% if is_edu %}
                 <option value="4">Criar conta EDU</option>
                 <option value="5">Reset MFA EDU</option>
                 <option value="6">Reset password EDU</option>
-                <option value="7">Adicionar MACaddress a controladora</option>
+                {% else %}
+                <option value="1">Topic 1</option>
+                <option value="2">Topic 2</option>
+                <option value="3">Topic 3</option>
+                {% endif %}
             </select>
             <label for="title">Título:</label>
             <input type="text" id="title" name="title" required>
