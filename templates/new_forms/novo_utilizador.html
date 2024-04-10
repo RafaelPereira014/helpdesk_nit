@@ -19,42 +19,47 @@
         <a href="/logout" class="button">Terminar sessão</a>
 
         <h1>Create New User</h1>
-            <form method="POST">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required><br>
+        <form method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
 
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required><br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required><br>
 
-                <label for="type">User Type:</label>
-                <select id="type" name="type" required onchange="toggleGroupField()">
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
+            <label for="type">User Type:</label>
+            <select id="type" name="type" required onchange="toggleGroupField()">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select><br>
+
+            <div id="group" style="display: none;">
+                <label for="group_id">Group:</label>
+                <select id="group_id" name="group_id">
+                    <!-- Option for selecting a group (You can populate this dynamically from backend) -->
+                    <option value="1">Group 1</option>
+                    <option value="2">Group 2</option>
+                    <option value="3">Group 3</option>
                 </select><br>
+            </div>
 
-                <div id="group" style="display: none;">
-                    <label for="group_id">Group:</label>
-                    <input type="text" id="group_id" name="group_id"><br>
-                </div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
 
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required><br>
+            <button type="submit">Create User</button>
+        </form>
 
-                <button type="submit">Create User</button>
-            </form>
+        <script>
+            function toggleGroupField() {
+                var userTypeSelect = document.getElementById('type');
+                var groupField = document.getElementById('group');
 
-            <script>
-                function toggleGroupField() {
-                    var userTypeSelect = document.getElementById('type');
-                    var groupField = document.getElementById('group');
-
-                    if (userTypeSelect.value === 'admin') {
-                        groupField.style.display = 'block';
-                    } else {
-                        groupField.style.display = 'none';
-                    }
+                if (userTypeSelect.value === 'admin') {
+                    groupField.style.display = 'block';
+                } else {
+                    groupField.style.display = 'none';
                 }
-            </script>
+            }
+        </script>
     </div>
     <div class="footer">
         &copy; 2024 SREC-NIT. All rights reserved.

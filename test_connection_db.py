@@ -6,7 +6,7 @@ config = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'helpdesk5'
+    'database': 'helpdesk4'
 }
 
 try:
@@ -25,9 +25,11 @@ try:
         # emails = cursor.fetchall()
         # print(emails)
         
+        is_edu = check_email_contains_edu('1')
+
         cursor.execute("SELECT * from users ")
         name = cursor.fetchall()
-        print(name)
+        print(is_edu)
         # Fetch all rows (tickets) from the result set
 
         # Close the cursor

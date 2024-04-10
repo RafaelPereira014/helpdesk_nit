@@ -80,7 +80,7 @@ def new_passowrd(user_id,password):
 def check_email_contains_edu(user_id):
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT email FROM users WHERE user_id = %s", (user_id,))
+    cursor.execute("SELECT email FROM users WHERE id = %s", (user_id,))
     user_email = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -89,6 +89,7 @@ def check_email_contains_edu(user_id):
         return "@edu" in user_email[0]
     else:
         return False
+
 
 
     

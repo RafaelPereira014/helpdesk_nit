@@ -35,20 +35,16 @@
             <label for="topic">Tópico de ajuda:</label>
             <select id="topic_id" name="topic_id" required>
                 <option value="0">-</option>
-                {% if is_edu %}
                 <option value="4">Criar conta EDU</option>
                 <option value="5">Reset MFA EDU</option>
                 <option value="6">Reset password EDU</option>
-                {% else %}
-                <option value="1">Topic 1</option>
-                <option value="2">Topic 2</option>
-                <option value="3">Topic 3</option>
-                {% endif %}
+                <option value="7">Adicionar MACaddress a controladora</option>
             </select>
             <label for="title">Título:</label>
             <input type="text" id="title" name="title" required>
             <label for="UnidadeOrg">Unidade organica:</label>
-            <input type="text" id="UnidadeOrg" name="UnidadeOrg" required>
+            <select id="UnidadeOrg" name="UnidadeOrg" required></select>
+
             <div id="file_download" style="display: none;">
                 <label>Ficheiro de template</label>
                 <a href="{{ url_for('static', filename='files/Criacao_de_Contas-template.xlsx') }}" download>Criacao_de_Contas-template.xlsx</a>
@@ -71,6 +67,24 @@
     </div>
 
     <script>
+        window.onload = function() {
+            // Fetch the file containing the values
+            fetch('{{ url_for('static', filename='files/unidade_organica.txt') }}')
+                .then(response => response.text())
+                .then(data => {
+                    // Split the data by newline to get individual values
+                    const values = data.split('\n');
+                    // Get the dropdown element
+                    const dropdown = document.getElementById('UnidadeOrg');
+                    // Populate the dropdown options
+                    values.forEach(value => {
+                        const option = document.createElement('option');
+                        option.text = value.trim();
+                        dropdown.add(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching unidade organica:', error));
+        };
         // Function to show or hide description field based on selected topic
         function toggleDescription() {
             var topicSelect = document.getElementById('topic_id');
@@ -107,5 +121,7 @@
         // Call toggleDescription function on page load to initialize based on initial topic value
         toggleDescription();
     </script>
+   
+    
 </body>
 </html>
