@@ -6,7 +6,7 @@ config = {
     'host': 'localhost',
     'user': 'root',
     'password': '',
-    'database': 'helpdesk4'
+    'database': 'helpdesk5'
 }
 
 try:
@@ -25,7 +25,7 @@ try:
         # emails = cursor.fetchall()
         # print(emails)
         
-        cursor.execute("SELECT email FROM users where group_id = %s", (group_id,))
+        cursor.execute("SELECT * from users ")
         name = cursor.fetchall()
         print(name)
         # Fetch all rows (tickets) from the result set
