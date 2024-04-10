@@ -29,7 +29,7 @@ try:
 
         cursor.execute("SELECT * from users ")
         name = cursor.fetchall()
-        print(is_edu)
+        print(name)
         # Fetch all rows (tickets) from the result set
 
         # Close the cursor

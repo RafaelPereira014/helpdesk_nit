@@ -8,14 +8,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}"> 
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/new_user.css') }}">
 </head>
 <body>
     <div class="container">
         <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo-main" class="logo-main">
-        <a href="/init_page" class="button">Inicio</a>
-        <a href="/new_ticket" class="button">Abrir um novo pedido</a>
-        <a href="/my_tickets" class="button">Tickets</a>
-        <a href="/logout" class="button">Terminar sessão</a>
+        <a href="#" class="button" onclick="goBack()">Voltar</a>
+        
 
         <h1>My Profile</h1>
         <div class="profile-info">
@@ -34,6 +33,12 @@
                 <button type="submit" class="button">Alterar Password</button>
             </form>
         </div>
+
+        <script>
+            function goBack() {
+                window.history.back();
+            }
+        </script>
     </div>
     <div class="footer">
         &copy; 2024 SREC-NIT. All rights reserved.
