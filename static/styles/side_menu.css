@@ -1,0 +1,46 @@
+/* side_menu.css */
+
+.sidenav {
+    height: 100%;
+    width: 250px; /* Adjust width as needed */
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #b3d2f5;
+    overflow-x: hidden;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-item {
+    padding: 10px 16px;
+}
+
+.menu-item a {
+    text-decoration: none;
+    font-size: 18px;
+    color: #818181;
+    display: flex;
+    align-items: center;
+}
+
+.menu-item a:hover {
+    color: #f1f1f1;
+}
+
+.gg-log-out {
+    margin-left: auto; /* Aligns the icon to the right */
+}
+
+#logout-button {
+    margin-top: 380px; /* Aligns the button to the bottom */
+}
+
+
+
+.main {
+    margin-left: 250px; /* Adjust to match side menu width */
+    padding: 16px;
+}

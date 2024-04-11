@@ -9,13 +9,40 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/profile.css') }}"> 
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/new_user.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/side_menu.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/log-out.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Include Font Awesome -->
 </head>
 <body>
-    <div class="container">
+    <div class="sidenav">
         <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo-main" class="logo-main">
-        <a href="#" class="button" onclick="goBack()">Voltar</a>
+        <div class="menu-item">
+            <a href="/admin_init"><i class="fa fa-home"></i> Inicio</a>
+        </div>
+        <div class="menu-item">
+            <a href="/admin_pannel"><i class="fa fa-dashboard"></i> Admin Panel</a>
+        </div>
+        <div class="menu-item">
+            <a href="/pannel_group"><i class="fa fa-users"></i> Group Panel</a>
+        </div>
+        <div class="menu-item">
+            <a href="/my_profile"><i class="fa fa-user"></i> Meu perfil</a>
+        </div>
+        <div class="menu-item" >
+            <a href="/new_user"><i class="fa fa-user-plus"></i> Novo utilizador</a>
+        </div>
+        <div class="menu-item" id="logout-button">
+            <a href="/logout">
+                Terminar sessão
+                <i class="gg-log-out"></i>
+            </a>
+        </div>
+    </div>
 
-
+    <div class="container">
         <h1>Create New User</h1>
         <div class="profile-info">
             <form method="POST">

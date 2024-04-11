@@ -7,25 +7,51 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/side_menu.css') }}">
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/log-out.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 <body>
-    <div class="container">
+    <div class="sidenav">
         <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo-main" class="logo-main">
-        <a href="/admin_pannel" class="button">Admin Panel</a>
-        <a href="/pannel_group" class="button">Group Panel</a>
-        <a href="/my_profile" class="button">Meu perfil</a>
-        <a href="/new_user" class="button">Novo utilizador</a>
-        <a href="/logout" class="button">Terminar sessão</a>
-
-
-        <h1>Bem-vindo ao sistema de tickets do NIT</h1>
-        <h3> De forma a otimizarmos os pedidos de apoio, utilizamos este sistema de gestão de pedidos de apoio.
-            A cada pedido será atribuído um numero único, e com o qual será possível verificar o seu estado, assim como as tarefas atribuídas ao mesmo.
-            Para referência futura, disponibilizamos o histórico de todos os pedidos registados.
-            </h2>
+        <div class="sidenav">
+            <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo-main" class="logo-main">
+            <div class="menu-item">
+                <a href="/admin_pannel"><i class="fa fa-dashboard"></i> Admin Panel</a>
+            </div>
+            <div class="menu-item">
+                <a href="/pannel_group"><i class="fa fa-users"></i> Group Panel</a>
+            </div>
+            <div class="menu-item">
+                <a href="/my_profile"><i class="fa fa-user"></i> Meu perfil</a>
+            </div>
+            <div class="menu-item" >
+                <a href="/new_user"><i class="fa fa-user-plus"></i> Novo utilizador</a>
+            </div>
+            <div class="menu-item" id="logout-button">
+                <a href="/logout">
+                    Terminar sessão
+                    <i class="gg-log-out"></i>
+                </a>
+            </div>
+            
+            
+        </div>
     </div>
-    <div class="footer">
-        &copy; 2024 SREC-NIT. All rights reserved.
+
+    <div class="main">
+        <div class="container">
+            <h1>Bem-vindo ao sistema de tickets do NIT</h1>
+            <h3> De forma a otimizarmos os pedidos de apoio, utilizamos este sistema de gestão de pedidos de apoio.
+                A cada pedido será atribuído um numero único, e com o qual será possível verificar o seu estado, assim como as tarefas atribuídas ao mesmo.
+                Para referência futura, disponibilizamos o histórico de todos os pedidos registados.
+            </h3>
+        </div>
+        <div class="footer">
+            &copy; 2024 SREC-NIT. All rights reserved.
+        </div>
     </div>
 </body>
 </html>

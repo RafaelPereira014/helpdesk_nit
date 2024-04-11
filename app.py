@@ -77,8 +77,10 @@ def profile_page():
     user_name = get_username(user_id)
     user_password = get_passowrd(user_id)
     
+    admin_status = is_admin(user_id)
     
-    return render_template('new_forms/my_profile.html',user_name=user_name)
+    
+    return render_template('new_forms/my_profile.html',user_name=user_name,is_admin=admin_status)
 
 
 
@@ -162,10 +164,12 @@ def my_tickets():
             'group_name': group_name,
             'attributed_name': attributed_name
         })
-    #print(ticket_fields)
     
-    
-    return render_template('my_tickets.html', tickets=ticket_fields)
+    admin_status = is_admin(user_id)
+
+    # Render the template with the tickets and admin status
+    return render_template('my_tickets.html', tickets=ticket_fields, is_admin=admin_status)
+
 
 @app.route('/send_message', methods=['POST'])
 def send_message():

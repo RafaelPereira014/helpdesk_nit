@@ -6,15 +6,55 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/side_menu.css') }}">
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/log-out.css' rel='stylesheet'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     
 </head>
 <body>
-    <div class="container">
-        <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo" class="logo-main">
-        <a href="/init_page" class="button">Inicio</a>
-        <a href="/new_ticket" class="button">Abrir um novo pedido</a>
-        <a href="/my_tickets" class="button">Tickets</a>
-        <a href="/logout" class="button">Terminar sessão</a>
+    <div class="sidenav">
+        <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo-main" class="logo-main">
+        {%if is_admin%}
+            <div class="menu-item">
+                <a href="/admin_init"><i class="fa fa-home"></i> Inicio</a>
+            </div>
+            <div class="menu-item">
+                <a href="/admin_pannel"><i class="fa fa-dashboard"></i> Admin Panel</a>
+            </div>
+            <div class="menu-item">
+                <a href="/pannel_group"><i class="fa fa-users"></i> Group Panel</a>
+            </div>
+            <div class="menu-item">
+                <a href="/my_profile"><i class="fa fa-user"></i> Meu perfil</a>
+            </div>
+            <div class="menu-item" >
+                <a href="/new_user"><i class="fa fa-user-plus"></i> Novo utilizador</a>
+            </div>
+        {%endif%}
+        
+        {%if not is_admin%}
+            <div class="menu-item">
+                <a href="/init_page"><i class="fa fa-home"></i> Inicio</a>
+            </div>
+            <div class="menu-item">
+                <a href="/new_ticket"><i class="fa fa-dashboard"></i>Abrir novo ticket</a>
+            </div>
+            <div class="menu-item">
+                <a href="/my_tickets"><i class="fa fa-users"></i>Tickets</a>
+            </div>
+            <div class="menu-item">
+                <a href="/my_profile"><i class="fa fa-user"></i> Meu perfil</a>
+            </div>
+        {% endif %}
+        <div class="menu-item" id="logout-button">
+            <a href="/logout">
+                Terminar sessão
+                <i class="gg-log-out"></i>
+            </a>
+        </div>
+        
+        
     </div>
 
     <div class="container">

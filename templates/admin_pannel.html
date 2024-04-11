@@ -3,47 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Tickets</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/side_menu.css') }}">
+    <link href='https://unpkg.com/css.gg@2.0.0/icons/css/log-out.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        /* Adjust the main content to accommodate the side navigation */
+        .main {
+            margin-left: 250px; /* Set the width of the side navigation */
+        }
 
-    <title>Admin Panel - Tickets</title>
-    <a href="/logout" class="button">Terminar sessão</a>
-    <a href="/admin_init" class="button">Voltar</a>
+        /* Style the table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
-    <h1>Admin Panel - Tickets</h1>
-    <button id="all-btn" class="filter-button">Todos</button>
-     <button id="aberto-btn"  class="fa fa-file-text-o">Aberto({{ open_tickets }})</button>
-     <button id="fechado-btn"  class="fa fa-file-text-o">Fechado({{ closed_tickets }})</button>
-     <button id="executing-btn"  class="fa fa-file-text-o">Em execucao({{ executing_tickets }})</button>
-
-
-   
-    <table>
-        <thead>
-            <tr>
-                <th>Pedido #</th>
-                <th>Data de criação</th>
-                <th>Utilizador</th>
-                <th>Unidade Org.</th>
-                <th>Titulo</th>
-                <th>Estado</th>
-                <th>Atribuido a/Fechado por</th>
-            </tr>
-        </thead>
-        <tbody id="ticket-table-body">
-            <!-- Ticket data will be inserted here -->
-        </tbody>
-    </table>
-    <div id="pagination">
-        <button id="prev-btn" class="button">Anterior</button>
-        <span id="page-num">[1]</span>
-        <button id="next-btn" class="button">Próximo</button>
+    <div class="sidenav">
+        <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo-main" class="logo-main">
+        <div class="menu-item">
+            <a href="/admin_init"><i class="fa fa-home"></i> Inicio</a>
+        </div>
+        <div class="menu-item">
+            <a href="/admin_pannel"><i class="fa fa-dashboard"></i> Admin Panel</a>
+        </div>
+        <div class="menu-item">
+            <a href="/pannel_group"><i class="fa fa-users"></i> Group Panel</a>
+        </div>
+        <div class="menu-item">
+            <a href="/my_profile"><i class="fa fa-user"></i> Meu perfil</a>
+        </div>
+        <div class="menu-item" >
+            <a href="/new_user"><i class="fa fa-user-plus"></i> Novo utilizador</a>
+        </div>
+        <div class="menu-item" id="logout-button">
+            <a href="/logout">
+                Terminar sessão
+                <i class="gg-log-out"></i>
+            </a>
+        </div>
+        
+        
     </div>
+
+    <div class="main">
+        <a href="/admin_init" class="button">Voltar</a>
+
+        <h1>Admin Panel - Tickets</h1>
+        <button id="all-btn" class="filter-button">Todos</button>
+        <button id="aberto-btn"  class="fa fa-file-text-o">Aberto({{ open_tickets }})</button>
+        <button id="fechado-btn"  class="fa fa-file-text-o">Fechado({{ closed_tickets }})</button>
+        <button id="executing-btn"  class="fa fa-file-text-o">Em execucao({{ executing_tickets }})</button>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Pedido #</th>
+                    <th>Data de criação</th>
+                    <th>Utilizador</th>
+                    <th>Unidade Org.</th>
+                    <th>Titulo</th>
+                    <th>Estado</th>
+                    <th>Atribuido a/Fechado por</th>
+                </tr>
+            </thead>
+            <tbody id="ticket-table-body">
+                <!-- Ticket data will be inserted here -->
+            </tbody>
+        </table>
+        <div id="pagination">
+            <button id="prev-btn" class="button">Anterior</button>
+            <span id="page-num">[1]</span>
+            <button id="next-btn" class="button">Próximo</button>
+        </div>
+    </div>
+
     <div class="footer">
         &copy; 2024 SREC-NIT. All rights reserved.
     </div>
@@ -164,6 +215,7 @@
             // Initial display
             displayTickets();
         });
+
     </script>
 </body>
 </html>
