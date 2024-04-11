@@ -7,38 +7,40 @@
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #b3d2f5;
+    background-color: #333;
     overflow-x: hidden;
     padding-top: 20px;
     display: flex;
     flex-direction: column;
 }
 
+
 .menu-item {
     padding: 10px 16px;
 }
 
 .menu-item a {
+    display: flex; /* Change display to flex */
+    align-items: center; /* Align items vertically */
+    color: #fff;
     text-decoration: none;
-    font-size: 18px;
-    color: #818181;
-    display: flex;
-    align-items: center;
+}
+
+.menu-item a span {
+    margin-left: 0px; /* Adjust as needed */
 }
 
 .menu-item a:hover {
     color: #f1f1f1;
 }
 
-.gg-log-out {
-    margin-left: auto; /* Aligns the icon to the right */
-}
+
 
 #logout-button {
-    margin-top: 380px; /* Aligns the button to the bottom */
+    margin-top: 350px; /* Aligns the button to the bottom */
+   
+    
 }
-
-
 
 .main {
     margin-left: 250px; /* Adjust to match side menu width */

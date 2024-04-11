@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
     background-color: #f4f4f4;
 }
 
@@ -11,6 +11,7 @@ body {
 
 h1 {
     text-align: center;
+    color: #333;
 }
 
 table {
@@ -22,56 +23,51 @@ table {
 
 th, td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 12px;
     text-align: left;
 }
 
 th {
     background-color: #f2f2f2;
+    color: #333;
 }
-.footer {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
-    color: #777;
-}
+
 .message-container {
-    
-    padding: 10px; /* Add padding for better appearance */
+    padding: 20px;
 }
 
 .message {
-    margin-bottom: 20px; /* Add margin between messages */
-    padding: 10px; /* Add padding for better appearance */
-    border-radius: 8px;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
 }
 
 .user-message {
-    background-color: #a3b9ca; /* Blue color for user messages */
+    background-color: #007bff;
     color: white;
-    float: left; /* Float user messages to the left */
-    clear: both; /* Clear the float */
+    float: left;
+    clear: both;
 }
 
 .admin-message {
-    background-color: #f0f0f0; /* Grey color for admin messages */
-    color: black;
-    float: right; /* Float admin messages to the right */
-    clear: both; /* Clear the float */
+    background-color: #96a4b3;
+    color: white;
+    float: right;
+    clear: both;
 }
 
-
 .message-header {
-    font-weight: bold; /* Make the header bold */
-    margin-bottom: 5px; /* Add margin below the header */
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #555;
 }
 
 .user-header {
-    color: #3498db; /* Blue color for user header */
+    color: #3498db;
 }
 
 .admin-header {
-    color: #555; /* Dark grey color for admin header */
+    color: #4e79bf;
 }
 
 .ticket-info table {
@@ -80,36 +76,44 @@ th {
 }
 
 .ticket-info td {
-    padding: 8px;
+    padding: 12px;
     border-bottom: 1px solid #ddd;
 }
 
 .ticket-info td:first-child {
-    width: 120px;
+    width: 30%;
     font-weight: bold;
     color: #333;
 }
+
 textarea {
     width: 100%;
-    padding: 10px;
+    padding: 15px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 6px;
     box-sizing: border-box;
+    font-size: 16px;
 }
 
 .claim-ticket-btn {
-    padding: 5px 10px;
+    padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    font-size: 16px;
 }
+
 .claim-ticket-btn:hover {
     background-color: #0056b3;
 }
 
-
-
+.footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #888;
+}

@@ -7,11 +7,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/side_menu.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/table.css') }}">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href='https://unpkg.com/css.gg@2.0.0/icons/css/log-out.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Admin Panel - Tickets</title>
+    <title>Group Panel - Tickets</title>
 </head>
 <body>
     <div class="sidenav">
@@ -34,25 +36,22 @@
                 <a href="/new_user"><i class="fa fa-user-plus"></i> Novo utilizador</a>
             </div>
             <div class="menu-item" id="logout-button">
-                <a href="/logout">
-                    Terminar sessão
-                    <i class="gg-log-out"></i>
-                </a>
+                <a href="/logout"></i> Terminar sessão</a>
             </div>
+            
             
             
         </div>
     </div>
 
     <div class="main">
-        <a href="/admin_init" class="button">Voltar</a>
         <h1>Group Panel - Tickets</h1>
-        <button id="all-btn" class="filter-button">Todos</button>
-        <button id="aberto-btn"  class="fa fa-file-text-o">Aberto({{ opened_tickets }})</button>
-        <button id="fechado-btn"  class="fa fa-file-text-o">Fechado({{ closed_tickets }})</button>
-        <button id="executing-btn"  class="fa fa-file-text-o">Em execucao({{ executing_tickets }})</button>
+        <button id="all-btn" class="button-filter">Todos</button>
+        <button id="aberto-btn"  class="button-filter">Aberto({{ opened_tickets }})</button>
+        <button id="fechado-btn"  class="button-filter">Fechado({{ closed_tickets }})</button>
+        <button id="executing-btn"  class="button-filter">Em execucao({{ executing_tickets }})</button>
 
-        <table>
+        <table id="ticket-table">
             <thead>
                 <tr>
                     <th>Pedido #</th>
@@ -75,9 +74,7 @@
         </div>
     </div>
 
-    <div class="footer">
-        &copy; 2024 SREC-NIT. All rights reserved.
-    </div>
+    
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -96,10 +93,9 @@
                 {% endfor %}
             ];
             var currentPage = 1;
-            var ticketsPerPage = 15; // Number of tickets to display per page
+            var ticketsPerPage = 10; // Number of tickets to display per page
             var currentFilter = 'all'; // Default filter option
-
-
+        
             var tableBody = document.getElementById('ticket-table-body');
             var prevButton = document.getElementById('prev-btn');
             var nextButton = document.getElementById('next-btn');
@@ -107,9 +103,8 @@
             var abertoButton = document.getElementById('aberto-btn');
             var fechadoButton = document.getElementById('fechado-btn');
             var executingButton = document.getElementById('executing-btn');
-
             var allButton = document.getElementById('all-btn');
-
+        
             // Function to display tickets for the current page
             function displayTickets() {
                 var filteredTickets;
@@ -117,17 +112,18 @@
                     filteredTickets = tickets.filter(ticket => ticket.state === 'open');
                 } else if (currentFilter === 'fechado') {
                     filteredTickets = tickets.filter(ticket => ticket.state === 'closed');
-                }else if (currentFilter === 'em execucao') {
-                    filteredTickets = tickets.filter(ticket => ticket.state === 'em execucao');
-                }else {
+                } else if (currentFilter === 'em execucao') {
+                    // Adjusted filter condition for "em execução"
+                    filteredTickets = tickets.filter(ticket => ticket.state.toLowerCase().includes('execucao'));
+                } else {
                     filteredTickets = tickets;
                 }
-
+        
                 var startIdx = (currentPage - 1) * ticketsPerPage;
                 var endIdx = Math.min(startIdx + ticketsPerPage, filteredTickets.length);
-
+        
                 tableBody.innerHTML = ''; // Clear previous entries
-
+        
                 for (var i = startIdx; i < endIdx; i++) {
                     var ticket = filteredTickets[i];
                     var row = document.createElement('tr');
@@ -142,10 +138,10 @@
                     `;
                     tableBody.appendChild(row);
                 }
-
+        
                 pageNumSpan.textContent = currentPage;
             }
-
+        
             // Function to navigate to the previous page
             function goToPrevPage() {
                 if (currentPage > 1) {
@@ -153,7 +149,7 @@
                     displayTickets();
                 }
             }
-
+        
             // Function to navigate to the next page
             function goToNextPage() {
                 var totalPages = Math.ceil(tickets.length / ticketsPerPage);
@@ -162,40 +158,40 @@
                     displayTickets();
                 }
             }
-
+        
             // Event listeners for pagination buttons
             prevButton.addEventListener('click', goToPrevPage);
             nextButton.addEventListener('click', goToNextPage);
-
+        
+            // Event listeners for filter buttons
             abertoButton.addEventListener('click', function () {
                 currentFilter = 'aberto';
                 currentPage = 1; // Reset page number when changing filter
                 displayTickets();
             });
-
+        
             fechadoButton.addEventListener('click', function () {
                 currentFilter = 'fechado';
                 currentPage = 1; // Reset page number when changing filter
                 displayTickets();
             });
-
+        
             executingButton.addEventListener('click', function () {
                 currentFilter = 'em execucao';
                 currentPage = 1; // Reset page number when changing filter
                 displayTickets();
             });
-
-
-            
+        
             allButton.addEventListener('click', function () {
                 currentFilter = 'all';
                 currentPage = 1; // Reset page number when changing filter
                 displayTickets();
             });
-
+        
             // Initial display
             displayTickets();
         });
+        
     </script>
 </body>
 </html>
