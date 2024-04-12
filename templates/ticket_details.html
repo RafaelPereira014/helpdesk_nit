@@ -24,6 +24,89 @@
             height: 300  // Specify the height of the TinyMCE editor
         });
     </script>
+    <style>
+        .ticket-info {
+            margin-bottom: 20px;
+        }
+
+        .ticket-info-item {
+            margin-bottom: 15px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .info-value {
+            color: #333;
+            margin-left: 10px;
+        }
+
+        .message-container {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 20px;
+        }
+
+        .message-container .message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .message-container .message .message-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .user-message {
+            background-color: #007bff;
+            color: white;
+            float: left;
+            clear: both;
+        }
+
+        .admin-message {
+            background-color: #96a4b3;
+            color: white;
+            float: right;
+            clear: both;
+        }
+
+        .user-header {
+            color: #3498db;
+        }
+
+        .admin-header {
+            color: #4e79bf;
+        }
+
+        #message {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <!-- Side Navigation Menu -->
@@ -73,20 +156,18 @@
         <h1>{{ ticket_details.title }} #{{ ticket_details.id }}</h1>
         <h2>Informação acerca do ticket</h2>
         <div class="ticket-info">
-            <table>
-                <tr>
-                    <td><strong>Utilizador:</strong></td>
-                    <td>{{ user_name }}</td>
-                </tr>
-                <tr>
-                    <td><strong>Contacto:</strong></td>
-                    <td>{{ ticket_details.contacto }}</td>
-                </tr>
-                <tr>
-                    <td><strong>Descrição:</strong></td>
-                    <td>{{ ticket_details.description | safe }}</td>
-                </tr>
-            </table>
+            <div class="ticket-info-item">
+                <span class="info-label">Utilizador:</span>
+                <span class="info-value">{{ user_name }}</span>
+            </div>
+            <div class="ticket-info-item">
+                <span class="info-label">Contacto:</span>
+                <span class="info-value">{{ ticket_details.contacto }}</span>
+            </div>
+            <div class="ticket-info-item">
+                <span class="info-label">Descrição:</span>
+                <span class="info-value">{{ ticket_details.description | safe }}</span>
+            </div>
         </div>
 
         <div class="message-container" id="message-container">
