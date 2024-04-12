@@ -27,7 +27,7 @@ try:
         
         is_edu = check_email_contains_edu('1')
 
-        cursor.execute("SELECT * from tickets  ")
+        cursor.execute("SELECT * from users")
         name = cursor.fetchall()
         print(name)
         # Fetch all rows (tickets) from the result set
