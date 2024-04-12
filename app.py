@@ -2,13 +2,14 @@ import datetime
 from functools import wraps
 import secrets
 import mysql.connector
-from flask import Flask, jsonify, render_template, request, redirect, url_for
+from flask import Flask, flash, jsonify, render_template, request, redirect, url_for
 from db_operations import *
 from flask import session
 from flask import redirect
 from datetime import datetime
 from flask import request
 from flask_mail import Mail, Message
+
 
 
 app = Flask(__name__)
@@ -68,19 +69,34 @@ def logout():
 def init_page():
     return render_template('init.html')
 
-@app.route('/my_profile')
+@app.route('/my_profile', methods=['GET', 'POST'])
 def profile_page():
     if 'user_id' not in session:
         return redirect(url_for('login'))  # Redirect to login page if user is not logged in
 
     user_id = session['user_id']
     user_name = get_username(user_id)
-    user_password = get_passowrd(user_id)
-    
     admin_status = is_admin(user_id)
-    
-    
-    return render_template('new_forms/my_profile.html',user_name=user_name,is_admin=admin_status)
+
+    message = None  # Initialize message variable
+
+    if request.method == 'POST':
+        password = request.form['password']
+        new_pass = request.form['new_password']
+        confirm_pass = request.form['confirm_password']
+
+        # Verify the current password
+        if verify_password(user_id, password):
+            # Update the password
+            if new_pass == confirm_pass:
+                update_password(user_id, new_pass)
+                message = {'type': 'success', 'content': 'Password atualizada com sucesso!'}
+            else:
+                message = {'type': 'error', 'content': 'Nova password não confirmada.Tente outra vez.'}
+        else:
+            message = {'type': 'error', 'content': 'Password incorreta!'}
+
+    return render_template('new_forms/my_profile.html', user_name=user_name, is_admin=admin_status, message=message)
 
 
 

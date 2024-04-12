@@ -14,6 +14,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
+<style>
+</style>
 <body>
     <div class="sidenav">
         <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo-main" class="logo-main">
@@ -58,22 +60,48 @@
     </div>
 
     <div class="container">
-        <h1>My Profile</h1>
+        <h1>Meu perfil</h1>
         <div class="profile-info">
             <h3>Nome de Utilizador: {{ user_name }}</h3> <!-- Replace 'username' with the variable holding the username -->
-            <form action="/change_password" method="post">
-
-                <label for="current_password">Password Atual:</label>
-                <input type="password" id="current_password" name="current_password" required>
-
+            <form method="POST">
+                <label for="password">Password Atual:</label>
+                <input type="password" id="password" name="password" required>
+            
                 <label for="new_password">Nova Password:</label>
                 <input type="password" id="new_password" name="new_password" required>
-
+            
                 <label for="confirm_password">Confirmar Nova Password:</label>
                 <input type="password" id="confirm_password" name="confirm_password" required>
-
+            
                 <button type="submit" class="button">Alterar Password</button>
+                {% if message %}
+                    <!-- Modal -->
+                    <div id="myModal" class="modal">
+                        <!-- Modal content -->
+                        <div class="modal-content">
+                            <span class="close" onclick="closeModal()">&times;</span>
+                            <p>{{ message.content }}</p>
+                        </div>
+                    </div>
+                    <script>
+                        // Display the modal
+                        var modal = document.getElementById("myModal");
+                        modal.style.display = "block";
+
+                        // Close the modal when clicked on close button or outside of the modal
+                        function closeModal() {
+                            modal.style.display = "none";
+                        }
+                        window.onclick = function(event) {
+                            if (event.target == modal) {
+                                modal.style.display = "none";
+                            }
+                        }
+                    </script>
+                {% endif %}
+
             </form>
+            
         </div>
 
         <script>

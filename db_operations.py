@@ -58,24 +58,24 @@ def get_username(user_id):
     conn.close()
     return user_name
 
-def get_passowrd(user_id):
+def verify_password(user_id,password):
     conn = connect_to_database()
     cursor = conn.cursor()
     cursor.execute("SELECT password FROM users WHERE id = %s", (user_id,))
-    user_password = cursor.fetchone()[0]
-    cursor.close()
-    conn.close()
-    return user_password
+    stored_password = cursor.fetchone()
+    if stored_password and password == stored_password[0]:
+        return True
+    
+    return False
 
-
-def new_passowrd(user_id,password):
+def update_password(user_id,password):
     conn = connect_to_database()
     cursor = conn.cursor()
     cursor.execute("UPDATE users SET password = %s WHERE id = %s", (password, user_id))
-    new_password = cursor.fetchone()[0]
+    conn.commit()
     cursor.close()
     conn.close()
-    return new_password
+    return update_password
 
 def check_email_contains_edu(user_id):
     conn = connect_to_database()
