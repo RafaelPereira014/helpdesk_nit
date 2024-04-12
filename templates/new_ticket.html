@@ -62,9 +62,13 @@
             <label for="UnidadeOrg">Unidade organica:</label>
             <select id="UnidadeOrg" name="UnidadeOrg" required></select>
 
-            <div id="file_download" style="display: none;">
+            <div id="file_download1" style="display: none;">
                 <label>Ficheiro de template</label>
-                <a href="{{ url_for('static', filename='files/Criacao_de_Contas-template.xlsx') }}" download>Criacao_de_Contas-template.xlsx</a>
+                <a href="{{ url_for('static', filename='files/criacao_conta-template.xlsx') }}" download>Criacao_de_Contas-template.xlsx</a>
+            </div>
+            <div id="file_download2" style="display: none;">
+                <label>Ficheiro de template</label>
+                <a href="{{ url_for('static', filename='files/reset_account-template.xlsx') }}" download>Reset conta.xlsx</a>
             </div>
             <!-- Div for description -->
             <div id="description_div">
@@ -104,24 +108,31 @@
         function toggleDescription() {
             var topicSelect = document.getElementById('topic_id');
             var descriptionDiv = document.getElementById('description_div');
-            var fileDownload = document.getElementById('file_download');
+            var fileDownload1 = document.getElementById('file_download1');
+            var fileDownload2 = document.getElementById('file_download2');
     
             if (topicSelect.value === '4') {
                 setDefaultMessage('<b>Insira aqui a tabela com os valores.</b>');
-                fileDownload.style.display = 'block'; // Show download link for topic 4
+                fileDownload1.style.display = 'block'; // Show download link for topic 4
+                fileDownload2.style.display = 'none'; // Show download link for topic 4
             } else if(topicSelect.value === '5'){
                 setDefaultMessage('<b>Nome completo: </b><br><b>User: </b>');
-                fileDownload.style.display = 'none'; // Show download link for topic 4
+                fileDownload1.style.display = 'none'; // Show download link for topic 4
+                fileDownload2.style.display = 'block'; // Show download link for topic 4
 
             } else if(topicSelect.value === '6'){
                 setDefaultMessage('<b>Nome completo: </b><br><b>User: </b>');
-                fileDownload.style.display = 'none'; // Show download link for topic 4
+                fileDownload1.style.display = 'none'; // Show download link for topic 4
+                fileDownload2.style.display = 'block'; // Show download link for topic 4
             } else if(topicSelect.value === '7'){
                 setDefaultMessage('<b>Insira aqui a lista com os MACaddress. </b>');
-                fileDownload.style.display = 'none'; // Show download link for topic 4
+                fileDownload1.style.display = 'none'; // Show download link for topic 4
+                fileDownload2.style.display = 'none'; // Show download link for topic 4
             } else  {
                 setDefaultMessage('');
-                fileDownload.style.display = 'none'; // Hide download link for other topics
+                fileDownload1.style.display = 'none'; // Hide download link for other topics
+                fileDownload2.style.display = 'none'; // Show download link for topic 4
+
             }
         }
     

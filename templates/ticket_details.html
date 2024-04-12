@@ -31,8 +31,10 @@
 
         .ticket-info-item {
             margin-bottom: 15px;
+            overflow: auto; /* Enable scrolling for overflow content */
+            max-height: 200px; /* Set a maximum height for the description */
         }
-
+        
         .info-label {
             font-weight: bold;
             color: #555;
@@ -156,19 +158,23 @@
         <h1>{{ ticket_details.title }} #{{ ticket_details.id }}</h1>
         <h2>Informação acerca do ticket</h2>
         <div class="ticket-info">
+            <!-- User -->
             <div class="ticket-info-item">
                 <span class="info-label">Utilizador:</span>
                 <span class="info-value">{{ user_name }}</span>
             </div>
+            <!-- Contact -->
             <div class="ticket-info-item">
                 <span class="info-label">Contacto:</span>
                 <span class="info-value">{{ ticket_details.contacto }}</span>
             </div>
+            <!-- Description -->
             <div class="ticket-info-item">
                 <span class="info-label">Descrição:</span>
                 <span class="info-value">{{ ticket_details.description | safe }}</span>
             </div>
         </div>
+        
 
         <div class="message-container" id="message-container">
             <!-- Messages will be displayed here -->
