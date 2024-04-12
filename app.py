@@ -121,6 +121,7 @@ def new_ticket():
         
         # Get the user ID of the currently logged-in user from the session
         created_by = session.get('user_id')
+        user_name = get_username(created_by)
         
         # Generate current date and time
         date = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
@@ -128,7 +129,7 @@ def new_ticket():
         title = request.form['title']
         
         # Call the create_ticket function with the correct parameters
-        create_ticket(topic_id, description, date, state, created_by, contacto, title,uni_org)
+        create_ticket(topic_id, description, date, state, created_by, contacto, title, uni_org)
         ticket_id = get_ticketid(description)
         
         # Retrieve the email of the user who created the ticket
@@ -138,25 +139,38 @@ def new_ticket():
         is_edu = check_email_contains_edu(created_by)
 
         if user_email:
-            msg = Message('Ticket criado', sender='noreply@azores.gov.pt', recipients=[user_email])
-            msg.body = f"O seu ticket #{ticket_id} foi criado com sucesso."
+            msg = Message(f'Ticket criado #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
+            msg.html = f"""
+                <h1>Novo ticket</h1>
+                <p>Foi registado um novo ticket com o numero #<strong>{ ticket_id }</strong>.</p>
+                <p>Logo que possível um dos nossos técnicos resolverá o problema.</p>
+                <h2>Assunto: { title }</h2>
+                <p>Descricao: { description}</p>
+                <p>Obrigado por usar o nosso helpdesk.</p>
+                <h3><strong>SREC-NIT</strong></h3>
+            """
             mail.send(msg)
             
         if admin_emails:
             unique_admin_emails = set(admin_emails)  # Remove duplicates if any
             for admin_email in unique_admin_emails:
-                msg = Message('Novo ticket aberto', sender='noreply@azores.gov.pt', recipients=[admin_email])
-                msg.body = f"Foi recebido um novo ticket com o número #{ticket_id}."
+                msg = Message(f'Novo ticket aberto #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[admin_email])
+                msg.html = f"""
+                    <h1>Novo ticket </h1>
+                    <p>Criado por: {user_name}</p>
+                    <p>Unidade organica: {uni_org}</p>
+                    <p>Foi recebido um novo ticket com o número #<strong>{ticket_id}</strong> e com assunto <strong>{title}</strong>.</p>
+                    <p>Descrição: {description}</p>
+                    <p>Obrigado por usar o nosso helpdesk.</p>
+                    <h3><strong>SREC-NIT</strong></h3>
+                """
                 mail.send(msg)
+
 
         return redirect(url_for('my_tickets'))  # Redirect to my_tickets page after creating ticket
 
     # Pass is_edu to the template for rendering
     return render_template('new_ticket.html', is_edu=is_edu)
-
-
-
-
 
 @app.route('/my_tickets')
 def my_tickets():
@@ -212,11 +226,26 @@ def send_message():
     # Set the sender type based on the user's type
     sender_type = user_type[0] if user_type else 'user'  # Default to 'user' if no type is found
     sender_name = get_username(user_id)
+    
     # Insert the message into the database
     cursor = connection.cursor()
-    cursor.execute("INSERT INTO messages (ticket_id, message, sender_type,sender_name) VALUES (%s, %s, %s,%s)",
-                   (ticket_id, message, sender_type,sender_name))
+    cursor.execute("INSERT INTO messages (ticket_id, message, sender_type, sender_name) VALUES (%s, %s, %s, %s)",
+                   (ticket_id, message, sender_type, sender_name))
     connection.commit()
+    
+    # If the sender is an admin, send the message to the email of the ticket creator
+    if sender_type == 'admin':
+        ticket_creator_email = get_user_email_by_ticket(ticket_id)
+        if ticket_creator_email:
+            msg = Message(f'Atualização no ticket#{ticket_id}', sender='noreply@azores.gov.pt', recipients=[ticket_creator_email])
+            msg.html = f"""
+                <p>Foi registada uma atualização no seu ticket com o numero #<strong>{ ticket_id }</strong>.</p>
+                <p>Verifique as novas atualizações.</p>
+                <p>Obrigado por usar o nosso helpdesk.</p>
+                <h3><strong>SREC-NIT</strong></h3>
+            """
+            mail.send(msg)
+            
     cursor.close()
     
     return jsonify({'success': True})
@@ -329,8 +358,12 @@ def close_ticket_route(ticket_id):
         
     # Send an email notification to the user
     if user_email:
-        msg = Message('Ticket fechado', sender='noreply@azores.gov.pt', recipients=[user_email])
-        msg.body = f"O seu ticket #{ticket_id} foi fechado."
+        msg = Message('Ticket fechado #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
+        msg.html = f"""
+            <h2>O seu ticket com o número #{ticket_id} foi concluído com sucesso.</h2>
+            <p>Obrigado por usar o nosso helpdesk.</p>
+            <h3><strong>SREC-NIT</strong></h3>
+        """
         mail.send(msg)
 
     return jsonify({'success': True})
@@ -364,8 +397,12 @@ def accept_ticket_route(ticket_id):
     attributed_to(user_id)
     user_email = get_user_email_by_ticket(ticket_id)
     if user_email:
-        msg = Message('Ticket aceite', sender='noreply@azores.gov.pt', recipients=[user_email])
-        msg.body = f"O seu ticket #{ticket_id} foi aceite."
+        msg = Message('Ticket aceite #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
+        msg.html = f"""
+            <h2>O seu ticket com o número #{ticket_id} foi aceite e encontra-se neste momento em execução.</h2>
+            <p>Obrigado por usar o nosso helpdesk.</p>
+            <h3><strong>SREC-NIT</strong></h3>
+        """
         mail.send(msg)
     
 

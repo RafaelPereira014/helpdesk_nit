@@ -136,7 +136,7 @@
                         <td>${ticket.date}</td>
                         <td>${ticket.state}</td>
                         <td><a href="/ticket_details/${ticket.id}">${ticket.title}</a></td>
-                        <td>${ticket.attributed}</td>
+                        <td>${ticket.state === 'open' ? '-' : ticket.attributed}</td>
                     `;
                     tableBody.appendChild(row);
                 }
