@@ -57,8 +57,9 @@
 
     <div class="main">
         <h1>Tickets</h1>
+        <button id="all-btn"  class="button-filter">Todos({{ all_tickets }})</button>
         <button id="aberto-btn"  class="button-filter">Aberto({{ open_tickets }})</button>
-        <button id="fechado-btn"  class="button-filter">Fechado({{ closed_tickets }})</button>
+        <button id="fechado-btn"  class="button-filter">Fechado({{ close_tickets }})</button>
         <button id="executing-btn"  class="button-filter">Em execucao({{ executing_tickets }})</button>
         <table id="ticket-table">
             <thead>
@@ -87,19 +88,18 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var tickets = [ 
-            {% for ticket in tickets %}
-            {
-                id: "{{ ticket.id }}",
-                date: "{{ ticket.date }}",
-                state: "{{ ticket.state }}",
-                title: "{{ ticket.title }}",
-                attributed: "{{ ticket.attributed_name}}"
-            },
-            {% endfor %}]; // Sample ticket data
-            var currentPage = 1;
+                {% for ticket in tickets %}
+                {
+                    id: "{{ ticket.id }}",
+                    date: "{{ ticket.date }}",
+                    state: "{{ ticket.state }}",
+                    title: "{{ ticket.title }}",
+                    attributed: "{{ ticket.attributed_name}}"
+                },
+                {% endfor %}]; // Sample ticket data
+            var currentPage = 1; // Set currentPage to 1 initially
             var ticketsPerPage = 10; // Number of tickets to display per page
-            var currentfilter = 'aberto'
-
+    
             var tableBody = document.getElementById('ticket-table-body');
             var prevButton = document.getElementById('prev-btn');
             var nextButton = document.getElementById('next-btn');
@@ -107,17 +107,29 @@
             var abertoButton = document.getElementById('aberto-btn');
             var fechadoButton = document.getElementById('fechado-btn');
             var executingButton = document.getElementById('executing-btn');
-
+            var allButton = document.getElementById('all-btn'); // Add this line
+            var currentFilter = 'all'; // Default filter
+    
             // Function to display tickets for the current page
             function displayTickets() {
-                
+                var filteredTickets;
+                if (currentFilter === 'aberto') {
+                    filteredTickets = tickets.filter(ticket => ticket.state === 'open');
+                } else if (currentFilter === 'fechado') {
+                    filteredTickets = tickets.filter(ticket => ticket.state === 'closed');
+                }else if (currentFilter === 'em execucao') {
+                    filteredTickets = tickets.filter(ticket => ticket.state === 'em execucao');
+                }else {
+                    filteredTickets = tickets;
+                }
+    
                 var startIdx = (currentPage - 1) * ticketsPerPage;
-                var endIdx = Math.min(startIdx + ticketsPerPage, tickets.length);
-
+                var endIdx = Math.min(startIdx + ticketsPerPage, filteredTickets.length);
+    
                 tableBody.innerHTML = ''; // Clear previous entries
-
+    
                 for (var i = startIdx; i < endIdx; i++) {
-                    var ticket = tickets[i];
+                    var ticket = filteredTickets[i];
                     var row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${ticket.id}</td>
@@ -128,10 +140,10 @@
                     `;
                     tableBody.appendChild(row);
                 }
-
+    
                 pageNumSpan.textContent = currentPage;
             }
-
+    
             // Function to navigate to the previous page
             function goToPrevPage() {
                 if (currentPage > 1) {
@@ -139,7 +151,7 @@
                     displayTickets();
                 }
             }
-
+    
             // Function to navigate to the next page
             function goToNextPage() {
                 var totalPages = Math.ceil(tickets.length / ticketsPerPage);
@@ -148,14 +160,42 @@
                     displayTickets();
                 }
             }
-
+    
+            // Event listeners for filter buttons
+            abertoButton.addEventListener('click', function () {
+                currentFilter = 'aberto';
+                currentPage = 1; // Reset page number when changing filter
+                displayTickets();
+            });
+    
+            fechadoButton.addEventListener('click', function () {
+                currentFilter = 'fechado';
+                currentPage = 1; // Reset page number when changing filter
+                displayTickets();
+            });
+    
+            executingButton.addEventListener('click', function () {
+                currentFilter = 'em execucao';
+                currentPage = 1; // Reset page number when changing filter
+                displayTickets();
+            });
+    
+            allButton.addEventListener('click', function () {
+                currentFilter = 'all';
+                currentPage = 1; // Reset page number when changing filter
+                displayTickets();
+            });
+    
             // Event listeners for pagination buttons
             prevButton.addEventListener('click', goToPrevPage);
             nextButton.addEventListener('click', goToNextPage);
-
+    
             // Initial display
             displayTickets();
         });
     </script>
+    
+    
+    
 </body>
 </html>

@@ -79,6 +79,7 @@ def profile_page():
     admin_status = is_admin(user_id)
 
     message = None  # Initialize message variable
+    
 
     if request.method == 'POST':
         password = request.form['password']
@@ -164,6 +165,12 @@ def my_tickets():
 
     user_id = session['user_id']
     tickets = get_user_tickets(user_id)  # Function to fetch tickets associated with the user ID
+    open_tickets = get_opened_tickets_count_by_user(user_id)
+    close_tickets = get_closed_tickets_count_by_user(user_id)
+    executing_tickets = get_executing_tickets_count_by_user(user_id)
+    all_tickets = get_all_tickets_user(user_id)
+
+
 
     ticket_fields = []  # List to store ticket fields
 
@@ -184,7 +191,7 @@ def my_tickets():
     admin_status = is_admin(user_id)
 
     # Render the template with the tickets and admin status
-    return render_template('my_tickets.html', tickets=ticket_fields, is_admin=admin_status)
+    return render_template('my_tickets.html', tickets=ticket_fields, is_admin=admin_status,open_tickets=open_tickets,close_tickets=close_tickets,executing_tickets=executing_tickets,all_tickets=all_tickets)
 
 
 @app.route('/send_message', methods=['POST'])

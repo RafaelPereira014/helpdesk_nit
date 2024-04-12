@@ -137,11 +137,31 @@ def get_all_tickets_group(group_id):
     conn.close()
     return tickets
 
+def get_all_tickets_user(user_id):
+    """Fetches all tickets from the database."""
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT COUNT(*) AS all_tickets_count FROM tickets WHERE created_by = %s", (user_id,))
+    all_tickets_count = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return all_tickets_count['all_tickets_count'] if all_tickets_count else 0
+
 def get_opened_tickets_count_by_group(group_id):
     """Fetches the number of opened tickets for a specific group."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(*) AS opened_tickets_count FROM tickets WHERE state = 'open' AND group_id = %s", (group_id,))
+    opened_tickets_count = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return opened_tickets_count['opened_tickets_count'] if opened_tickets_count else 0
+
+def get_opened_tickets_count_by_user(user_id):
+    """Fetches the number of opened tickets for a specific group."""
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT COUNT(*) AS opened_tickets_count FROM tickets WHERE state = 'open' AND created_by = %s", (user_id,))
     opened_tickets_count = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -157,11 +177,31 @@ def get_closed_tickets_count_by_group(group_id):
     conn.close()
     return closed_tickets_count['closed_tickets_count'] if closed_tickets_count else 0
 
+def get_closed_tickets_count_by_user(user_id):
+    """Fetches the number of opened tickets for a specific group."""
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT COUNT(*) AS closed_tickets_count FROM tickets WHERE state = 'closed' AND created_by = %s", (user_id,))
+    closed_tickets_count = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return closed_tickets_count['closed_tickets_count'] if closed_tickets_count else 0
+
 def get_executing_tickets_count_by_group(group_id):
     """Fetches the number of opened tickets for a specific group."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(*) AS executing_tickets_count FROM tickets WHERE state = 'em execucao' AND group_id = %s", (group_id,))
+    executing_tickets_count = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return executing_tickets_count['executing_tickets_count'] if executing_tickets_count else 0
+
+def get_executing_tickets_count_by_user(user_id):
+    """Fetches the number of opened tickets for a specific group."""
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT COUNT(*) AS executing_tickets_count FROM tickets WHERE state = 'em execucao' AND created_by = %s", (user_id,))
     executing_tickets_count = cursor.fetchone()
     cursor.close()
     conn.close()
