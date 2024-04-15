@@ -11,6 +11,9 @@ body {
     background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+.button-container {
+    text-align: center;
+}
 
 h1 {
     color: #3e4684;
@@ -28,6 +31,17 @@ p {
     background-color: #3e4684;
     color: white;
     text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+.button-login {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #3e4684;
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    display: inline;
     border-radius: 5px;
     transition: background-color 0.3s ease;
 }
