@@ -7,6 +7,7 @@ body {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    position: relative;
 }
 
 h1 {
@@ -43,15 +44,15 @@ th {
 }
 
 .user-message {
-    background-color: #007bff;
-    color: white;
+    background-color: #ebebeb;
+    color: rgb(0, 0, 0);
     float: left;
     clear: both;
 }
 
 .admin-message {
-    background-color: #96a4b3;
-    color: white;
+    background-color: #d4d4d4e1;
+    color: rgb(0, 0, 0);
     float: right;
     clear: both;
 }
@@ -63,7 +64,7 @@ th {
 }
 
 .user-header {
-    color: #3498db;
+    color: #5cafe6;
 }
 
 .admin-header {

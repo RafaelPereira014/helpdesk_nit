@@ -67,7 +67,15 @@ def logout():
 
 @app.route('/init_page')
 def init_page():
-    return render_template('init.html')
+    if 'user_id' not in session:
+        return redirect(url_for('login'))  # Redirect to login page if user is not logged in
+
+    user_id = session['user_id']
+    open_tickets = get_opened_tickets_count_by_user(user_id)
+    closed_tickets = get_closed_tickets_count_by_user(user_id)
+    executing_tickets = get_executing_tickets_count_by_user(user_id)
+    
+    return render_template('init.html', open_tickets=open_tickets,closed_tickets=closed_tickets,executing_tickets=executing_tickets)
 
 @app.route('/my_profile', methods=['GET', 'POST'])
 def profile_page():

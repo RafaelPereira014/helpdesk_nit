@@ -1,18 +1,20 @@
 body {
-    font-family: "Poppins";
+    font-family: "Poppins", sans-serif;
     background-color: #dde5f4;
 }
 
 .container {
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
-    text-align: center;
     padding: 40px 20px;
-    border-radius: 30px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
     color: #3e4684;
+    margin-bottom: 20px;
 }
 
 p {
@@ -22,11 +24,11 @@ p {
 
 .button {
     display: inline-block;
-    padding: 5px 10px;
+    padding: 10px 20px;
     background-color: #3e4684;
     color: white;
     text-decoration: none;
-    border-radius: 30px;
+    border-radius: 5px;
     transition: background-color 0.3s ease;
 }
 
@@ -42,28 +44,133 @@ p {
     text-decoration: none;
     transition: background-color 0.3s ease;
 }
+
+.ticket-info {
+    margin-bottom: 20px;
+}
+
+.ticket-info-item {
+    margin-bottom: 15px;
+    overflow: auto; /* Enable scrolling for overflow content */
+    max-height: 200px; /* Set a maximum height for the description */
+}
+
+.info-label {
+    font-weight: bold;
+    color: #555;
+}
+
+.info-value {
+    color: #333;
+    margin-left: 10px;
+}
+
+.message-container {
+    margin-top: 20px;
+    border-top: 1px solid #ccc;
+    padding-top: 20px;
+}
+
+.message-container .message {
+    margin-bottom: 20px;
+    padding: 0; /* Remove default padding */
+    border-radius: 10px;
+}
+
+.message-container .message .message-header {
+    padding: 10px 20px;
+    border-radius: 10px 10px 0 0;
+    border-color: #bf4e4e;
+    color: #272525;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.user-message,
+.admin-message {
+    margin-bottom: 20px;
+    overflow: auto; /* Enable scrolling for overflow content */
+    float: none;
+    clear: none;
+}
+
+.user-message .message-content,
+.admin-message .message-content {
+    padding: 15px 20px;
+}
+
+.user-message .message-header {
+    background-color: #4e84be;
+}
+
+.admin-message .message-header {
+    background-color: #8d8f91;
+}
+
+.user-message .message-header,
+.admin-message .message-header {
+    margin-bottom: 10px;
+}
+
+.user-message .message-content,
+.admin-message .message-content {
+    margin-top: 0;
+}
+
+.user-header {
+    color: #122d3f;
+}
+
+.admin-header {
+    color: #4e79bf;
+}
+
+#message {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 16px;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
 .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+    display: none;
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
 }
 
-/* Modal content */
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 10% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 15%; /* Could be more or less, depending on screen size */
+    width: 60%;
+    border-radius: 5px;
 }
 
-/* Close button */
 .close {
     color: #aaa;
     float: right;
