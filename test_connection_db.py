@@ -25,9 +25,10 @@ try:
         # emails = cursor.fetchall()
         # print(emails)
         
-        is_edu = check_email_contains_edu('1')
+        is_edu = check_email_contains_edu('13')
+        
 
-        cursor.execute("SELECT * from users")
+        cursor.execute("SELECT * from topics")
         name = cursor.fetchall()
         print(name)
         # Fetch all rows (tickets) from the result set

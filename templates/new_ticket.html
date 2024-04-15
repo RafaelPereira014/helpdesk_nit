@@ -51,11 +51,15 @@
         <form method="POST" action="/new_ticket" id="ticket_form">
             <label for="topic">Tópico de ajuda:</label>
             <select id="topic_id" name="topic_id" required>
+                <!-- Topicos default para todos -->
                 <option value="0">-</option>
+                {%if is_edu%}
                 <option value="4">Criar conta EDU</option>
                 <option value="5">Reset MFA EDU</option>
                 <option value="6">Reset password EDU</option>
+                {%else %}
                 <option value="7">Adicionar MACaddress a controladora</option>
+                {% endif %}
             </select>
             <label for="title">Título:</label>
             <input type="text" id="title" name="title" required>
@@ -112,27 +116,26 @@
             var fileDownload2 = document.getElementById('file_download2');
     
             if (topicSelect.value === '4') {
-                setDefaultMessage('<b>Insira aqui a tabela com os valores.</b>');
+                // Create a default table with three columns
+                setDefaultMessage('<table border="1"><tr><th>Nome completo</th><th>NIF</th><th>Data de nascimento</th></tr><tr><td></td><td></td><td></td></tr></table>');
                 fileDownload1.style.display = 'block'; // Show download link for topic 4
                 fileDownload2.style.display = 'none'; // Show download link for topic 4
-            } else if(topicSelect.value === '5'){
-                setDefaultMessage('<b>Nome completo: </b><br><b>User: </b>');
+            } else if (topicSelect.value === '5') {
+                setDefaultMessage('<table border="1"><tr><th>Nome completo</th><th>User</th></tr><tr><td></td><td></td></tr></table>');
                 fileDownload1.style.display = 'none'; // Show download link for topic 4
                 fileDownload2.style.display = 'block'; // Show download link for topic 4
-
-            } else if(topicSelect.value === '6'){
-                setDefaultMessage('<b>Nome completo: </b><br><b>User: </b>');
+            } else if (topicSelect.value === '6') {
+                setDefaultMessage('<table border="1"><tr><th>Nome completo</th><th>User</th></tr><tr><td></td><td></td></tr></table>');
                 fileDownload1.style.display = 'none'; // Show download link for topic 4
                 fileDownload2.style.display = 'block'; // Show download link for topic 4
-            } else if(topicSelect.value === '7'){
+            } else if (topicSelect.value === '7') {
                 setDefaultMessage('<b>Insira aqui a lista com os MACaddress. </b>');
                 fileDownload1.style.display = 'none'; // Show download link for topic 4
                 fileDownload2.style.display = 'none'; // Show download link for topic 4
-            } else  {
+            } else {
                 setDefaultMessage('');
                 fileDownload1.style.display = 'none'; // Hide download link for other topics
                 fileDownload2.style.display = 'none'; // Show download link for topic 4
-
             }
         }
     

@@ -110,7 +110,12 @@ from flask import render_template
 
 @app.route('/new_ticket', methods=['GET', 'POST'])
 def new_ticket():
-    is_edu = False  # Initialize is_edu variable
+    if 'user_id' not in session:
+        return redirect(url_for('login'))  # Redirect to login page if user is not logged in
+    
+    user_id = session['user_id']
+    is_edu = check_email_contains_edu(user_id) 
+
 
     if request.method == 'POST':
         # Your existing code for creating a new ticket
@@ -136,7 +141,6 @@ def new_ticket():
         user_email = get_user_email_by_user(created_by)
         # Send an email notification to the user
         admin_emails = get_emails_by_group(topic_id)
-        is_edu = check_email_contains_edu(created_by)
 
         if user_email:
             msg = Message(f'Ticket criado #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])

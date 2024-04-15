@@ -12,6 +12,31 @@
     <link href='https://unpkg.com/css.gg@2.0.0/icons/css/log-out.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        /* Add custom styles for the ticket status panel */
+        .ticket-status {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .ticket-status .status-item {
+            width: 30%;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .ticket-status .status-item h2 {
+            color: #333;
+        }
+
+        .ticket-status .status-item p {
+            margin-top: 10px;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
     <div class="sidenav">
@@ -31,8 +56,6 @@
         <div class="menu-item" id="logout-button">
             <a href="/logout"></i> Terminar sessão</a>
         </div>
-        
-        
     </div>
     
     <div class="container">
@@ -41,7 +64,22 @@
             A cada pedido será atribuído um numero único, e com o qual será possível verificar o seu estado, assim como as tarefas atribuídas ao mesmo.
             Para referência futura, disponibilizamos o histórico de todos os pedidos registados.
         </h3>
+        
+        <!-- Ticket Status Panel -->
+        <div class="ticket-status">
+            <div class="status-item">
+                <h2>Aberto</h2>
+                <p>{{ open_tickets }} Tickets</p>
+            </div>
+            <div class="status-item">
+                <h2>Fechado</h2>
+                <p>{{ close_tickets }} Tickets</p>
+            </div>
+            <div class="status-item">
+                <h2>Em Execução</h2>
+                <p>{{ executing_tickets }} Tickets</p>
+            </div>
+        </div>
     </div>
-    
 </body>
 </html>
