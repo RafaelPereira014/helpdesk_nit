@@ -23,6 +23,7 @@
         images_upload_url: '/upload_image', // URL for server-side image upload handler (optional)
     });
 </script>
+
 </head>
 <body>
     <div class="sidenav">
@@ -42,8 +43,6 @@
         <div class="menu-item" id="logout-button">
             <a href="/logout"></i> Terminar sessão</a>
         </div>
-        
-        
     </div>
 
     <div class="container">
@@ -84,13 +83,18 @@
             <input type="text" id="contacto" name="contacto" required>
             <!-- Download link for default file -->
             
-            <button type="submit">Submeter ticket</button>
+            <button type="submit" id="submit_button">Submeter ticket</button>
+            <div id="loader">
+                <i class="fa fa-spinner fa-spin"></i> Carregando...
+            </div>
         </form>
-       
     </div>
 
     <script>
         window.onload = function() {
+            // Hide the loader when the page is fully loaded
+            document.getElementById('loader').style.display = 'none';
+            
             // Fetch the file containing the values
             fetch('{{ url_for('static', filename='files/unidade_organica.txt') }}')
                 .then(response => response.text())
@@ -108,6 +112,7 @@
                 })
                 .catch(error => console.error('Error fetching unidade organica:', error));
         };
+        
         // Function to show or hide description field based on selected topic
         function toggleDescription() {
             var topicSelect = document.getElementById('topic_id');
@@ -149,8 +154,14 @@
     
         // Call toggleDescription function on page load to initialize based on initial topic value
         toggleDescription();
+    
+        // Show loader when form is submitted
+        document.getElementById('ticket_form').addEventListener('submit', function() {
+            document.getElementById('loader').style.display = 'flex'; // Change display to flex to show the loader
+            // Optionally, disable the submit button to prevent multiple submissions
+            // document.getElementById('submit_button').disabled = true;
+        });
     </script>
-   
     
 </body>
 </html>
