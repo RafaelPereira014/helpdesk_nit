@@ -118,3 +118,36 @@ textarea {
     font-size: 14px;
     color: #888;
 }
+
+/* Popup styles */
+/* Popup styles */
+.popup {
+    position: fixed;
+    top: 20px; /* Adjust top position */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: none;
+    z-index: 999;
+}
+
+/* Animation for showing popup */
+@keyframes slideIn {
+    from {
+        top: -50px; /* Adjust top position */
+    }
+    to {
+        top: 20px; /* Adjust top position */
+    }
+}
+
+
+.close-popup {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+}

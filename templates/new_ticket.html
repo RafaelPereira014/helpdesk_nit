@@ -48,6 +48,7 @@
     <div class="container">
         <h1>Abrir novo ticket</h1>
         <form method="POST" action="/new_ticket" id="ticket_form">
+            <div id="popup-message" class="popup" style="display: none;">Ticket criado com sucesso!</div>
             <label for="topic">Tópico de ajuda:</label>
             <select id="topic_id" name="topic_id" required>
                 <!-- Topicos default para todos -->
@@ -85,7 +86,7 @@
             
             <button type="submit" id="submit_button">Submeter ticket</button>
             <div id="loader">
-                <i class="fa fa-spinner fa-spin"></i> Carregando...
+                <i class="fa fa-spinner fa-spin"></i>A submeter o ticket.Por favor aguarde...
             </div>
         </form>
     </div>
@@ -143,6 +144,20 @@
                 fileDownload2.style.display = 'none'; // Show download link for topic 4
             }
         }
+        // Function to show popup message
+        function showPopupMessage() {
+            var popup = document.getElementById('popup-message');
+            popup.style.display = 'block'; // Show the popup
+            setTimeout(function() {
+                popup.style.display = 'none'; // Hide the popup after 3 seconds
+            }, 3000); // Adjust the duration as needed (in milliseconds)
+        }
+
+        // Show loader when form is submitted
+        document.getElementById('ticket_form').addEventListener('submit', function() {
+            document.getElementById('loader').style.display = 'flex'; // Show the loader
+            showPopupMessage(); // Show the popup message
+        });
     
         // Function to set default message in the editor
         function setDefaultMessage(message) {

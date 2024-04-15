@@ -128,6 +128,10 @@
             <p>Aguarde enquanto a mensagem é submetida.</p>
         </div>
     </div>
+    <div id="popup" class="popup">
+        <span class="popup-text" id="popup-text"></span>
+        <span class="close-popup" id="close-popup">&times;</span>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -215,7 +219,8 @@
             var closeTicketButton = document.getElementById('close-ticket-btn');
             if (closeTicketButton && currentAdminId === "{{ ticket_details.admin_id }}") {
                 closeTicketButton.addEventListener('click', function () {
-                    var message = "This ticket has been closed.";
+                    var message = "Este ticket foi fechado com sucesso.";
+                    showPopup('Ticket fechado com sucesso');
                     sendMessage(message); // Send the message
                     var ticketId = "{{ ticket_details.id }}";
                     // Send an AJAX request to close the ticket
@@ -245,7 +250,9 @@
             var reopenTicketButton = document.getElementById('reopen-ticket-btn');
             if (reopenTicketButton && currentAdminId === "{{ ticket_details.admin_id }}") {
                 reopenTicketButton.addEventListener('click', function () {
-                    var message = "This ticket has been reopened.";
+                    var message = "Este ticket foi reaberto.";
+                    showPopup('Ticket reaberto com sucesso');
+
                     sendMessage(message); // Send the message
                     var ticketId = "{{ ticket_details.id }}";
                     // Send an AJAX request to reopen the ticket
@@ -272,11 +279,34 @@
                 });
             }
 
+            function showPopup(message) {
+                var popup = document.getElementById('popup');
+                var popupText = document.getElementById('popup-text');
+                popupText.textContent = message;
+                popup.style.display = 'block';
+                popup.style.animation = 'slideIn 0.5s ease-in-out';
+                setTimeout(function () {
+                    hidePopup();
+                }, 3000); // Hide popup after 3 seconds
+            }
+
+            function hidePopup() {
+                var popup = document.getElementById('popup');
+                popup.style.display = 'none';
+                popup.style.animation = 'none'; // Reset animation
+            }
+            
+            // Event listener to close popup when close button is clicked
+            document.getElementById('close-popup').addEventListener('click', function () {
+                hidePopup();
+            });
+
             // Function to handle accepting the ticket
             var acceptTicketButton = document.getElementById('accept-ticket-btn');
             if (acceptTicketButton && currentAdminId === "{{ ticket_details.admin_id }}") {
                 acceptTicketButton.addEventListener('click', function () {
-                    var message = "This ticket has been accepted.";
+                    var message = "Este ticket foi aceite com sucesso.";
+                    showPopup('Ticket aceite com sucesso.');
                     sendMessage(message); // Send the message
                     var ticketId = "{{ ticket_details.id }}";
                     // Send an AJAX request to update the ticket with the current admin's ID
