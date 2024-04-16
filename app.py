@@ -370,7 +370,7 @@ def close_ticket_route(ticket_id):
         
     # Send an email notification to the user
     if user_email:
-        msg = Message('Ticket fechado #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
+        msg = Message(f'Ticket fechado #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
         msg.html = f"""
             <h2>O seu ticket com o número #{ticket_id} foi concluído com sucesso.</h2>
             <p>Obrigado por usar o nosso helpdesk.</p>
@@ -384,12 +384,6 @@ def close_ticket_route(ticket_id):
 
 @app.route('/reopen_ticket/<int:ticket_id>', methods=['POST'])
 def reopen_ticket_route(ticket_id):
-    # Add a message indicating that the ticket has been closed by the admin
-    # current_time = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-    # reopen_message = f"Ticket reopened by admin at {current_time}"
-    # add_message_to_ticket(ticket_id, reopen_message)
-
-    # Update the ticket's state to "closed"
     reopen_ticket(ticket_id)
 
     return jsonify({'success': True})
@@ -409,7 +403,7 @@ def accept_ticket_route(ticket_id):
     attributed_to(user_id)
     user_email = get_user_email_by_ticket(ticket_id)
     if user_email:
-        msg = Message('Ticket aceite #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
+        msg = Message(f'Ticket aceite #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
         msg.html = f"""
             <h2>O seu ticket com o número #{ticket_id} foi aceite e encontra-se neste momento em execução.</h2>
             <p>Obrigado por usar o nosso helpdesk.</p>

@@ -43,20 +43,20 @@
         <h1>Create New User</h1>
         <div class="profile-info">
             <form method="POST">
-                <label for="name">Name:</label>
+                <label for="name">Nome:</label>
                 <input type="text" id="name" name="name" required><br>
 
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required><br>
 
-                <label for="type">User Type:</label>
+                <label for="type">Tipo utilizador:</label>
                 <select id="type" name="type" required onchange="toggleGroupField()">
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
                 </select><br>
 
                 <div id="group" style="display: none;">
-                    <label for="group_id">Group:</label>
+                    <label for="group_id">Grupo:</label>
                     <select id="group_id" name="group_id">
                         <!-- Option for selecting a group (You can populate this dynamically from backend) -->
                         <option value="1">micro-informática</option>
