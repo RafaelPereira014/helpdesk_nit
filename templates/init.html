@@ -88,43 +88,93 @@
             z-index: 1;
         }
 
+        /* Add styles for the actions section */
+        .actions {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .actions h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .action {
+            margin-bottom: 10px;
+        }
+
+        .action i {
+            font-size: 24px;
+            color: #007bff; /* Blue color */
+            margin-right: 10px;
+        }
+
+        .action span {
+            font-size: 18px;
+        }
+
+        /* Add styles for the latest changes panel */
+        .latest-changes {
+            margin-top: 40px;
+            background-color: #f8f9fa; /* Light gray background */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+        }
+
+        .latest-changes h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .latest-changes ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .latest-changes li {
+            margin-bottom: 10px;
+        }
+
+        .latest-changes li strong {
+            color: #007bff; /* Blue color */
+        }
     </style>
 </head>
 <body>
     <div class="sidenav">
         <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo-main" class="logo-main">
         <div class="menu-item">
-            <a href="/init_page"><i class="fa fa-home"></i> Inicio</a>
+            <a href="/init_page"><i class="fa fa-home"></i> Início</a>
         </div>
         <div class="menu-item">
-            <a href="/new_ticket"><i class="fa fa-dashboard"></i>Abrir novo ticket</a>
+            <a href="/new_ticket"><i class="fa fa-dashboard"></i> Abrir Novo Ticket</a>
         </div>
         <div class="menu-item">
-            <a href="/my_tickets"><i class="fa fa-users"></i>Tickets</a>
+            <a href="/my_tickets"><i class="fa fa-users"></i> Tickets</a>
         </div>
         <div class="menu-item">
-            <a href="/my_profile"><i class="fa fa-user"></i> Meu perfil</a>
+            <a href="/my_profile"><i class="fa fa-user"></i> Meu Perfil</a>
         </div>
         <div class="menu-item" id="logout-button">
-            <a href="/logout"></i> Terminar sessão</a>
+            <a href="/logout"><i class="gg-log-out"></i> Terminar Sessão</a>
         </div>
     </div>
     
     <div class="container">
-        <h1>Bem-vindo ao sistema tickets do NIT</h1>
-        <h3> De forma a otimizarmos os pedidos de apoio, utilizamos este sistema de gestão de pedidos de apoio.
-            A cada pedido será atribuído um numero único, e com o qual será possível verificar o seu estado, assim como as tarefas atribuídas ao mesmo.
-            Para referência futura, disponibilizamos o histórico de todos os pedidos registados.
-        </h3>
+        <h1>Bem-vindo ao Sistema de Tickets do NIT</h1>
+        <h3>Seja bem-vindo ao nosso sistema de gestão de pedidos de apoio! Aqui, você pode abrir novos tickets, acompanhar o estado dos tickets, editar mensagens nos tickets e verificar o histórico de todos os tickets registrados. Estamos aqui para ajudá-lo!</h3>
         
         <!-- Ticket Status Panel -->
         <div class="ticket-status">
             <div class="status-item">
-                <h2>Aberto</h2>
+                <h2>Abertos</h2>
                 <p>{{ open_tickets }} Tickets</p>
             </div>
             <div class="status-item">
-                <h2>Fechado</h2>
+                <h2>Fechados</h2>
                 <p>{{ closed_tickets }} Tickets</p>
             </div>
             <div class="status-item">
@@ -133,7 +183,43 @@
             </div>
         </div>
         
+        <!-- Actions Section -->
+        <div class="actions">
+            <h2>Nesta versão, é possivel:</h2>
+            <div class="action">
+                <i class="fa fa-plus-circle"></i><span>Abrir Novo Ticket</span> <!-- Icon for creating tickets -->
+            </div>
+            <div class="action">
+                <i class="fa fa-list-alt"></i><span>Ver Estado dos Tickets</span> <!-- Icon for viewing ticket status -->
+            </div>
+            <div class="action">
+                <i class="fa fa-edit"></i><span>Editar Mensagens no Ticket</span> <!-- Icon for changing messages -->
+            </div>
+            <div class="action">
+                <i class="fa fa-history"></i><span>Ver Histórico de Tickets</span> <!-- Icon for viewing history -->
+            </div>
+            <div class="action">
+                <i class="fa fa-key"></i><span>Alterar password</span> <!-- Icon for changing password -->
+            </div>
+        </div>
+
+        <!-- Latest Changes Panel -->
+        <div class="latest-changes">
+            <h2>Últimas Alterações</h2>
+            <ul>
+                <li>
+                    <strong>1.0.1:</strong> Corrigido bug na página de perfil do usuário.
+                </li>
+                <li>
+                    <strong>1.0.0:</strong> Lançamento inicial do sistema de tickets.
+                </li>
+            </ul>
+        </div>
         
+        <!-- Version Information -->
+        <footer>
+            <p>Versão: beta v1.0</p>
+        </footer>
     </div>
 </body>
 </html>
