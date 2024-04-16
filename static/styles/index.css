@@ -20,6 +20,18 @@ h1 {
     margin-bottom: 20px;
 }
 
+h3 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+h4 {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+
 p {
     color: #4d4d4d;
     margin-bottom: 20px;
