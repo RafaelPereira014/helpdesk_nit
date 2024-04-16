@@ -1,0 +1,23 @@
+-
+Gabinete SRECD
+DSTF
+DAIP
+DAIP-Técnicos
+DAIP-Aprovisionamento
+DAIP-Pessoal
+DAIP-Expediente
+DAIP-Telefonistas
+DCE
+DCE-Estatística
+DCE-Arquivo
+DCE-Contabilidade
+NIT
+Gabinete DREAE
+DREAE-CF
+DEPBIDE
+DESAP
+DGPD
+DGPD-Gabinete Jurídico
+DGPND
+DGFE
+IRE
