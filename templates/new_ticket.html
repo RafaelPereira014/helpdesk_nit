@@ -53,6 +53,7 @@
             <select id="topic_id" name="topic_id" required>
                 <!-- Topicos default para todos -->
                 <option value="0">-</option>
+                <option value="2">Geral</option>
                 {%if is_edu%}
                 <option value="4">Criar conta EDU</option>
                 <option value="5">Reset MFA EDU</option>
@@ -65,7 +66,7 @@
             <input type="text" id="title" name="title" required>
             <label for="UnidadeOrg">Unidade organica:</label>
             <select id="UnidadeOrg" name="UnidadeOrg" required></select>
-
+            <!-- Div for description 
             <div id="file_download1" style="display: none;">
                 <label>Ficheiro de template</label>
                 <a href="{{ url_for('static', filename='files/criacao_conta-template.xlsx') }}" download>Criacao_de_Contas-template.xlsx</a>
@@ -74,6 +75,7 @@
                 <label>Ficheiro de template</label>
                 <a href="{{ url_for('static', filename='files/reset_account-template.xlsx') }}" download>Reset conta.xlsx</a>
             </div>
+            -->
             <!-- Div for description -->
             <div id="description_div">
                 <label for="description">Descrição:</label>
