@@ -105,7 +105,7 @@ def get_ticket_details(ticket_id):
     """Fetches ticket details and associated messages from the database based on the ticket ID."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT id, description, date, state, created_by, attributed_to, contacto, title,closed_by FROM tickets WHERE id = %s", (ticket_id,))
+    cursor.execute("SELECT id, description, date, state, created_by, attributed_to, contacto, title,closed_by,file FROM tickets WHERE id = %s", (ticket_id,))
     ticket_details = cursor.fetchone()
     
     # Fetch messages associated with the ticket
@@ -207,7 +207,7 @@ def get_executing_tickets_count_by_user(user_id):
     conn.close()
     return executing_tickets_count['executing_tickets_count'] if executing_tickets_count else 0
 
-def create_ticket(topic_id, description, date, state, created_by, contacto, title,UnidadeOrg):
+def create_ticket(topic_id, description, date, state, created_by, contacto, title,UnidadeOrg,file):
     """Creates a new ticket in the database."""
     conn = connect_to_database()
     cursor = conn.cursor()
@@ -222,9 +222,9 @@ def create_ticket(topic_id, description, date, state, created_by, contacto, titl
 
         # Insert the new ticket with the fetched group_id and created_by_user
         cursor.execute("""
-            INSERT INTO tickets (topic_id, description, date, state, created_by, contacto, title, group_id, created_by_user,UnidadeOrg)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-        """, (topic_id, description, date, state, created_by, contacto, title, group_id, created_by_user,UnidadeOrg))
+            INSERT INTO tickets (topic_id, description, date, state, created_by, contacto, title, group_id, created_by_user,UnidadeOrg,file)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+        """, (topic_id, description, date, state, created_by, contacto, title, group_id, created_by_user,UnidadeOrg,file))
         conn.commit()
         print("Ticket created successfully")
     except mysql.connector.Error as e:

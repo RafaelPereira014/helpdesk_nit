@@ -1,6 +1,7 @@
 import datetime
 from functools import wraps
 import secrets
+import os
 import mysql.connector
 from flask import Flask, flash, jsonify, render_template, request, redirect, url_for
 from db_operations import *
@@ -9,11 +10,17 @@ from flask import redirect
 from datetime import datetime
 from flask import request
 from flask_mail import Mail, Message
+from werkzeug.utils import secure_filename
+from flask import render_template
+
+
 
 
 
 app = Flask(__name__)
 # Generate a secure secret key
+
+
 app.secret_key = secrets.token_bytes(16)
 app.config['MAIL_SERVER']='pegasus.azores.gov.pt'
 app.config['MAIL_PORT'] = 587
@@ -21,7 +28,8 @@ app.config['MAIL_USERNAME'] = 's0204helpdesk'
 app.config['MAIL_PASSWORD'] = 'RL3kieLAziocp7iK'
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-
+UPLOAD_FOLDER = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 mail=Mail(app)
 
 
@@ -114,7 +122,6 @@ def admin_init():
     return render_template('admin_init.html')
 
 
-from flask import render_template
 
 @app.route('/new_ticket', methods=['GET', 'POST'])
 def new_ticket():
@@ -124,51 +131,56 @@ def new_ticket():
     user_id = session['user_id']
     is_edu = check_email_contains_edu(user_id) 
 
-
     if request.method == 'POST':
-        # Your existing code for creating a new ticket
         topic_id = request.form['topic_id']
         description = request.form['description']
         state = "open"
         uni_org = request.form['UnidadeOrg']
-        
-        # Get the user ID of the currently logged-in user from the session
         created_by = session.get('user_id')
         user_name = get_username(created_by)
-        
-        # Generate current date and time
         date = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
         contacto = request.form['contacto']
         title = request.form['title']
         
-        # Call the create_ticket function with the correct parameters
-        create_ticket(topic_id, description, date, state, created_by, contacto, title, uni_org)
+        # Check if file is uploaded
+        if 'file' in request.files:
+            file = request.files['file']
+            if file.filename != '':
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            else:
+                filename = "Sem ficheiro."
+        else:
+            filename = "Sem ficheiro."
+
+        create_ticket(topic_id, description, date, state, created_by, contacto, title, uni_org, filename)
+
         ticket_id = get_ticketid(description)
-        
-        # Retrieve the email of the user who created the ticket
         user_email = get_user_email_by_user(created_by)
-        # Send an email notification to the user
         admin_emails = get_emails_by_group(topic_id)
 
+        # Email notifications
         if user_email:
+            # Send email notification to user
             msg = Message(f'Ticket criado #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
             msg.html = f"""
                 <h1>Novo ticket</h1>
-                <p>Foi registado um novo ticket com o numero #<strong>{ ticket_id }</strong>.</p>
+                <p>Foi registado um novo ticket com o numero #<strong>{ticket_id}</strong>.</p>
                 <p>Logo que possível um dos nossos técnicos resolverá o problema.</p>
-                <h2>Assunto: { title }</h2>
-                <p>Descricao: { description}</p>
+                <h2>Assunto: {title}</h2>
+                <p>Descricao: {description}</p>
                 <p>Obrigado por usar o nosso helpdesk.</p>
                 <h3><strong>SREC-NIT</strong></h3>
             """
             mail.send(msg)
             
         if admin_emails:
-            unique_admin_emails = set(admin_emails)  # Remove duplicates if any
+            # Send email notification to admins
+            unique_admin_emails = set(admin_emails)
             for admin_email in unique_admin_emails:
                 msg = Message(f'Novo ticket aberto #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[admin_email])
                 msg.html = f"""
-                    <h1>Novo ticket </h1>
+                    <h1>Novo ticket</h1>
                     <p>Criado por: {user_name}</p>
                     <p>Unidade organica: {uni_org}</p>
                     <p>Foi recebido um novo ticket com o número #<strong>{ticket_id}</strong> e com assunto <strong>{title}</strong>.</p>
@@ -178,11 +190,11 @@ def new_ticket():
                 """
                 mail.send(msg)
 
+        return redirect(url_for('my_tickets'))
 
-        return redirect(url_for('my_tickets'))  # Redirect to my_tickets page after creating ticket
-
-    # Pass is_edu to the template for rendering
     return render_template('new_ticket.html', is_edu=is_edu)
+
+
 
 @app.route('/my_tickets')
 def my_tickets():

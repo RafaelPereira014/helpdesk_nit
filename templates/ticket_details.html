@@ -77,6 +77,17 @@
                 <span class="info-label">Descrição:</span>
                 <span class="info-value">{{ ticket_details.description | safe }}</span>
             </div>
+           
+            {% if ticket_details.file != "Sem ficheiro." %}
+            <div class="ticket-info-item">
+                <span class="info-label">Anexo:</span>
+                <span class="info-value">
+                    <a href="{{ url_for('static', filename='uploads/' + ticket_details.file) }}" download>{{ ticket_details.file }}</a>
+                </span>
+            </div>
+            {% endif %}
+
+            
         </div>
 
         <div class="message-container" id="message-container">

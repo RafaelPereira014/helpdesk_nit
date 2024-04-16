@@ -56,7 +56,7 @@ CREATE TABLE `messages` (
   PRIMARY KEY (`id`),
   KEY `ticket_id` (`ticket_id`),
   CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3307 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3313 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +65,7 @@ CREATE TABLE `messages` (
 
 LOCK TABLES `messages` WRITE;
 /*!40000 ALTER TABLE `messages` DISABLE KEYS */;
-INSERT INTO `messages` VALUES (3305,114,'Este ticket foi aceite com sucesso.','admin','2024-04-16 12:23:16','Carlos Cota'),(3306,114,'Este ticket foi fechado com sucesso.','admin','2024-04-16 12:23:26','Carlos Cota');
+INSERT INTO `messages` VALUES (3305,114,'Este ticket foi aceite com sucesso.','admin','2024-04-16 12:23:16','Carlos Cota'),(3306,114,'Este ticket foi fechado com sucesso.','admin','2024-04-16 12:23:26','Carlos Cota'),(3307,114,'<p>teste mensagem com editor</p>','user','2024-04-16 16:47:38','test_user'),(3308,114,'teste','user','2024-04-16 16:48:32','test_user'),(3309,114,'<strong>teste mensagem em italico&nbsp;</strong>','user','2024-04-16 16:49:20','test_user'),(3310,123,'ok bom','user','2024-04-16 23:13:31','test_user'),(3311,122,'ok','user','2024-04-16 23:13:43','test_user'),(3312,123,'Este ticket foi aceite com sucesso.','admin','2024-04-16 23:13:58','Carlos Cota');
 /*!40000 ALTER TABLE `messages` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -91,6 +91,7 @@ CREATE TABLE `tickets` (
   `closed_by` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `UnidadeOrg` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   `attributed_to_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `file` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `created_by` (`created_by`),
   KEY `attributed_to` (`attributed_to`),
@@ -100,7 +101,7 @@ CREATE TABLE `tickets` (
   CONSTRAINT `fk_tickets_group_id` FOREIGN KEY (`group_id`) REFERENCES `Groups` (`id`),
   CONSTRAINT `fk_topic_id` FOREIGN KEY (`topic_id`) REFERENCES `Topics` (`id`),
   CONSTRAINT `tickets_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `Users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -109,7 +110,7 @@ CREATE TABLE `tickets` (
 
 LOCK TABLES `tickets` WRITE;
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
-INSERT INTO `tickets` VALUES (114,'<p>Ticket inicial</p>','2024-04-16','closed',1,5,2,'1823','test_user',1,'Novo ticket','Carlos Cota','EBSV - Escola Básica Secundária Velas','Carlos Cota');
+INSERT INTO `tickets` VALUES (114,'<p>Ticket inicial</p>','2024-04-16','closed',1,5,2,'1823','test_user',1,'Novo ticket','Carlos Cota','EBSV - Escola Básica Secundária Velas','Carlos Cota',NULL),(115,'<table style=\"width: 24.4125%; height: 67.1953px;\" border=\"1\">\r\n<tbody>\r\n<tr style=\"height: 44.7969px;\">\r\n<th style=\"width: 65.3326%; height: 44.7969px;\">Nome completo</th>\r\n<th style=\"width: 19.548%; height: 44.7969px;\">User</th>\r\n</tr>\r\n<tr style=\"height: 22.3984px;\">\r\n<td style=\"width: 65.3326%; height: 22.3984px;\">name</td>\r\n<td style=\"width: 19.548%; height: 22.3984px;\">user</td>\r\n</tr>\r\n</tbody>\r\n</table>','2024-04-16','open',1,NULL,12,'1823','test_user',1,'teste file',NULL,'EBIRP - Escola Básica Integrada Rabo Peixe',NULL,NULL),(116,'<p>teste file</p>','2024-04-16','open',1,NULL,2,'123','test_user',1,'teste file',NULL,'EBIPV - Escola Básica Integrada Praia Vitória',NULL,'PEM.png'),(117,'<p>teste ficheiro</p>','2024-04-16','open',1,NULL,2,'1234','test_user',1,'teste file',NULL,'DAIP',NULL,'2015.pdf'),(118,'<p>fieaidm</p>','2024-04-16','open',1,NULL,2,'1234','test_user',1,'ticket sem file',NULL,'EBIPV - Escola Básica Integrada Praia Vitória',NULL,NULL),(119,'<p>tikcet com file</p>','2024-04-16','open',1,NULL,2,'1244','test_user',1,'ticket com file',NULL,'EBSC - Escola Básica Secundária Calheta',NULL,'2015_1.pdf'),(120,'<p>12343124</p>','2024-04-16','open',1,NULL,2,'123','test_user',1,'ticket ',NULL,'EBSC - Escola Básica Secundária Calheta',NULL,NULL),(121,'<p>123123132</p>','2024-04-16','open',1,NULL,2,'12312','test_user',1,'teste1234',NULL,'EBSC - Escola Básica Secundária Calheta',NULL,'Sem ficheiro.'),(122,'<p>teste com file</p>','2024-04-16','open',1,NULL,2,'1234','test_user',1,'Ticket com file',NULL,'EBSC - Escola Básica Secundária Calheta',NULL,'Criacao_de_Contas-template.xlsx'),(123,'<p>teste 1234</p>','2024-04-16','em execucao',1,5,2,'123','test_user',1,'ticket sem file',NULL,'EBIPV - Escola Básica Integrada Praia Vitória','Carlos Cota','Sem ficheiro.');
 /*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -127,7 +128,7 @@ CREATE TABLE `Topics` (
   PRIMARY KEY (`id`),
   KEY `fk_topics_group_id` (`group_id`),
   CONSTRAINT `fk_topics_group_id` FOREIGN KEY (`group_id`) REFERENCES `Groups` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -136,7 +137,7 @@ CREATE TABLE `Topics` (
 
 LOCK TABLES `Topics` WRITE;
 /*!40000 ALTER TABLE `Topics` DISABLE KEYS */;
-INSERT INTO `Topics` VALUES (1,'password',1),(2,'Geral',1),(3,'certificados',2),(4,'Criar conta EDU',1),(5,'Reset MFA EDU',1),(6,'Reset password EDU',1),(7,'Adicionar MACaddress a controladora',1);
+INSERT INTO `Topics` VALUES (1,'password',1),(2,'Geral',1),(3,'certificados',2),(4,'Criar conta EDU',1),(5,'Reset MFA EDU',1),(6,'Reset password EDU',1),(7,'Adicionar MACaddress a controladora',1),(9,'Reconfiguração portas switch',2),(10,'Dados aluno',1),(11,'Criar novo utilizador',1),(12,'Autenticação MFA',1),(13,'Criar grupo de distribuição',1),(14,'Licença 0365',1),(15,'Partilhas na rede',1),(16,'Apoio ao Utilizador',1),(17,'Reconfiguração portas switch ',2),(18,'Dados aluno',1),(19,'Criar novo utilizador',1),(20,'Autenticação MFA',1),(21,'Criar grupo de distribuição',1),(22,'Licença 0365',1),(23,'Partilhas na rede',1),(24,'Apoio ao Utilizador',1),(25,'Atribuicao de computadores',1),(26,'Apoio a websites EDU',1),(27,'Pedido de Equipamento',1),(28,'Pedido de SUP individual',1),(29,'Pedido de Swicth - avaria',2),(30,'Pedido de Switch - configuração',2),(31,'Pedido de VPN ',2),(32,'Preparaçao de local para evento ',1),(33,'Alteração de Redes ',2),(34,'Pedido de parecer',1),(35,'Incidente de segurança',2);
 /*!40000 ALTER TABLE `Topics` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -182,4 +183,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-04-16 12:23:58
+-- Dump completed on 2024-04-16 23:16:05

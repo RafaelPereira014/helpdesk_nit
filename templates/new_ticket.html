@@ -47,7 +47,7 @@
 
     <div class="container">
         <h1>Abrir novo ticket</h1>
-        <form method="POST" action="/new_ticket" id="ticket_form">
+        <form method="POST" action="/new_ticket" id="ticket_form" enctype="multipart/form-data">
             <div id="popup-message" class="popup" style="display: none;">Ticket criado com sucesso!</div>
             <label for="topic">Tópico de ajuda:</label>
             <select id="topic_id" name="topic_id" required>
@@ -55,12 +55,11 @@
                 <option value="0">-Selecione um tópico de ajuda-</option>
                 <option value="2">Geral</option>
                 
-
-                {%if is_edu%}
+                {% if is_edu %}
                 <option value="4">Criar conta EDU</option>
                 <option value="5">Reset MFA EDU</option>
                 <option value="6">Reset password EDU</option>
-                {%else %}
+                {% else %}
                 <option value="11">Criar novo utilizador</option>
                 <option value="12">Autenticação MFA</option>
                 <option value="13">Criar grupo de distribuição</option>
@@ -68,7 +67,6 @@
                 <option value="15">Partilhas na rede</option>
                 <option value="16">Apoio ao Utilizador</option>
                 <option value="7">Adicionar MACaddress a controladora</option>
-                
                 {% endif %}
             </select>
             <label for="title">Sumário do problema:</label>
@@ -84,12 +82,16 @@
             <label for="contacto">Contacto (VOIP ou outro):</label>
             <input type="text" id="contacto" name="contacto" required>
             <!-- Download link for default file -->
+            <label for="file">Anexar ficheiro:</label>
+            <input type="file" id="file" name="file">
             
             <button type="submit" id="submit_button">Submeter ticket</button>
             <div id="loader">
                 <i class="fa fa-spinner fa-spin"></i>A submeter o ticket.Por favor aguarde...
             </div>
         </form>
+        
+        
     </div>
 
     <script>
