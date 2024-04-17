@@ -56,17 +56,32 @@
                 <option value="2">Geral</option>
                 
                 {% if is_edu %}
+                <option value="26">Apoio a websites EDU</option>
                 <option value="4">Criar conta EDU</option>
                 <option value="5">Reset MFA EDU</option>
                 <option value="6">Reset password EDU</option>
+
                 {% else %}
-                <option value="11">Criar novo utilizador</option>
                 <option value="12">Autenticação MFA</option>
-                <option value="13">Criar grupo de distribuição</option>
-                <option value="14">Licença O365</option>
-                <option value="15">Partilhas na rede</option>
                 <option value="16">Apoio ao Utilizador</option>
                 <option value="7">Adicionar MACaddress a controladora</option>
+                <option value="25">Atribuição de computadores</option>
+                <option value="33">Alteração de Redes</option>
+                <option value="11">Criar novo utilizador</option>
+                <option value="13">Criar grupo de distribuição</option>
+                <option value="10">Dados aluno</option>
+                <option value="34">Indidente de Segurança</option>
+                <option value="14">Licença O365</option>
+                <option value="15">Partilhas na rede</option>
+                <option value="27">Pedido de equipamento</option>
+                <option value="28">Pedido de SUP individual</option>
+                <option value="29">Pedido de Switch - Avaria</option>
+                <option value="30">Pedido de Switch - Configuração</option>
+                <option value="31">Pedido de VPN</option>
+                <option value="32">Preparação de local para evento</option>
+                <option value="34">Pedido de parecer</option>
+                <option value="9">Reconfiguração portas switch</option>
+                           
                 {% endif %}
             </select>
             <label for="title">Sumário do problema:</label>
@@ -184,10 +199,6 @@
             
             }else if (topicSelect.value === '13') {
                 setDefaultMessage('<table border="1"><tr><th>Nome grupo</th><th>Endereço email grupo</th><th>Proprietário grupo</th><th>Membros</th><th>Enviar em nome de </th></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td></tr></table>');
-                fileDownload1.style.display = 'none'; // Show download link for topic 4
-                fileDownload2.style.display = 'none'; // Show download link for topic 4
-            
-            }else if (topicSelect.value === '14') {
                 fileDownload1.style.display = 'none'; // Show download link for topic 4
                 fileDownload2.style.display = 'none'; // Show download link for topic 4
             

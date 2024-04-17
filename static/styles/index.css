@@ -241,4 +241,39 @@ p {
     font-size: 50px;
     color: #3e4684; /* Your preferred color */
 }
+.file-label {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.file-upload {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.file-input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0); /* For IE8 and earlier */
+}
+
+.file-button {
+    background-color: #0056b3;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.file-button:hover {
+    background-color: #0056b3;
+}
+
 

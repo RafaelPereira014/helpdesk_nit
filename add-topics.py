@@ -9,15 +9,25 @@ def insert_topics_from_file(file_path, cursor):
             for line in file:
                 # Split the line into topic name and group_id
                 topic_name, group_id = line.strip().split(',')
-                # SQL query to insert the topic into the topics table
-                insert_query = "INSERT INTO topics (key_word, group_id) VALUES (%s, %s)"
+                # SQL query to check if the topic already exists in the database
+                check_query = "SELECT COUNT(*) FROM topics WHERE key_word = %s"
                 # Execute the query
-                cursor.execute(insert_query, (topic_name, group_id))
-        print("Topics inserted successfully.")
+                cursor.execute(check_query, (topic_name,))
+                count = cursor.fetchone()[0]
+                # If topic doesn't exist, insert it into the topics table
+                if count == 0:
+                    insert_query = "INSERT INTO topics (key_word, group_id) VALUES (%s, %s)"
+                    # Execute the query
+                    cursor.execute(insert_query, (topic_name, group_id))
+                    print(f"Topic '{topic_name}' inserted successfully.")
+                else:
+                    print(f"Topic '{topic_name}' already exists. Skipping insertion.")
+        print("Topics insertion complete.")
     except FileNotFoundError:
         print("File not found.")
     except mysql.connector.Error as e:
         print("Error inserting topics:", e)
+
 
 # MySQL connection configuration
 config = {
