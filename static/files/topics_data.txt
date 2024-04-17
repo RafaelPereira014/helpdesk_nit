@@ -17,3 +17,6 @@ Preparaçao de local para evento , 1
 Alteração de Redes , 2
 Pedido de parecer, 1
 Incidente de segurança, 2
+Configuração/problema de rede EDU, 2
+Pedido de parecer EDU, 1
+Configuração APs EDU, 2

@@ -1,42 +1,23 @@
 -
 Conservatório Regional Ponta Delgada
-EBSC - Escola Básica Secundária Calheta
-EBSV - Escola Básica Secundária Velas
-EBIPV - Escola Básica Integrada Praia Vitória
-EBIB - Escola Básica Integrada Biscoitos
-EBIAH - Escola Básica Integrada Angra Heroísmo
-EBSVFC - Escola Básica Secundária Vila Franca Campo
-EBSP - Escola Básica Secundária Povoação
-EBIRP - Escola Básica Integrada Rabo Peixe
-EBSLP - Escola Básica Secundária Lages Pico
-EBIG - Escola Básica Integrada Ginetes
-EBSG - Escola Básica Secundária Graciosa
-ESMA - Escola Secundária Manuel Arriaga
-EBIRG - Escola Básica Integrada Ribeira Grande
-ESDR - Escola Secundária Domingos Rebelo
-EBIAP - Escola Básica Integrada Água Pau
-EBSF - Escola Básica Secundária Flores
-EPC - Escola Profissional Capelas
-ESL - Escola Secundária Lagoa
-ESRG - Escola Secundária Ribeira Grande
-ESL - Escola Secundária Laranjeiras
-ESJEA - Escola Secundária Jerónimo Emiliano Andrade
-EBIM - Escola Básica Integrada Maia
-EBIMS - Escola Básica Integrada Mouzinho Silveira
-EBSM - Escola Básica Secundária Madalena
-EBSSRP - Escola Básica Secundária São Roque Pico
-ESAQ - Escola Secundária Antero Quental
-EBIVC - Escola Básica Integrada Vila Capelas
-ESBIRI - Escola Básica Integrada Roberto Ivens
 EBIA - Escola Básica Integrada Arrifes
+EBIAP - Escola Básica Integrada Água Pau
 EBICM - Escola Básica Integrada Canto Maia
+EBIG - Escola Básica Integrada Ginetes
 EBIL - Escola Básica Integrada Lagoa
-EBSSM - Escola Básica Secundária Santa Maria
-EBSN - Escola Básica Secundária Nordeste
-ESVN - Escola Secundária Vitorino Nemésio
-EBIVT - Escola Básica Integrada Vila Topo
-EBSTB - Escola Básica Secundária Tomás Borba
-EBIH - Escola Básica Integrada Horta
-EBIFD - Escola Básica Integrada Francisco Ferreira Drumond
+EBIM - Escola Básica Integrada Maia
 EBIPG - Escola Básica Integrada Ponta Garça
-EBSMS - Escola Básica Secundária Mouzinho Silveira
+EBIRG - Escola Básica Integrada Ribeira Grande
+EBIRP - Escola Básica Integrada Rabo Peixe
+EBIVC - Escola Básica Integrada Vila Capelas
+EBIVT - Escola Básica Integrada Vila Topo
+EBSN - Escola Básica Secundária Nordeste
+EBSP - Escola Básica Secundária Povoação
+EBSVFC - Escola Básica Secundária Vila Franca Campo
+EPC - Escola Profissional Capelas
+ESAQ - Escola Secundária Antero Quental
+ESBIRI - Escola Básica Integrada Roberto Ivens
+ESDR - Escola Secundária Domingos Rebelo
+ESL - Escola Secundária Lagoa
+ESL - Escola Secundária Laranjeiras
+ESRG - Escola Secundária Ribeira Grande

@@ -284,15 +284,17 @@ def no_execution_tickets():
     cursor.execute("SELECT COUNT(*) FROM tickets WHERE state = 'em execucao'")
     num_execution_tickets = cursor.fetchone()[0]
     cursor.close()
+    conn.close()
     return num_execution_tickets
 
 def get_ticketid(description):
     conn = connect_to_database()
     cursor = conn.cursor()
     cursor.execute("SELECT id FROM tickets WHERE description = %s", (description,))
-    num_closed_tickets = cursor.fetchone()[0]
+    ticket_ids = [row[0] for row in cursor.fetchall()]  # Fetch all rows
     cursor.close()
-    return num_closed_tickets
+    conn.close()
+    return ticket_ids
 
 def claim_ticket(user_id, ticket_id):
     try:

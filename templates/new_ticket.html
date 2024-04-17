@@ -86,6 +86,22 @@
             </select>
             <label for="title">Sumário do problema:</label>
             <input type="text" id="title" name="title" required>
+            {%if is_edu%}
+            <label for="ilha">Ilha:</label>
+            <select id="ilha" name="ilha" required>
+                <option>-Selecione uma opção-</option>
+                <option>Santa Maria</option>
+                <option>São Miguel</option>
+                <option>Terceira</option>
+                <option>Faial</option>
+                <option>Pico</option>
+                <option>São Jorge</option>
+                <option>Graciosa</option>
+                <option>Flores</option>
+                <option>Corvo</option>
+
+            </select>
+            {% endif%}
             <label for="UnidadeOrg">Unidade organica/Divião:</label>
             <select id="UnidadeOrg" name="UnidadeOrg" required></select>
             <!-- Div for description -->
@@ -114,29 +130,63 @@
         window.onload = function() {
             // Hide the loader when the page is fully loaded
             document.getElementById('loader').style.display = 'none';
-
+        
             fetchUnidadeOrganica();
-
+        
+            // Call fetchUnidadeOrganica whenever the selected Ilha changes
+            document.getElementById('ilha').addEventListener('change', fetchUnidadeOrganica);
+        
+            // Call fetchUnidadeOrganica whenever the selected topic changes (optional)
             document.getElementById('topic_id').addEventListener('change', fetchUnidadeOrganica);
-
-            
-            
         };
+        
+        var ilhaOptions = {
+            "São Miguel": [
+            "Conservatório Regional Ponta Delgada",
+            "EBIA - Escola Básica Integrada Arrifes",
+            "EBIAP - Escola Básica Integrada Água Pau",
+            "EBICM - Escola Básica Integrada Canto Maia",
+            "EBIG - Escola Básica Integrada Ginetes",
+            "EBIL - Escola Básica Integrada Lagoa",
+            "EBIM - Escola Básica Integrada Maia",
+            "EBIPG - Escola Básica Integrada Ponta Garça",
+            "EBIRG - Escola Básica Integrada Ribeira Grande",
+            "EBIRP - Escola Básica Integrada Rabo Peixe",
+            "EBIVC - Escola Básica Integrada Vila Capelas",
+            "EBIVT - Escola Básica Integrada Vila Topo",
+            "EBSN - Escola Básica Secundária Nordeste",
+            "EBSP - Escola Básica Secundária Povoação",
+            "EBSVFC - Escola Básica Secundária Vila Franca Campo",
+            "EPC - Escola Profissional Capelas",
+            "ESAQ - Escola Secundária Antero Quental",
+            "ESBIRI - Escola Básica Integrada Roberto Ivens",
+            "ESDR - Escola Secundária Domingos Rebelo",
+            "ESL - Escola Secundária Lagoa",
+            "ESL - Escola Secundária Laranjeiras",
+            "ESRG - Escola Secundária Ribeira Grande"],
+            "Santa Maria": ["EBS Santa Maria"],
+            "São Jorge": ["EBS das Velas","EBS da Calheta","EBS Topo"],
+            "Terceira": ["EBI da Praia da Vitória","EBI de Angra do Heroísmo","EBI dos Biscoitos","EBI Francisco Ferreira Drummond","ES Jerónimo Emiliano Andrade","EBS Tomás de Borba"],
+            "Faial": ["EBI Horta","ES Manuel Arriaga"],
+            "Pico": ["EBS da Madalena","EBS Lajes do Pico","EBS S.Roque do Pico"],
+            "Graciosa": ["EBS da Graciosa"],
+            "Flores": ["EBS das Flores","EBS Lajes Flores"],
+            "Corvo": ["EBS Mouzinho Silveira"],
+            
+            // Add options for other ilhas here
+        };
+        
 
         function fetchUnidadeOrganica() {
-            var topicSelect = document.getElementById('topic_id');
+            var ilhaDropdown = document.getElementById('ilha');
             var unidadeOrgDropdown = document.getElementById('UnidadeOrg');
-
-            // If the selected topic id is '13', fetch from divisao.txt
+        
             if (!is_edu) {
                 fetch('{{ url_for('static', filename='files/divisoes.txt') }}')
                     .then(response => response.text())
                     .then(data => {
-                        // Split the data by newline to get individual values
                         const values = data.split('\n');
-                        // Clear existing options
                         unidadeOrgDropdown.innerHTML = '';
-                        // Populate the dropdown options
                         values.forEach(value => {
                             const option = document.createElement('option');
                             option.text = value.trim();
@@ -145,24 +195,18 @@
                     })
                     .catch(error => console.error('Error fetching divisao:', error));
             } else {
-                // Fetch the file containing the values
-                fetch('{{ url_for('static', filename='files/unidade_organica.txt') }}')
-                .then(response => response.text())
-                .then(data => {
-                    // Split the data by newline to get individual values
-                    const values = data.split('\n');
-                    // Get the dropdown element
-                    const dropdown = document.getElementById('UnidadeOrg');
-                    // Populate the dropdown options
-                    values.forEach(value => {
-                        const option = document.createElement('option');
-                        option.text = value.trim();
-                        dropdown.add(option);
-                    });
-                })
-                .catch(error => console.error('Error fetching unidade organica:', error));
+                var selectedIlha = ilhaDropdown.value;
+                var unidadeOrgOptions = ilhaOptions[selectedIlha] || [];
+        
+                unidadeOrgDropdown.innerHTML = '';
+                unidadeOrgOptions.forEach(option => {
+                    var optionElement = document.createElement('option');
+                    optionElement.textContent = option;
+                    unidadeOrgDropdown.appendChild(optionElement);
+                });
             }
         }
+        
         
         // Function to show or hide description field based on selected topic
         function toggleDescription() {
