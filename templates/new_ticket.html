@@ -110,6 +110,7 @@
     </div>
 
     <script>
+        var is_edu = {{ is_edu|tojson }};
         window.onload = function() {
             // Hide the loader when the page is fully loaded
             document.getElementById('loader').style.display = 'none';
@@ -127,7 +128,7 @@
             var unidadeOrgDropdown = document.getElementById('UnidadeOrg');
 
             // If the selected topic id is '13', fetch from divisao.txt
-            if (topicSelect.value === '11') {
+            if (!is_edu) {
                 fetch('{{ url_for('static', filename='files/divisoes.txt') }}')
                     .then(response => response.text())
                     .then(data => {
