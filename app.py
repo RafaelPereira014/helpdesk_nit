@@ -172,6 +172,7 @@ def new_ticket():
                 <p>Poderá, a qualquer momento, acompanhar em <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a> a evolução do seu pedido:</p>
                 <p>Assunto: {title}</p>
                 <p>{description}</p>
+                <p>----------------------------------------------</p>
                 <p><strong>Núcleo de Informática e Telecomunicações</strong></p>
                 <img src="https://github.com/RafaelPereira014/helpdesk_nit/blob/main/static/images/MicrosoftTeams-image.png" alt="Description of the image">
                 <p><strong>Secretaria Regional da Educação, Cultura e Desporto</strong></p>
@@ -197,6 +198,7 @@ def new_ticket():
                     <h1>Novo ticket</h1>
                     <p>Criado por: {user_name}</p>
                     <p>Unidade organica: {uni_org}</p>
+                    <p>----------------------------------------------</p>
                     <p>Foi recebido um novo ticket com o número #<strong>{ticket_id}</strong> e com assunto <strong>{title}</strong>.</p>
                     <p>Descrição: {description}</p>
                     <p>Obrigado por usar o nosso helpdesk.</p>

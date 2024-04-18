@@ -64,12 +64,15 @@
                 {% if is_edu %}
                 <option value="26">Apoio a websites EDU</option>
                 <option value="4">Criar conta EDU</option>
-                <option value="5">Reset MFA EDU</option>
-                <option value="6">Reset password EDU</option>
                 <option value="45">Configuração/problema de rede EDU</option>
-                <option value="46">Pedido de parecer EDU</option>
                 <option value="47">Configuração APs EDU</option>
                 <option value="48">Manuais digitais</option>
+                <option value="49">Pedido de VPN - FSE</option>
+                <option value="46">Pedido de parecer EDU</option>
+                <option value="51">Registo de Tablet</option>
+                <option value="50">Reposição de Table</option>
+                <option value="5">Reset MFA EDU</option>
+                <option value="6">Reset password EDU</option>
 
                 {% else %}
                 <option value="12">Autenticação MFA</option>
@@ -88,9 +91,11 @@
                 <option value="29">Pedido de Switch - Avaria</option>
                 <option value="30">Pedido de Switch - Configuração</option>
                 <option value="31">Pedido de VPN</option>
+                <option value="49">Pedido de VPN - FSE</option>
                 <option value="32">Preparação de local para evento</option>
                 <option value="34">Pedido de parecer</option>
                 <option value="9">Reconfiguração portas switch</option>
+
                            
                 {% endif %}
             </select>
@@ -124,9 +129,9 @@
             <input type="text" id="contacto" name="contacto" required>
             <!-- Download link for default file -->
             <label for="file">Anexar ficheiro:</label>
-            <input type="file" id="file" name="file " >
+            <input type="file" id="file" name="file" accept=".png, .jpg, .jpeg, .pdf, .xlsx, .zip, .rar" required>
             
-            <button type="submit" id="submit_button" style="margin-top: 10px;">Submeter ticket</button>
+            <button type="submit" id="submit_button">Submeter ticket</button>
             <div id="loader">
                 <i class="fa fa-spinner fa-spin"></i>A submeter o ticket.Por favor aguarde...
             </div>
@@ -266,6 +271,11 @@
                     <li>Tipo de Permissão (Leitura, Alterar, Remover): </li>
                 </ul>
             `);
+                fileDownload1.style.display = 'none'; // Show download link for topic 4
+                fileDownload2.style.display = 'none'; // Show download link for topic 4
+            
+            }else if (topicSelect.value === '49') {
+                setDefaultMessage('<table border="1"><tr><th>Nome/Entidade</th><th>Nome responsável</th><th>Data de nascimento</th><th>NIF</th><th>Aplicações/Portos</th></tr><tr><td></td><td></td><td></td><td></td><td></td><td></tr></table>');
                 fileDownload1.style.display = 'none'; // Show download link for topic 4
                 fileDownload2.style.display = 'none'; // Show download link for topic 4
             

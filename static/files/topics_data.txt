@@ -21,3 +21,7 @@ Configuração/problema de rede EDU, 2
 Pedido de parecer EDU, 1
 Configuração APs EDU, 2
 Manuais digitais, 1
+Pedido de VPN , 1
+Pedido de VPN - FSE , 1
+Reposição de Tablet, 1
+Registo de Tablet, 1
