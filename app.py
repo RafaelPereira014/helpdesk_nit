@@ -1,4 +1,5 @@
 import datetime
+import bleach
 from functools import wraps
 import secrets
 import os
@@ -248,11 +249,12 @@ def my_tickets():
     return render_template('my_tickets.html', tickets=ticket_fields, is_admin=admin_status,open_tickets=open_tickets,close_tickets=close_tickets,executing_tickets=executing_tickets,all_tickets=all_tickets)
 
 
+
 @app.route('/send_message', methods=['POST'])
 def send_message():
     data = request.json
     ticket_id = data['ticket_id']
-    message = data['message']
+    message = bleach.clean(data['message'], tags=['p', 'strong', 'em'], attributes={'p': ['class']})
     
     # Get the user's ID from the session
     user_id = session.get('user_id')
@@ -289,6 +291,8 @@ def send_message():
     cursor.close()
     
     return jsonify({'success': True})
+
+
 
 def admin_required(f):
     @wraps(f)

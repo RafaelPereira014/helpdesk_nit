@@ -102,7 +102,7 @@
                     {% endif %}
                 </div>
                 <div class="message-content">
-                    {{ message.message }}
+                    {{ message.message|safe }}
                 </div>
             </div>
             {% endfor %}
@@ -143,7 +143,7 @@
             tinymce.init({
                 selector: '#message', // Use the message div as the selector
                 plugins: 'advlist autolink lists link image charmap print preview hr anchor',
-                toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+                toolbar: 'undo redo | bold italic  | removeformat | help',
                 height: 300, // Specify the height of the TinyMCE editor
                 forced_root_block: false, // Prevent TinyMCE from adding <p> tags
                 apply_source_formatting: true, // Keep the formatting as per the source
@@ -158,11 +158,12 @@
                     var senderType = message.sender_type;
                     var sentAt = message.sent_at;
                     var senderName = message.sender_name; // Add sender's name to message object
-                    var messageContent = message.message;
+                    var messageContent = decodeHtmlEntities(message.message); // Decode HTML entities
                     appendMessage(messageContent, senderType, senderName, sentAt);
                 });
             }
-    
+
+            // Function to append a message to the message container
             // Function to append a message to the message container
             function appendMessage(messageContent, senderType, senderName, sentAt) {
                 var messageElement = document.createElement('div');
@@ -174,20 +175,34 @@
                 }
                 var messageHeader = document.createElement('div');
                 messageHeader.classList.add('message-header');
-                messageHeader.innerText = senderName + ' - ' + sentAt; // Display sender's name
+                messageHeader.textContent = senderName + ' - ' + sentAt; // Display sender's name
+                
+                // Create the message content element
                 var messageContentElement = document.createElement('div');
                 messageContentElement.classList.add('message-content');
-                messageContentElement.innerText = messageContent;
+                
+                // Set the innerHTML property to render HTML content
+                messageContentElement.innerHTML = messageContent;
+
+                // Append elements to the message container
                 messageElement.appendChild(messageHeader);
                 messageElement.appendChild(messageContentElement);
                 messageContainer.appendChild(messageElement);
                 // Scroll to bottom of message container
                 messageContainer.scrollTop = messageContainer.scrollHeight;
             }
-    
+
+
+
+
+
+
             // Function to send a message
             function sendMessage(message) {
-                // Send the message to the server
+                // Convert HTML entities to their corresponding characters
+                var decodedMessage = decodeHtmlEntities(message);
+                
+                // Send the decoded message to the server
                 fetch('/send_message', {
                     method: 'POST',
                     headers: {
@@ -195,7 +210,7 @@
                     },
                     body: JSON.stringify({
                         ticket_id: "{{ ticket_details.id }}",
-                        message: message,
+                        message: decodedMessage,
                         sender_id: currentAdminId // Include sender's ID
                     })
                 })
@@ -207,7 +222,7 @@
                 })
                 .then(data => {
                     // Message sent successfully, append it to the message container
-                    appendMessage(message, 'admin', 'You', new Date().toLocaleString()); // Display 'You' as sender
+                    appendMessage(decodedMessage, 'admin', 'You', new Date().toLocaleString()); // Display 'You' as sender
                     // Show popup and reload after 2 seconds
                     setTimeout(() => {
                         location.reload();
@@ -217,6 +232,14 @@
                     console.error('Error sending message:', error);
                 });
             }
+
+            // Function to decode HTML entities
+            function decodeHtmlEntities(html) {
+                var txt = document.createElement('textarea');
+                txt.innerHTML = html;
+                return txt.value;
+            }
+
     
             // Event listener for message form submission
             messageForm.addEventListener('submit', function (event) {
