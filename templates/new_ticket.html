@@ -51,95 +51,97 @@
         </div>
     </div>
 
-    <div class="container">
-        <h1>Abrir novo ticket</h1>
-        <form method="POST" action="/new_ticket" id="ticket_form" enctype="multipart/form-data">
-            <div id="popup-message" class="popup" style="display: none;">Ticket criado com sucesso!</div>
-            <label for="topic">Tópico de ajuda:</label>
-            <select id="topic_id" name="topic_id" required>
-                <!-- Topicos default para todos -->
-                <option value="0">-Selecione um tópico de ajuda-</option>
-                <option value="2">Geral</option>
+    <div class="main">
+        <div class="container">
+            <h1>Abrir novo ticket</h1>
+            <form method="POST" action="/new_ticket" id="ticket_form" enctype="multipart/form-data">
+                <div id="popup-message" class="popup" style="display: none;">Ticket criado com sucesso!</div>
+                <label for="topic">Tópico de ajuda:</label>
+                <select id="topic_id" name="topic_id" required>
+                    <!-- Topicos default para todos -->
+                    <option value="0">-Selecione um tópico de ajuda-</option>
+                    <option value="2">Geral</option>
+                    
+                    {% if is_edu %}
+                    <option value="26">Apoio a websites EDU</option>
+                    <option value="4">Criar conta EDU</option>
+                    <option value="45">Configuração/problema de rede EDU</option>
+                    <option value="47">Configuração APs EDU</option>
+                    <option value="48">Manuais digitais</option>
+                    <option value="49">Pedido de VPN - FSE</option>
+                    <option value="46">Pedido de parecer EDU</option>
+                    <option value="51">Registo de Tablet</option>
+                    <option value="50">Reposição de Tablet</option>
+                    <option value="5">Reset MFA EDU</option>
+                    <option value="6">Reset password EDU</option>
+    
+                    {% else %}
+                    <option value="12">Autenticação MFA</option>
+                    <option value="16">Apoio ao Utilizador</option>
+                    <option value="7">Adicionar MACaddress a controladora</option>
+                    <option value="25">Atribuição de computadores</option>
+                    <option value="33">Alteração de Redes</option>
+                    <option value="11">Criar novo utilizador</option>
+                    <option value="13">Criar grupo de distribuição</option>
+                    <option value="10">Dados aluno</option>
+                    <option value="34">Indidente de Segurança</option>
+                    <option value="14">Licença O365</option>
+                    <option value="15">Partilhas na rede</option>
+                    <option value="27">Pedido de equipamento</option>
+                    <option value="28">Pedido de SUP individual</option>
+                    <option value="29">Pedido de Switch - Avaria</option>
+                    <option value="30">Pedido de Switch - Configuração</option>
+                    <option value="31">Pedido de VPN</option>
+                    <option value="49">Pedido de VPN - FSE</option>
+                    <option value="32">Preparação de local para evento</option>
+                    <option value="34">Pedido de parecer</option>
+                    <option value="9">Reconfiguração portas switch</option>
+    
+                               
+                    {% endif %}
+                </select>
+                <label for="title">Sumário do problema:</label>
+                <input type="text" id="title" name="title" required>
+                {%if is_edu%}
+                <label for="ilha">Ilha:</label>
+                <select id="ilha" name="ilha" required>
+                    <option>-Selecione uma opção-</option>
+                    <option>Santa Maria</option>
+                    <option>São Miguel</option>
+                    <option>Terceira</option>
+                    <option>Faial</option>
+                    <option>Pico</option>
+                    <option>São Jorge</option>
+                    <option>Graciosa</option>
+                    <option>Flores</option>
+                    <option>Corvo</option>
+    
+                </select>
+                {% endif%}
+                <label for="UnidadeOrg">Unidade organica/Divião:</label>
+                <select id="UnidadeOrg" name="UnidadeOrg" required></select>
+                <!-- Div for description -->
+                <div id="description_div">
+                    <label for="description">Descrição:</label>
+                    <!-- Replace textarea with div for TinyMCE -->
+                    <div id="description" name="description" required></div>
+                </div>
+                <label for="contacto">Contacto (VOIP ou outro):</label>
+                <input type="text" id="contacto" name="contacto" required>
+                <!-- Download link for default file -->
+                <label for="file">Anexar ficheiro:</label>
+                <input type="file" id="file" name="file" accept=".png, .jpg, .jpeg, .pdf, .xlsx, .zip, .rar" >
                 
-                {% if is_edu %}
-                <option value="26">Apoio a websites EDU</option>
-                <option value="4">Criar conta EDU</option>
-                <option value="45">Configuração/problema de rede EDU</option>
-                <option value="47">Configuração APs EDU</option>
-                <option value="48">Manuais digitais</option>
-                <option value="49">Pedido de VPN - FSE</option>
-                <option value="46">Pedido de parecer EDU</option>
-                <option value="51">Registo de Tablet</option>
-                <option value="50">Reposição de Tablet</option>
-                <option value="5">Reset MFA EDU</option>
-                <option value="6">Reset password EDU</option>
-
-                {% else %}
-                <option value="12">Autenticação MFA</option>
-                <option value="16">Apoio ao Utilizador</option>
-                <option value="7">Adicionar MACaddress a controladora</option>
-                <option value="25">Atribuição de computadores</option>
-                <option value="33">Alteração de Redes</option>
-                <option value="11">Criar novo utilizador</option>
-                <option value="13">Criar grupo de distribuição</option>
-                <option value="10">Dados aluno</option>
-                <option value="34">Indidente de Segurança</option>
-                <option value="14">Licença O365</option>
-                <option value="15">Partilhas na rede</option>
-                <option value="27">Pedido de equipamento</option>
-                <option value="28">Pedido de SUP individual</option>
-                <option value="29">Pedido de Switch - Avaria</option>
-                <option value="30">Pedido de Switch - Configuração</option>
-                <option value="31">Pedido de VPN</option>
-                <option value="49">Pedido de VPN - FSE</option>
-                <option value="32">Preparação de local para evento</option>
-                <option value="34">Pedido de parecer</option>
-                <option value="9">Reconfiguração portas switch</option>
-
-                           
-                {% endif %}
-            </select>
-            <label for="title">Sumário do problema:</label>
-            <input type="text" id="title" name="title" required>
-            {%if is_edu%}
-            <label for="ilha">Ilha:</label>
-            <select id="ilha" name="ilha" required>
-                <option>-Selecione uma opção-</option>
-                <option>Santa Maria</option>
-                <option>São Miguel</option>
-                <option>Terceira</option>
-                <option>Faial</option>
-                <option>Pico</option>
-                <option>São Jorge</option>
-                <option>Graciosa</option>
-                <option>Flores</option>
-                <option>Corvo</option>
-
-            </select>
-            {% endif%}
-            <label for="UnidadeOrg">Unidade organica/Divião:</label>
-            <select id="UnidadeOrg" name="UnidadeOrg" required></select>
-            <!-- Div for description -->
-            <div id="description_div">
-                <label for="description">Descrição:</label>
-                <!-- Replace textarea with div for TinyMCE -->
-                <div id="description" name="description" required></div>
-            </div>
-            <label for="contacto">Contacto (VOIP ou outro):</label>
-            <input type="text" id="contacto" name="contacto" required>
-            <!-- Download link for default file -->
-            <label for="file">Anexar ficheiro:</label>
-            <input type="file" id="file" name="file" accept=".png, .jpg, .jpeg, .pdf, .xlsx, .zip, .rar" >
+                <div style="margin-top: 10px;">
+                    <button type="submit" id="submit_button">Submeter ticket</button>
+                </div>           
+                <div id="loader">
+                    <i class="fa fa-spinner fa-spin"></i>A submeter o ticket.Por favor aguarde...
+                </div>
+            </form>
             
-            <div style="margin-top: 10px;">
-                <button type="submit" id="submit_button">Submeter ticket</button>
-            </div>           
-            <div id="loader">
-                <i class="fa fa-spinner fa-spin"></i>A submeter o ticket.Por favor aguarde...
-            </div>
-        </form>
-        
-        
+            
+        </div>
     </div>
 
     <script>

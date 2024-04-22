@@ -30,10 +30,7 @@
             transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transition for hover effect */
         }
 
-        .ticket-status .status-item:hover {
-            transform: translateY(-5px); /* Add slight lift on hover */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
-        }
+      
 
         .ticket-status .status-item h2 {
             color: #333;
@@ -164,63 +161,65 @@
         </div>
     </div>
     
-    <div class="container">
-        <h1>Bem-vindo ao Sistema de Tickets do NIT</h1>
-        
-        <!-- Ticket Status Panel -->
-        <div class="ticket-status">
-            <div class="status-item">
-                <h2>Abertos</h2>
-                <p>{{ open_tickets }} Tickets</p>
+    <div class="main">
+        <div class="container">
+            <h1>Bem-vindo ao Sistema de Tickets do NIT</h1>
+            
+            <!-- Ticket Status Panel -->
+            <div class="ticket-status">
+                <div class="status-item">
+                    <h2>Abertos</h2>
+                    <p>{{ open_tickets }} Tickets</p>
+                </div>
+                <div class="status-item">
+                    <h2>Fechados</h2>
+                    <p>{{ closed_tickets }} Tickets</p>
+                </div>
+                <div class="status-item">
+                    <h2>Em Execução</h2>
+                    <p>{{ executing_tickets }} Tickets</p>
+                </div>
             </div>
-            <div class="status-item">
-                <h2>Fechados</h2>
-                <p>{{ closed_tickets }} Tickets</p>
+            
+            <!-- Actions Section -->
+            <div class="actions">
+                <h2>Nesta versão, é possivel:</h2>
+                <div class="action">
+                    <i class="fa fa-plus-circle"></i><span>Abrir um novo Ticket</span> <!-- Icon for creating tickets -->
+                </div>
+                <div class="action">
+                    <i class="fa fa-list-alt"></i><span>Ver o estado dos Tickets</span> <!-- Icon for viewing ticket status -->
+                </div>
+                <div class="action">
+                    <i class="fa fa-edit"></i><span>Editar mensagens no Ticket</span> <!-- Icon for changing messages -->
+                </div>
+                <div class="action">
+                    <i class="fa fa-history"></i><span>Ver o histórico de Tickets</span> <!-- Icon for viewing history -->
+                </div>
+                <div class="action">
+                    <i class="fa fa-key"></i><span>Alterar password</span> <!-- Icon for changing password -->
+                </div>
+                <div class="action">
+                    <i class="fa fa-upload"></i><span>Adicionar um ficheiro</span> <!-- Icon for adding a file -->
+                </div>
             </div>
-            <div class="status-item">
-                <h2>Em Execução</h2>
-                <p>{{ executing_tickets }} Tickets</p>
+    
+            <!-- Latest Changes Panel -->
+            <div class="latest-changes">
+                <h2>Últimos updates</h2>
+                <ul>
+                    
+                    <li>
+                        <strong>1.0.0:</strong> Lançamento inicial do sistema de tickets.
+                    </li>
+                </ul>
             </div>
+            
+            <!-- Version Information -->
+            <footer>
+                <p>Versão: beta v1.0.0</p>
+            </footer>
         </div>
-        
-        <!-- Actions Section -->
-        <div class="actions">
-            <h2>Nesta versão, é possivel:</h2>
-            <div class="action">
-                <i class="fa fa-plus-circle"></i><span>Abrir um novo Ticket</span> <!-- Icon for creating tickets -->
-            </div>
-            <div class="action">
-                <i class="fa fa-list-alt"></i><span>Ver o estado dos Tickets</span> <!-- Icon for viewing ticket status -->
-            </div>
-            <div class="action">
-                <i class="fa fa-edit"></i><span>Editar mensagens no Ticket</span> <!-- Icon for changing messages -->
-            </div>
-            <div class="action">
-                <i class="fa fa-history"></i><span>Ver o histórico de Tickets</span> <!-- Icon for viewing history -->
-            </div>
-            <div class="action">
-                <i class="fa fa-key"></i><span>Alterar password</span> <!-- Icon for changing password -->
-            </div>
-            <div class="action">
-                <i class="fa fa-upload"></i><span>Adicionar um ficheiro</span> <!-- Icon for adding a file -->
-            </div>
-        </div>
-
-        <!-- Latest Changes Panel -->
-        <div class="latest-changes">
-            <h2>Últimos updates</h2>
-            <ul>
-                
-                <li>
-                    <strong>1.0.0:</strong> Lançamento inicial do sistema de tickets.
-                </li>
-            </ul>
-        </div>
-        
-        <!-- Version Information -->
-        <footer>
-            <p>Versão: beta v1.0.0</p>
-        </footer>
     </div>
 </body>
 </html>

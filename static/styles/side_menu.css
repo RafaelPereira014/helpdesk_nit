@@ -2,7 +2,7 @@
 
 .sidenav {
     height: 100%;
-    width: 250px; /* Adjust width as needed */
+    width: 260px; /* Adjust width as needed */
     position: fixed;
     z-index: 1;
     top: 0;
@@ -14,9 +14,9 @@
     flex-direction: column;
 }
 
-
 .menu-item {
-    padding: 10px 16px;
+    padding: 10px 15px;
+    transition: background-color 0.3s; /* Smooth transition */
 }
 
 .menu-item a {
@@ -24,25 +24,32 @@
     align-items: center; /* Align items vertically */
     color: #fff;
     text-decoration: none;
-}
-
-.menu-item a span {
-    margin-left: 0px; /* Adjust as needed */
+    transition: color 0.3s; /* Smooth transition */
 }
 
 .menu-item a:hover {
-    color: #f1f1f1;
+    background-color: #555; /* Highlight on hover */
 }
 
+.menu-item a:hover span {
+    color: #f1f1f1; /* Change text color on hover */
+}
 
+.menu-item a span {
+    margin-left: 10px; /* Adjust as needed */
+}
 
 #logout-button {
     margin-top: 350px; /* Aligns the button to the bottom */
-   
-    
+    padding: 10px 16px;
 }
 
 .main {
     margin-left: 250px; /* Adjust to match side menu width */
     padding: 16px;
+}
+
+.logo-main {
+    margin-left: 15px; /* Adjust as needed */
+    margin-bottom: 20px; /* Adjust as needed */
 }

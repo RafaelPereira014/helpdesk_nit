@@ -52,10 +52,10 @@ def index():
 def login():
     error = None
     if request.method == 'POST':
-        username = request.form['username']
+        email = request.form['username']
         password = request.form['password']
         cursor = connection.cursor()
-        cursor.execute("SELECT id, type FROM users WHERE name = %s AND password = %s", (username, password))
+        cursor.execute("SELECT id, type FROM users WHERE email = %s AND password = %s", (email, password))
         user_data = cursor.fetchone()  # Fetch the user ID and type from the database
         cursor.close()
         if user_data:
@@ -164,7 +164,7 @@ def new_ticket():
         # Email notifications
         if user_email:
             # Send email notification to user
-            msg = Message(f'{title} #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
+            msg = Message(f'Helpdesk NIT:{title} #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
             msg.html = f"""
                
                 <h1>Caro(a) {user_name}</h1>
@@ -283,8 +283,18 @@ def send_message():
             msg.html = f"""
                 <p>Foi registada uma atualização no seu ticket com o numero #<strong>{ ticket_id }</strong>.</p>
                 <p>Verifique as novas atualizações.</p>
-                <p>Obrigado por usar o nosso helpdesk.</p>
-                <h3><strong>SREC-NIT</strong></h3>
+                <p>----------------------------------------------</p>
+                <p><strong>Núcleo de Informática e Telecomunicações</strong></p>
+                <img src="https://github.com/RafaelPereira014/helpdesk_nit/blob/main/static/images/MicrosoftTeams-image.png" alt="Description of the image">
+                <p><strong>Secretaria Regional da Educação, Cultura e Desporto</strong></p>
+                <p>Paços da Junta Geral</p>
+                <p>Rua Carreira dos Cavalos</p>
+                <p>9700 – 167 Angra do Heroísmo</p>
+                <p>Telefone: 295 40 11 32</p>
+                <p>Telefone VOIP GRA: 310 380</p>
+                <p>E-mail GRA: sre.nit@azores.gov.pt</p>
+                <p>E-mail EDU: sre.nit@edu.azores.gov.pt</p>
+                <p>Helpdesk: <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a></p>
             """
             mail.send(msg)
             
@@ -405,8 +415,18 @@ def close_ticket_route(ticket_id):
         msg = Message(f'Ticket fechado #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
         msg.html = f"""
             <h2>O seu ticket com o número #{ticket_id} foi concluído com sucesso.</h2>
-            <p>Obrigado por usar o nosso helpdesk.</p>
-            <h3><strong>SREC-NIT</strong></h3>
+           <p>----------------------------------------------</p>
+            <p><strong>Núcleo de Informática e Telecomunicações</strong></p>
+            <img src="https://github.com/RafaelPereira014/helpdesk_nit/blob/main/static/images/MicrosoftTeams-image.png" alt="Description of the image">
+            <p><strong>Secretaria Regional da Educação, Cultura e Desporto</strong></p>
+            <p>Paços da Junta Geral</p>
+            <p>Rua Carreira dos Cavalos</p>
+            <p>9700 – 167 Angra do Heroísmo</p>
+            <p>Telefone: 295 40 11 32</p>
+            <p>Telefone VOIP GRA: 310 380</p>
+            <p>E-mail GRA: sre.nit@azores.gov.pt</p>
+            <p>E-mail EDU: sre.nit@edu.azores.gov.pt</p>
+            <p>Helpdesk: <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a></p>
         """
         mail.send(msg)
 
@@ -438,8 +458,18 @@ def accept_ticket_route(ticket_id):
         msg = Message(f'Ticket aceite #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
         msg.html = f"""
             <h2>O seu ticket com o número #{ticket_id} foi aceite e encontra-se neste momento em execução.</h2>
-            <p>Obrigado por usar o nosso helpdesk.</p>
-            <h3><strong>SREC-NIT</strong></h3>
+            <p>----------------------------------------------</p>
+                <p><strong>Núcleo de Informática e Telecomunicações</strong></p>
+                <img src="https://github.com/RafaelPereira014/helpdesk_nit/blob/main/static/images/MicrosoftTeams-image.png" alt="Description of the image">
+                <p><strong>Secretaria Regional da Educação, Cultura e Desporto</strong></p>
+                <p>Paços da Junta Geral</p>
+                <p>Rua Carreira dos Cavalos</p>
+                <p>9700 – 167 Angra do Heroísmo</p>
+                <p>Telefone: 295 40 11 32</p>
+                <p>Telefone VOIP GRA: 310 380</p>
+                <p>E-mail GRA: sre.nit@azores.gov.pt</p>
+                <p>E-mail EDU: sre.nit@edu.azores.gov.pt</p>
+                <p>Helpdesk: <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a></p>
         """
         mail.send(msg)
     
