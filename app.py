@@ -3,6 +3,7 @@ import bleach
 from functools import wraps
 import secrets
 import os
+import subprocess
 import mysql.connector
 from flask import Flask, flash, jsonify, render_template, request, redirect, url_for
 from db_operations import *
@@ -13,6 +14,7 @@ from flask import request
 from flask_mail import Mail, Message
 from werkzeug.utils import secure_filename
 from flask import render_template
+from flask import send_file
 
 
 
@@ -120,7 +122,13 @@ def profile_page():
 
 @app.route('/admin_init')
 def admin_init():
-    return render_template('admin_init.html')
+    if 'user_id' not in session:
+        return redirect(url_for('login'))  # Redirect to login page if user is not logged in
+    
+    user_id = session['user_id']
+    super_admin = is_super_admin(user_id)
+    
+    return render_template('admin_init.html',super_admin=super_admin)
 
 
 
@@ -136,7 +144,7 @@ def new_ticket():
     if request.method == 'POST':
         topic_id = request.form['topic_id']
         description = request.form['description']
-        state = "open"
+        state = "Aberto"
         uni_org = request.form['UnidadeOrg']
         created_by = session.get('user_id')
         user_name = get_username(created_by)
@@ -480,6 +488,13 @@ def accept_ticket_route(ticket_id):
 @app.route('/accountform')
 def create_accountEDU_page():
     return render_template('/new_forms/create_accountform.html')
+
+
+
+####Actions diretly from the DB####
+
+
+
 
 
 if __name__ == '__main__':

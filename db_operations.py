@@ -151,7 +151,7 @@ def get_opened_tickets_count_by_group(group_id):
     """Fetches the number of opened tickets for a specific group."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT COUNT(*) AS opened_tickets_count FROM tickets WHERE state = 'open' AND group_id = %s", (group_id,))
+    cursor.execute("SELECT COUNT(*) AS opened_tickets_count FROM tickets WHERE state = 'Aberto' AND group_id = %s", (group_id,))
     opened_tickets_count = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -161,7 +161,7 @@ def get_opened_tickets_count_by_user(user_id):
     """Fetches the number of opened tickets for a specific group."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT COUNT(*) AS opened_tickets_count FROM tickets WHERE state = 'open' AND created_by = %s", (user_id,))
+    cursor.execute("SELECT COUNT(*) AS opened_tickets_count FROM tickets WHERE state = 'Aberto' AND created_by = %s", (user_id,))
     opened_tickets_count = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -171,7 +171,7 @@ def get_closed_tickets_count_by_group(group_id):
     """Fetches the number of opened tickets for a specific group."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT COUNT(*) AS closed_tickets_count FROM tickets WHERE state = 'closed' AND group_id = %s", (group_id,))
+    cursor.execute("SELECT COUNT(*) AS closed_tickets_count FROM tickets WHERE state = 'Fechado' AND group_id = %s", (group_id,))
     closed_tickets_count = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -181,7 +181,7 @@ def get_closed_tickets_count_by_user(user_id):
     """Fetches the number of opened tickets for a specific group."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT COUNT(*) AS closed_tickets_count FROM tickets WHERE state = 'closed' AND created_by = %s", (user_id,))
+    cursor.execute("SELECT COUNT(*) AS closed_tickets_count FROM tickets WHERE state = 'Fechado' AND created_by = %s", (user_id,))
     closed_tickets_count = cursor.fetchone()
     cursor.close()
     conn.close()
@@ -270,7 +270,7 @@ def get_creator_name(ticket_id):
 def no_open_tickets():
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM tickets WHERE state = 'open'")
+    cursor.execute("SELECT COUNT(*) FROM tickets WHERE state = 'Aberto'")
     num_open_tickets = cursor.fetchone()[0]
     cursor.close()
     return num_open_tickets
@@ -278,7 +278,7 @@ def no_open_tickets():
 def no_closed_tickets():
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM tickets WHERE state = 'closed'")
+    cursor.execute("SELECT COUNT(*) FROM tickets WHERE state = 'Fechado'")
     num_closed_tickets = cursor.fetchone()[0]
     cursor.close()
     return num_closed_tickets
@@ -376,7 +376,7 @@ def close_ticket(user_id,ticket_id):
         cursor.execute("SELECT name FROM users WHERE id = %s", (user_id,))
         user_name = cursor.fetchone()[0]
         
-        cursor.execute("UPDATE tickets SET state = 'closed', closed_by = %s WHERE id = %s", (user_name, ticket_id))
+        cursor.execute("UPDATE tickets SET state = 'Fechado', closed_by = %s WHERE id = %s", (user_name, ticket_id))
         conn.commit()
         print("Ticket closed successfully")
     except Exception as e:
@@ -389,7 +389,7 @@ def close_ticket(user_id,ticket_id):
 def reopen_ticket(ticket_id):
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("UPDATE tickets SET state = 'open' WHERE id = %s", (ticket_id,))
+    cursor.execute("UPDATE tickets SET state = 'Aberto' WHERE id = %s", (ticket_id,))
     conn.commit()
     cursor.close()
     conn.close()
@@ -405,7 +405,7 @@ def is_closed(ticket_id):
     cursor.close()
     conn.close()
     
-    if ticket_state == 'closed':  # Check if user_type is not None and compare the first element of the tuple
+    if ticket_state == 'Fechado':  # Check if user_type is not None and compare the first element of the tuple
         closed+=1;
         return True
     else:
@@ -516,6 +516,27 @@ def get_emails_by_group(topic_id):
     email_list = [row[0] for row in emails]  # Extract emails from the result
     
     return email_list
+
+def is_super_admin(user_id):
+    """Checks if the user is an Super Admin"""
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT group_id FROM users WHERE id = %s", (user_id,))
+    group_id = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    
+    if group_id and group_id[0] == 3:  # Check if user_type is not None and compare the first element of the tuple
+        return True
+    else:
+        return False
+
+
+
+#Database ADMIN actions 
+
+def dump_database():
+    return 0
 
 
 

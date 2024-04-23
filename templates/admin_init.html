@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Helpdesk Ticketing System</title>
+    <title>Sistema de Tickets NIT</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/super_admin.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/basic.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/side_menu.css') }}">
@@ -16,36 +17,103 @@
 <body>
     <div class="sidenav">
         <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo-main" class="logo-main">
-        <div class="sidenav">
-            <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo-main" class="logo-main">
-            <div class="menu-item">
-                <a href="/admin_pannel"><i class="fa fa-dashboard"></i> Admin Panel</a>
-            </div>
-            <div class="menu-item">
-                <a href="/pannel_group"><i class="fa fa-users"></i> Group Panel</a>
-            </div>
-            <div class="menu-item">
-                <a href="/my_profile"><i class="fa fa-user"></i> Meu perfil</a>
-            </div>
-            <div class="menu-item" >
-                <a href="/new_user"><i class="fa fa-user-plus"></i> Novo utilizador</a>
-            </div>
-            <div class="menu-item" id="logout-button">
-                <a href="/logout"></i> Terminar sessão</a>
-            </div>
-            
+        <div class="menu-item">
+            <a href="/admin_pannel"><i class="fa fa-dashboard"></i> Painel de administração</a>
         </div>
+        <div class="menu-item">
+            <a href="/pannel_group"><i class="fa fa-users"></i>Painel de grupo</a>
+        </div>
+        <div class="menu-item">
+            <a href="/my_profile"><i class="fa fa-user"></i> Meu perfil</a>
+        </div>
+        <div class="menu-item">
+            <a href="/new_user"><i class="fa fa-user-plus"></i> Novo utilizador</a>
+        </div>
+        <div class="menu-item">
+            <a href="/logout"><i class="gg-log-out"></i> Terminar sessão</a>
+        </div> 
     </div>
 
     <div class="main">
         <div class="container">
-            <h1>Bem-vindo ao sistema de tickets do NIT</h1>
-            <h3> De forma a otimizarmos os pedidos de apoio, utilizamos este sistema de gestão de pedidos de apoio.
-                A cada pedido será atribuído um numero único, e com o qual será possível verificar o seu estado, assim como as tarefas atribuídas ao mesmo.
-                Para referência futura, disponibilizamos o histórico de todos os pedidos registados.
-            </h3>
+            <h1>Bem-vindo ao sistema de apoio do Núcleo de Informática e Telecomunicações</h1>
+            
+
+            {% if super_admin %}
+            <div class="dump-database">
+                <h2>Dump da Base de Dados</h2>
+                <form action="/dump_database" method="post">
+                    <fieldset>
+                        <legend>Dump da Base de Dados</legend>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="users" name="users" value="users">
+                            <label for="users">Utilizadores</label><br>
+                            <div class="sub-checkboxes">
+                                <input type="checkbox" id="user_id" name="user_id" value="user_id">
+                                <label for="user_id">ID do Utilizador</label><br>
+                                <input type="checkbox" id="username" name="username" value="username">
+                                <label for="username">Nome do Utilizador</label><br>
+                                <input type="checkbox" id="email" name="email" value="email">
+                                <label for="created_at">Data de criação</label><br>
+                                <input type="checkbox" id="created_at" name="created_at" value="created_at">
+                                <label for="email">Email</label><br>
+                                <input type="checkbox" id="group_id" name="group_id" value="group_id">
+                                <label for="group_id">ID do Grupo</label><br>
+                                <input type="checkbox" id="user_type" name="user_type" value="user_type">
+                                <label for="user_type">Tipo de utilizador</label><br>
+                                <input type="submit" value="Gerar Dump">
+                            </div>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="tickets" name="tickets" value="tickets">
+                            <label for="tickets">Tickets</label><br>
+                            <div class="sub-checkboxes">
+                                <input type="checkbox" id="ticket_id" name="ticket_id" value="ticket_id">
+                                <label for="ticket_id">ID do Ticket</label><br>
+                                <input type="checkbox" id="title" name="title" value="title">
+                                <label for="title">Título</label><br>
+                                <input type="checkbox" id="descricao" name="descricao" value="descricao">
+                                <label for="descricao">Descrição</label><br>
+                                <input type="checkbox" id="created_by" name="created_by" value="created_by">
+                                <label for="created_by">Criado Por</label><br>
+                                <input type="checkbox" id="state" name="state" value="state">
+                                <label for="state">Estado</label><br>
+                                <input type="checkbox" id="closed_by" name="closed_by" value="closed_by">
+                                <label for="closed_by">Fechado por </label><br>
+                                <input type="submit" value="Gerar Dump">
+                            </div>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="topics" name="topics" value="topics">
+                            <label for="topics">Tópicos</label><br>
+                            <div class="sub-checkboxes">
+                                <input type="checkbox" id="topic_id" name="topic_id" value="topic_id">
+                                <label for="topic_id">ID do Tópico</label><br>
+                                <input type="checkbox" id="topic_name" name="topic_name" value="topic_name">
+                                <label for="topic_name">Nome do Tópico</label><br>
+                                <input type="checkbox" id="group_id" name="group_id" value="group_id">
+                                <label for="group_id">Grupo do Tópico</label><br>
+                                <input type="submit" value="Gerar Dump">
+                            </div>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="groups" name="groups" value="groups">
+                            <label for="groups">Grupos</label><br>
+                            <div class="sub-checkboxes">
+                                <input type="checkbox" id="group_id" name="group_id" value="group_id">
+                                <label for="group_id">ID do Grupo</label><br>
+                                <input type="checkbox" id="group_name" name="group_name" value="group_name">
+                                <label for="group_name">Nome do Grupo</label><br>
+                                <input type="submit" value="Gerar Dump">
+                            </div>
+                        </div>
+                    </fieldset>
+                    
+                </form>
+                
+            </div>
+            {% endif %}
         </div>
-       
     </div>
 </body>
 </html>

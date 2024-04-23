@@ -25,12 +25,12 @@ try:
         # emails = cursor.fetchall()
         # print(emails)
         
-        is_edu = check_email_contains_edu('13')
+        super_admin = is_super_admin('16')
         
 
         cursor.execute("SELECT * from users")
         name = cursor.fetchall()
-        print(name)
+        print(super_admin)
         # Fetch all rows (tickets) from the result set
 
         # Close the cursor

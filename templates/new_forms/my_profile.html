@@ -24,10 +24,10 @@
                 <a href="/admin_init"><i class="fa fa-home"></i> Inicio</a>
             </div>
             <div class="menu-item">
-                <a href="/admin_pannel"><i class="fa fa-dashboard"></i> Admin Panel</a>
+                <a href="/admin_pannel"><i class="fa fa-dashboard"></i>Painel de administração</a>
             </div>
             <div class="menu-item">
-                <a href="/pannel_group"><i class="fa fa-users"></i> Group Panel</a>
+                <a href="/pannel_group"><i class="fa fa-users"></i> Painel de grupo</a>
             </div>
             <div class="menu-item">
                 <a href="/my_profile"><i class="fa fa-user"></i> Meu perfil</a>
@@ -65,16 +65,16 @@
             <div class="profile-info">
                 <h2>{{ user_name }}</h2> <!-- Replace 'username' with the variable holding the username -->
                 <form method="POST">
-                    <label for="password">Password Atual:</label>
+                    <label for="password">Palavra-passe atual:</label>
                     <input type="password" id="password" name="password" required>
                 
-                    <label for="new_password">Nova Password:</label>
+                    <label for="new_password">Nova palavra-passe:</label>
                     <input type="password" id="new_password" name="new_password" required>
                 
-                    <label for="confirm_password">Confirmar Nova Password:</label>
+                    <label for="confirm_password">Confirmar nova palavra-passe:</label>
                     <input type="password" id="confirm_password" name="confirm_password" required>
                 
-                    <button type="submit" class="button">Alterar Password</button>
+                    <button type="submit" class="button">Alterar palavra-passe</button>
                     {% if message %}
                         <!-- Modal -->
                         <div id="myModal" class="modal">

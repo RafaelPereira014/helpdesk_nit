@@ -28,7 +28,7 @@ body {
 
 .login-container input[type="text"],
 .login-container input[type="password"] {
-    width: 100%;
+    width: 90%;
     padding: 12px;
     margin-bottom: 20px;
     border: 1px solid #ced4da;
@@ -44,7 +44,7 @@ body {
 }
 
 .login-container input[type="submit"] {
-    width: 100%;
+    width: 50%;
     padding: 12px;
     background-color: #007bff;
     color: #ffffff;

@@ -13,7 +13,7 @@
     <link href='https://unpkg.com/css.gg@2.0.0/icons/css/log-out.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Admin Panel - Tickets</title>
+    <title>Painel de administração - Tickets</title>
 </head>
 <body>
     <div class="sidenav">
@@ -24,10 +24,10 @@
                 <a href="/admin_init"><i class="fa fa-home"></i> Inicio</a>
             </div>
             <div class="menu-item">
-                <a href="/admin_pannel"><i class="fa fa-dashboard"></i> Admin Panel</a>
+                <a href="/admin_pannel"><i class="fa fa-dashboard"></i> Painel de administração</a>
             </div>
             <div class="menu-item">
-                <a href="/pannel_group"><i class="fa fa-users"></i> Group Panel</a>
+                <a href="/pannel_group"><i class="fa fa-users"></i> Painel de grupo</a>
             </div>
             <div class="menu-item">
                 <a href="/my_profile"><i class="fa fa-user"></i> Meu perfil</a>
@@ -44,7 +44,7 @@
     </div>
 
     <div class="main">
-        <h1>Admin Panel - Tickets</h1>
+        <h1>Painel de administração - Tickets</h1>
         <button id="all-btn" class="button-filter">Todos</button>
         <button id="aberto-btn"  class="button-filter">Aberto({{ open_tickets }})</button>
         <button id="fechado-btn"  class="button-filter">Fechado({{ closed_tickets }})</button>
@@ -110,9 +110,9 @@
             function displayTickets() {
                 var filteredTickets;
                 if (currentFilter === 'aberto') {
-                    filteredTickets = tickets.filter(ticket => ticket.state === 'open');
+                    filteredTickets = tickets.filter(ticket => ticket.state === 'Aberto');
                 } else if (currentFilter === 'fechado') {
-                    filteredTickets = tickets.filter(ticket => ticket.state === 'closed');
+                    filteredTickets = tickets.filter(ticket => ticket.state === 'Fechado');
                 }else if (currentFilter === 'em execucao') {
                     filteredTickets = tickets.filter(ticket => ticket.state === 'em execucao');
                 }else {
@@ -134,7 +134,7 @@
                         <td>${ticket.UnidadeOrg}</td>
                         <td><a href="/ticket_details/${ticket.id}">${ticket.title}</a></td>
                         <td>${ticket.state}</td>
-                        <td>${ticket.state === 'closed' ? ticket.closed_by : ticket.state === 'em execucao' ? ticket.attributed_to_name : '-'}</td>
+                        <td>${ticket.state === 'Fechado' ? ticket.closed_by : ticket.state === 'em execucao' ? ticket.attributed_to_name : '-'}</td>
                         `;
                     tableBody.appendChild(row);
                 }
