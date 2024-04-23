@@ -41,7 +41,6 @@
 
             {% if super_admin %}
             <div class="dump-database">
-                <h2>Dump da Base de Dados</h2>
                 <form action="/dump_database" method="post">
                     <fieldset>
                         <legend>Dump da Base de Dados</legend>
@@ -49,9 +48,9 @@
                             <input type="checkbox" id="users" name="users" value="users">
                             <label for="users">Utilizadores</label><br>
                             <div class="sub-checkboxes">
-                                <input type="checkbox" id="user_id" name="user_id" value="user_id">
+                                <input type="checkbox" id="id" name="id" value="id">
                                 <label for="user_id">ID do Utilizador</label><br>
-                                <input type="checkbox" id="username" name="username" value="username">
+                                <input type="checkbox" id="name" name="name" value="name">
                                 <label for="username">Nome do Utilizador</label><br>
                                 <input type="checkbox" id="email" name="email" value="email">
                                 <label for="created_at">Data de criação</label><br>
@@ -59,7 +58,7 @@
                                 <label for="email">Email</label><br>
                                 <input type="checkbox" id="group_id" name="group_id" value="group_id">
                                 <label for="group_id">ID do Grupo</label><br>
-                                <input type="checkbox" id="user_type" name="user_type" value="user_type">
+                                <input type="checkbox" id="type" name="type" value="type">
                                 <label for="user_type">Tipo de utilizador</label><br>
                                 <input type="submit" value="Gerar Dump">
                             </div>
@@ -68,13 +67,13 @@
                             <input type="checkbox" id="tickets" name="tickets" value="tickets">
                             <label for="tickets">Tickets</label><br>
                             <div class="sub-checkboxes">
-                                <input type="checkbox" id="ticket_id" name="ticket_id" value="ticket_id">
+                                <input type="checkbox" id="id" name="id" value="id">
                                 <label for="ticket_id">ID do Ticket</label><br>
                                 <input type="checkbox" id="title" name="title" value="title">
                                 <label for="title">Título</label><br>
-                                <input type="checkbox" id="descricao" name="descricao" value="descricao">
+                                <input type="checkbox" id="description" name="description" value="description">
                                 <label for="descricao">Descrição</label><br>
-                                <input type="checkbox" id="created_by" name="created_by" value="created_by">
+                                <input type="checkbox" id="created_by_user" name="created_by_user" value="created_by_user">
                                 <label for="created_by">Criado Por</label><br>
                                 <input type="checkbox" id="state" name="state" value="state">
                                 <label for="state">Estado</label><br>
@@ -83,13 +82,14 @@
                                 <input type="submit" value="Gerar Dump">
                             </div>
                         </div>
+                        <!-- Actions Section 
                         <div class="checkbox-group">
                             <input type="checkbox" id="topics" name="topics" value="topics">
                             <label for="topics">Tópicos</label><br>
                             <div class="sub-checkboxes">
-                                <input type="checkbox" id="topic_id" name="topic_id" value="topic_id">
+                                <input type="checkbox" id="id" name="id" value="id">
                                 <label for="topic_id">ID do Tópico</label><br>
-                                <input type="checkbox" id="topic_name" name="topic_name" value="topic_name">
+                                <input type="checkbox" id="key_word" name="key_word" value="key_word">
                                 <label for="topic_name">Nome do Tópico</label><br>
                                 <input type="checkbox" id="group_id" name="group_id" value="group_id">
                                 <label for="group_id">Grupo do Tópico</label><br>
@@ -105,8 +105,10 @@
                                 <input type="checkbox" id="group_name" name="group_name" value="group_name">
                                 <label for="group_name">Nome do Grupo</label><br>
                                 <input type="submit" value="Gerar Dump">
+                                
                             </div>
                         </div>
+                        -->
                     </fieldset>
                     
                 </form>

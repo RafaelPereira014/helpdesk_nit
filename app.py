@@ -1,3 +1,4 @@
+import csv
 import datetime
 import bleach
 from functools import wraps
@@ -493,9 +494,93 @@ def create_accountEDU_page():
 
 ####Actions diretly from the DB####
 
+@app.route('/dump_database', methods=['POST'])
+def dump_database():
+    selected_items = []
+    select_fields = []
 
+    # Check which items have been selected for dumping
+    if request.form.get('users') == 'users':
+        selected_items.append('users')
+        if request.form.get('id') == 'id':
+            select_fields.append('id')
+        if request.form.get('name') == 'name':
+            select_fields.append('name')
+        if request.form.get('email') == 'email':
+            select_fields.append('email')
+        if request.form.get('created_at') == 'created_at':
+            select_fields.append('created_at')
+        if request.form.get('group_id') == 'group_id':
+            select_fields.append('group_id')
+        if request.form.get('type') == 'type':
+            select_fields.append('type')
+    
+    if request.form.get('tickets') == 'tickets':
+        selected_items.append('tickets')
+        if request.form.get('id') == 'id':
+            select_fields.append('id')
+        if request.form.get('title') == 'title':
+            select_fields.append('title')
+        if request.form.get('description') == 'description':
+            select_fields.append('description')
+        if request.form.get('created_by_user') == 'created_by_user':
+            select_fields.append('created_by_user')
+        if request.form.get('state') == 'state':
+            select_fields.append('state')
+        if request.form.get('closed_by') == 'closed_by':
+            select_fields.append('closed_by')
+    
+    # if request.form.get('topics') == 'topics':
+    #     selected_items.append('topics')
+    #     if request.form.get('id') == 'id':
+    #         select_fields.append('id')
+    #     if request.form.get('key_word') == 'key_word':
+    #         select_fields.append('key_word')
+    #     if request.form.get('group_id') == 'group_id':
+    #         select_fields.append('group_id')
+    
+    # if request.form.get('groups') == 'groups':
+    #     selected_items.append('groups')
+    #     if request.form.get('id') == 'id':
+    #         select_fields.append('id')
+    #     if request.form.get('name') == 'name':
+    #         select_fields.append('name')
 
+    if len(selected_items) == 0:
+        return "Nenhum item selecionado para exportar."
 
+    # Define the SELECT fields
+    select_string = ", ".join(select_fields)
 
+    # Define the SELECT queries
+    queries = []
+
+    for item in selected_items:
+        if item == 'users':
+            queries.append(f"SELECT {select_string} FROM users")
+        elif item == 'tickets':
+            queries.append(f"SELECT {select_string} FROM tickets")
+        # elif item == 'topics':
+        #     queries.append(f"SELECT {select_string} FROM topics")
+        # elif item == 'groups':
+        #     queries.append(f"SELECT {select_string} FROM `Groups`")
+
+    # Define the CSV file name
+    file_name = "database_dump.csv"
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], file_name)
+
+    # Run the SELECT queries and write to CSV
+    with open(file_path, mode='w', newline='') as f:
+        writer = csv.writer(f)
+        for query in queries:
+            dump_command = [
+                'mysql',
+                '-u', 'root',
+                'helpdesk4',
+                '-e', query
+            ]
+            subprocess.run(dump_command, stdout=f, text=True)
+
+    return send_file(file_path, as_attachment=True)
 if __name__ == '__main__':
     app.run(debug=True)
