@@ -147,6 +147,7 @@ def new_ticket():
     
     user_id = session['user_id']
     is_edu = check_email_contains_edu(user_id) 
+    admin_status = is_admin(user_id)
     
 
     if request.method == 'POST':
@@ -225,7 +226,7 @@ def new_ticket():
 
         return redirect(url_for('my_tickets'))
 
-    return render_template('new_ticket.html', is_edu=is_edu)
+    return render_template('new_ticket.html', is_edu=is_edu,admin_status=admin_status)
 
 
 
@@ -578,7 +579,6 @@ def dump_database():
 
     # Run the SELECT queries and write to CSV
     with open(file_path, mode='w', newline='') as f:
-        writer = csv.writer(f)
         for query in queries:
             dump_command = [
                 'mysql',
