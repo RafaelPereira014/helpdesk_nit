@@ -181,7 +181,7 @@ def new_ticket():
         # Email notifications
         if user_email:
             # Send email notification to user
-            msg = Message(f'Helpdesk NIT:{title} #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
+            msg = Message(f'Helpdesk NIT: {title} #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
             msg.html = f"""
                
                 <h1>Caro(a) {user_name}</h1>
@@ -211,7 +211,7 @@ def new_ticket():
             # Send email notification to admins
             unique_admin_emails = set(admin_emails)
             for admin_email in unique_admin_emails:
-                msg = Message(f'Novo ticket aberto #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[admin_email])
+                msg = Message(f'Helpdesk NIT: Novo ticket aberto #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[admin_email])
                 msg.html = f"""
                     <h1>Novo ticket</h1>
                     <p>Criado por: {user_name}</p>
@@ -296,7 +296,7 @@ def send_message():
     if sender_type == 'admin':
         ticket_creator_email = get_user_email_by_ticket(ticket_id)
         if ticket_creator_email:
-            msg = Message(f'Atualização no ticket#{ticket_id}', sender='noreply@azores.gov.pt', recipients=[ticket_creator_email])
+            msg = Message(f'Helpdesk NIT: Atualização no ticket#{ticket_id}', sender='noreply@azores.gov.pt', recipients=[ticket_creator_email])
             msg.html = f"""
                 <p>Foi registada uma atualização no seu ticket com o numero #<strong>{ ticket_id }</strong>.</p>
                 <p>Verifique as novas atualizações.</p>
@@ -429,7 +429,7 @@ def close_ticket_route(ticket_id):
         
     # Send an email notification to the user
     if user_email:
-        msg = Message(f'Ticket fechado #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
+        msg = Message(f'Helpdesk NIT: Ticket fechado #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
         msg.html = f"""
             <h2>O seu ticket com o número #{ticket_id} foi concluído com sucesso.</h2>
            <p>----------------------------------------------</p>
@@ -472,7 +472,7 @@ def accept_ticket_route(ticket_id):
     attributed_to(user_id)
     user_email = get_user_email_by_ticket(ticket_id)
     if user_email:
-        msg = Message(f'Ticket aceite #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
+        msg = Message(f'Helpdesk NIT: Ticket aceite #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
         msg.html = f"""
             <h2>O seu ticket com o número #{ticket_id} foi aceite e encontra-se neste momento em execução.</h2>
             <p>----------------------------------------------</p>
