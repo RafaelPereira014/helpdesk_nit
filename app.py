@@ -58,19 +58,23 @@ def login():
         email = request.form['username']
         password = request.form['password']
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
-        cursor = connection.cursor()
-        cursor.execute("SELECT id, type FROM users WHERE email = %s AND password = %s", (email, hashed_password))
-        user_data = cursor.fetchone()  # Fetch the user ID and type from the database
+
+        conn = connect_to_database()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, type, password FROM users WHERE email = %s", (email,))
+        user_data = cursor.fetchone()  # Fetch the user ID, type, and hashed password from the database
         cursor.close()
+
         if user_data:
-            session['user_id'] = user_data[0]  # Store user ID in session
-            session['user_type'] = user_data[1]  # Store user type in session
-            if is_admin(user_data[0]):
-                return redirect(url_for('admin_init'))  # Redirect admin users to admin_init page
-            else:
-                return redirect(url_for('init_page'))  # Redirect non-admin users to init_page
-        else:
-            error = 'Invalid credentials. Please try again.'
+            stored_password = user_data[2]
+            if hashed_password == stored_password:
+                session['user_id'] = user_data[0]  # Store user ID in session
+                session['user_type'] = user_data[1]  # Store user type in session
+                if is_admin(user_data[0]):
+                    return redirect(url_for('admin_init'))  # Redirect admin users to admin_init page
+                else:
+                    return redirect(url_for('init_page'))  # Redirect non-admin users to init_page
+        error = 'Invalid credentials. Please try again.'
     return render_template('login.html', error=error)
 
 @app.route('/logout')
@@ -352,7 +356,6 @@ def new_user():
         email = request.form['email']
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-
         # Here, you would add code to insert the new user into the database
         try:
             conn = connect_to_database()
@@ -366,7 +369,6 @@ def new_user():
         except Exception as e:
             print("Error creating user:", e)
             return "Error creating user. Please try again later."
-
 
     # Render the form for adding a new user
     return render_template('new_forms/novo_utilizador.html')
