@@ -57,8 +57,9 @@ def login():
     if request.method == 'POST':
         email = request.form['username']
         password = request.form['password']
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
         cursor = connection.cursor()
-        cursor.execute("SELECT id, type FROM users WHERE email = %s AND password = %s", (email, password))
+        cursor.execute("SELECT id, type FROM users WHERE email = %s AND password = %s", (email, hashed_password))
         user_data = cursor.fetchone()  # Fetch the user ID and type from the database
         cursor.close()
         if user_data:
@@ -105,9 +106,11 @@ def profile_page():
         password = request.form['password']
         new_pass = request.form['new_password']
         confirm_pass = request.form['confirm_password']
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
 
         # Verify the current password
-        if verify_password(user_id, password):
+        if verify_password(user_id, hashed_password):
             # Update the password
             if new_pass == confirm_pass:
                 update_password(user_id, new_pass)

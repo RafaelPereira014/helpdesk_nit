@@ -4,6 +4,8 @@ from config import DB_CONFIG  # Import the database configuration
 from flask import session
 import mysql.connector  # Import MySQL Connector Python module
 from flask_mail import Message
+import hashlib
+
 
 
 
@@ -68,14 +70,19 @@ def verify_password(user_id,password):
     
     return False
 
-def update_password(user_id,password):
+
+def update_password(user_id, password):
+    # Hash the password
+    hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("UPDATE users SET password = %s WHERE id = %s", (password, user_id))
+    cursor.execute("UPDATE users SET password = %s WHERE id = %s", (hashed_password, user_id))
     conn.commit()
     cursor.close()
     conn.close()
-    return update_password
+    return "Password updated successfully"
+
 
 def check_email_contains_edu(user_id):
     conn = connect_to_database()
