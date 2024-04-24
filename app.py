@@ -350,13 +350,15 @@ def new_user():
         type = request.form['type']
         group = request.form.get('group_id', None)
         email = request.form['email']
+        hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
 
         # Here, you would add code to insert the new user into the database
         try:
             conn = connect_to_database()
             cursor = conn.cursor()
             cursor.execute("INSERT INTO users (name, password, type, group_id, email) VALUES (%s, %s, %s, %s, %s)",
-                            (name, password, type, group, email))
+                            (name, hashed_password, type, group, email))
             conn.commit()
             cursor.close()
             conn.close()
