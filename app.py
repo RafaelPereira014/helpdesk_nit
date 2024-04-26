@@ -271,7 +271,7 @@ def my_tickets():
 def send_message():
     data = request.json
     ticket_id = data['ticket_id']
-    message = bleach.clean(data['message'], tags=['p', 'strong', 'em'], attributes={'p': ['class']})
+    message = bleach.clean(data['message'], tags=['p', 'strong', 'em','a','href','span'], attributes={'p': ['class']})
     
     # Get the user's ID from the session
     user_id = session.get('user_id')
