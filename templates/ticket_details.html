@@ -90,9 +90,10 @@
                     </span>
                 </div>
                 {% endif %}
-    
+              
                 
             </div>
+            
     
             <div class="message-container" id="message-container">
                 <!-- Messages will be displayed here -->
@@ -108,13 +109,23 @@
                     <div class="message-content">
                         {{ message.message|safe }}
                     </div>
+                    {% for attachment in message_attachments %}
+                        <div class="ticket-info-item">
+                            <span class="info-label">Anexo:</span>
+                            <span class="info-value">
+                                <a href="{{ url_for('download_attachment', attachment_id=attachment.id) }}" download>{{ attachment.filename }}</a>
+                            </span>
+                        </div>
+                    {% endfor %}
                 </div>
                 {% endfor %}
             </div>
     
             <form id="message-form">
                 <!-- <textarea id="message" rows="6" name="chat_message"></textarea><br> -->
+
                 <div id="message"></div> <!-- TinyMCE editor container -->
+                
                 <button type="submit" class="button">Publicar resposta</button>
             </form>
             {% if is_admin %}
@@ -147,8 +158,8 @@
             // Initialize TinyMCE
             tinymce.init({
                 selector: '#message', // Use the message div as the selector
-                plugins: 'advlist autolink lists link image charmap print preview hr anchor',
-                toolbar: 'undo redo | bold italic  | removeformat | help',
+                plugins: 'advlist autolink lists link image charmap print preview hr anchor insert file',
+                toolbar: 'undo redo | bold italic | removeformat | help | insertfile',
                 height: 300, // Specify the height of the TinyMCE editor
                 forced_root_block: false, // Prevent TinyMCE from adding <p> tags
                 apply_source_formatting: true, // Keep the formatting as per the source
