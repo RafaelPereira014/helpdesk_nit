@@ -101,7 +101,7 @@ def check_email_contains_edu(user_id):
 def get_all_users():
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT name FROM users")
+    cursor.execute("SELECT name FROM users ORDER BY name ASC")
     users = cursor.fetchall()
     cursor.close()
     conn.close()

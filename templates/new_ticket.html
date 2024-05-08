@@ -83,7 +83,7 @@
                 {%if admin_status %}
                 <label for="assigned_to">Atribuir ticket a:</label>
                 <select id="assigned_to" name="assigned_to">
-                    <option value="">- Selecione um usuário -</option>
+                    <option value="">- Selecione utilizador -</option>
                     {% for user_tuple in all_users %}
                         {% set user = user_tuple[0] %}
                         <option value="{{ user }}">{{ user }}</option>
@@ -100,7 +100,7 @@
                     <option value="2">Geral</option>
 
                     {% if admin_status %}
-                    <option value="7">Adicionar MACaddress a controladora</option>
+                    <option value="7">Adicionar MAC address a controladora</option>
                     <option value="12">Autenticação MFA</option>
                     <option value="33">Alteração de Redes</option>
                     <option value="16">Apoio ao Utilizador</option>
@@ -184,7 +184,7 @@
     
                 </select>
                 {% endif%}
-                <label for="UnidadeOrg">Unidade organica/Divisão:</label>
+                <label for="UnidadeOrg">Unidade organica:</label>
                 <select id="UnidadeOrg" name="UnidadeOrg" required></select>
                 <!-- Div for description -->
                 <div id="description_div">
