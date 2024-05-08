@@ -388,12 +388,13 @@
             popup.style.display = 'block'; // Show the popup
             setTimeout(function() {
                 popup.style.display = 'none'; // Hide the popup after 3 seconds
+                window.location.href = "/my_tickets";
             }, 3000); // Adjust the duration as needed (in milliseconds)
         }
 
         // Show loader when form is submitted
         document.getElementById('ticket_form').addEventListener('submit', function() {
-            document.getElementById('loader').style.display = 'flex'; // Show the loader
+            //document.getElementById('loader').style.display = 'flex'; // Show the loader
             showPopupMessage(); // Show the popup message
         });
     
@@ -409,11 +410,11 @@
         toggleDescription();
     
         // Show loader when form is submitted
-        document.getElementById('ticket_form').addEventListener('submit', function() {
-            document.getElementById('loader').style.display = 'flex'; // Change display to flex to show the loader
+        // document.getElementById('ticket_form').addEventListener('submit', function() {
+        //    document.getElementById('loader').style.display = 'flex'; // Change display to flex to show the loader
             // Optionally, disable the submit button to prevent multiple submissions
             // document.getElementById('submit_button').disabled = true;
-        });
+   //     }); 
     </script>
     
 </body>
