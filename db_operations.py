@@ -98,6 +98,16 @@ def check_email_contains_edu(user_id):
         return False
 
 
+def get_all_users():
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM users")
+    users = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
+    return users;
+
 
     
 
@@ -355,6 +365,30 @@ def attributed_to_by_ticket(ticket_id):
     cursor.close()
     conn.close()
     return user_name
+
+def get_user_id_by_name(user_name):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM users WHERE name = %s", (user_name,))
+    user_id = cursor.fetchone()[0]  # Assuming user names are unique
+    cursor.close()
+    conn.close()
+    return user_id
+
+def assign_ticket_to_user(ticket_id,user_name):
+    assigned_user_id = get_user_id_by_name(user_name)
+    conn = connect_to_database()
+    if assigned_user_id:
+        conn = connect_to_database()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE tickets SET created_by = %s WHERE id = %s", (assigned_user_id, ticket_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return "Ticket assigned to user successfully"
+    else:
+        return "User not found"
+
 
 # Miscellaneous Operations
 

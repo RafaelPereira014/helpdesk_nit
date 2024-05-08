@@ -18,7 +18,7 @@
     tinymce.init({
         selector: '#description',
         plugins: 'advlist autolink lists link image charmap print preview hr anchor table',
-        toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | image | help',
+        toolbar: 'undo redo | formatselect | bold italic backcolor ',
         height: 300, // Specify the height of the TinyMCE editor
         images_upload_url: '/upload_image', // URL for server-side image upload handler (optional)
     });
@@ -79,13 +79,58 @@
             <h1>Abrir novo ticket</h1>
             <form method="POST" action="/new_ticket" id="ticket_form" enctype="multipart/form-data">
                 <div id="popup-message" class="popup" style="display: none;">Ticket criado com sucesso!</div>
+                
+                {%if admin_status %}
+                <label for="assigned_to">Atribuir ticket a:</label>
+                <select id="assigned_to" name="assigned_to">
+                    <option value="">- Selecione um usuário -</option>
+                    {% for user_tuple in all_users %}
+                        {% set user = user_tuple[0] %}
+                        <option value="{{ user }}">{{ user }}</option>
+                    {% endfor %}
+                </select>
+               
+
+                {%endif%}
+
                 <label for="topic">Tópico de ajuda:</label>
                 <select id="topic_id" name="topic_id" required>
                     <!-- Topicos default para todos -->
                     <option value="0">-Selecione um tópico de ajuda-</option>
                     <option value="2">Geral</option>
+
+                    {% if admin_status %}
+                    <option value="7">Adicionar MACaddress a controladora</option>
+                    <option value="12">Autenticação MFA</option>
+                    <option value="33">Alteração de Redes</option>
+                    <option value="16">Apoio ao Utilizador</option>
+                    <option value="25">Atribuição de computadores</option>
+                    <option value="27">Pedido de equipamento</option>
+                    <option value="26">Apoio a websites EDU</option>
+                    <option value="11">Criar novo utilizador</option>
+                    <option value="4">Criar conta EDU</option>
+                    <option value="13">Criar grupo de distribuição</option>
+                    <option value="10">Dados aluno</option>
+                    <option value="34">Incidente de Segurança</option>
+                    <option value="5">Reset MFA EDU</option>
+                    <option value="6">Reset password EDU</option>
+                    <option value="46">Pedido de parecer EDU</option>
+                    <option value="45">Configuração/problema de rede EDU</option>
+                    <option value="47">Configuração APs EDU</option>
+                    <option value="14">Licença O365</option>
+                    <option value="15">Partilhas na rede</option>
+                    <option value="31">Pedido de VPN</option>
+                    <option value="49">Pedido de VPN - FSE</option>
+                    <option value="28">Pedido de SUP individual</option>
+                    <option value="32">Preparação de local para evento</option>
+                    <option value="50">Reposição de Tablet</option>
+                    <option value="51">Registo de Tablet</option>
+                    <option value="9">Reconfiguração portas switch</option>
+                    <option value="29">Pedido de Switch - Avaria</option>
+                    <option value="30">Pedido de Switch - Configuração</option>
+
                     
-                    {% if is_edu %}
+                    {% elif is_edu %}
                     <option value="26">Apoio a websites EDU</option>
                     <option value="4">Criar conta EDU</option>
                     <option value="45">Configuração/problema de rede EDU</option>
@@ -97,7 +142,6 @@
                     <option value="50">Reposição de Tablet</option>
                     <option value="5">Reset MFA EDU</option>
                     <option value="6">Reset password EDU</option>
-    
                     {% else %}
                     <option value="12">Autenticação MFA</option>
                     <option value="16">Apoio ao Utilizador</option>
@@ -119,13 +163,12 @@
                     <option value="32">Preparação de local para evento</option>
                     <option value="34">Pedido de parecer</option>
                     <option value="9">Reconfiguração portas switch</option>
-    
-                               
-                    {% endif %}
+                    {%endif%}
                 </select>
                 <label for="title">Sumário do problema:</label>
                 <input type="text" id="title" name="title" required>
-                {%if is_edu%}
+                
+                {%if is_edu %}
                 <label for="ilha">Ilha:</label>
                 <select id="ilha" name="ilha" required>
                     <option>-Selecione uma opção-</option>
@@ -141,7 +184,7 @@
     
                 </select>
                 {% endif%}
-                <label for="UnidadeOrg">Unidade organica/Divião:</label>
+                <label for="UnidadeOrg">Unidade organica/Divisão:</label>
                 <select id="UnidadeOrg" name="UnidadeOrg" required></select>
                 <!-- Div for description -->
                 <div id="description_div">
@@ -169,6 +212,8 @@
 
     <script>
         var is_edu = {{ is_edu|tojson }};
+        var is_admin = {{ admin_status|tojson}}
+
         window.onload = function() {
             // Hide the loader when the page is fully loaded
             document.getElementById('loader').style.display = 'none';
@@ -180,8 +225,10 @@
         
             // Call fetchUnidadeOrganica whenever the selected topic changes (optional)
             document.getElementById('topic_id').addEventListener('change', fetchUnidadeOrganica);
+            
         };
         
+
         var ilhaOptions = {
             "São Miguel": [
             "Conservatório Regional Ponta Delgada",
@@ -223,8 +270,9 @@
             var ilhaDropdown = document.getElementById('ilha');
             var unidadeOrgDropdown = document.getElementById('UnidadeOrg');
         
-            if (!is_edu) {
-                fetch('{{ url_for('static', filename='files/divisoes.txt') }}')
+            if (!is_edu ) {
+                if(is_admin){
+                    fetch('{{ url_for('static', filename='files/divisoes_escolas.txt') }}')
                     .then(response => response.text())
                     .then(data => {
                         const values = data.split('\n');
@@ -236,6 +284,21 @@
                         });
                     })
                     .catch(error => console.error('Error fetching divisao:', error));
+                }else{
+                    fetch('{{ url_for('static', filename='files/divisoes.txt') }}')
+                    .then(response => response.text())
+                    .then(data => {
+                        const values = data.split('\n');
+                        unidadeOrgDropdown.innerHTML = '';
+                        values.forEach(value => {
+                            const option = document.createElement('option');
+                            option.text = value.trim();
+                            unidadeOrgDropdown.add(option);
+                        });
+                    })
+                    .catch(error => console.error('Error fetching divisao:', error));
+                }
+                
             } else {
                 var selectedIlha = ilhaDropdown.value;
                 var unidadeOrgOptions = ilhaOptions[selectedIlha] || [];
@@ -248,6 +311,9 @@
                 });
             }
         }
+
+        
+
         
         
         // Function to show or hide description field based on selected topic

@@ -148,18 +148,25 @@ def new_ticket():
     user_id = session['user_id']
     is_edu = check_email_contains_edu(user_id) 
     admin_status = is_admin(user_id)
-    
+    all_users = get_all_users()
 
     if request.method == 'POST':
         topic_id = request.form['topic_id']
         description = request.form['description']
         state = "Aberto"
         uni_org = request.form['UnidadeOrg']
-        created_by = session.get('user_id')
-        user_name = get_username(created_by)
         date = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
         contacto = request.form['contacto']
         title = request.form['title']
+        assigned_to = request.form.get('assigned_to')
+        
+        if assigned_to:
+            created_by = get_user_id_by_name(assigned_to)
+            user_name = get_username(created_by)
+        else:
+            created_by = session.get('user_id')
+            user_name = get_username(created_by)
+            
         
         # Check if file is uploaded
         if 'file' in request.files:
@@ -171,6 +178,9 @@ def new_ticket():
                 filename = "Sem ficheiro."
         else:
             filename = "Sem ficheiro."
+        
+        
+        
 
         create_ticket(topic_id, description, date, state, created_by, contacto, title, uni_org, filename)
 
@@ -213,20 +223,34 @@ def new_ticket():
             for admin_email in unique_admin_emails:
                 msg = Message(f'Helpdesk NIT: Novo ticket aberto #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[admin_email])
                 msg.html = f"""
-                    <h1>Novo ticket</h1>
-                    <p>Criado por: {user_name}</p>
-                    <p>Unidade organica: {uni_org}</p>
-                    <p>----------------------------------------------</p>
-                    <p>Foi recebido um novo ticket com o número #<strong>{ticket_id}</strong> e com assunto <strong>{title}</strong>.</p>
-                    <p>Descrição: {description}</p>
+                    <table role="presentation" width="100%">
+                        <tr>
+                            <td bgcolor="#00A4BD" align="center" style="color: white;">
+                                <h1> Novo ticket recebido!</h1>
+                            </td>
+                    </table>
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="10px" style="padding: 30px 30px 30px 60px;">
+                    <tr>
+                        <td>
+                            <p>Criado por: {user_name}</p>
+                            <p>Unidade organica: {uni_org}</p>
+                            <p>----------------------------------------------</p>
+                            <p>Foi recebido um novo ticket com o número #<strong>{ticket_id}</strong> e com assunto <strong>{title}</strong>.</p>
+                            <p>Descrição: {description}</p>
+                        </td>
+                    </tr>
+                    </table>
                     <p>Obrigado por usar o nosso helpdesk.</p>
                     <h3><strong>SREC-NIT</strong></h3>
                 """
                 mail.send(msg)
 
-        return redirect(url_for('my_tickets'))
+        if is_admin(user_id):
+            return redirect(url_for('group_panel'))
+        else:
+            return redirect(url_for('my_tickets'))
 
-    return render_template('new_ticket.html', is_edu=is_edu,admin_status=admin_status)
+    return render_template('new_ticket.html', is_edu=is_edu,admin_status=admin_status,all_users=all_users)
 
 
 

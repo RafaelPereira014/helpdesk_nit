@@ -28,7 +28,7 @@ try:
         super_admin = is_super_admin('16')
         
 
-        cursor.execute("SELECT email,password from users")
+        cursor.execute("SELECT name from users")
         name = cursor.fetchall()
         print(name)
         # Fetch all rows (tickets) from the result set
