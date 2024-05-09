@@ -388,7 +388,10 @@ def new_user():
         name = request.form['name']
         password = request.form['password']
         type = request.form['type']
-        group = request.form.get('group_id', None)
+        if type == 'user':
+            group = None  # For user type, group is set to None
+        else:
+            group = request.form.get('group_id', None)  # For admin type, group is set to the selected value
         email = request.form['email']
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
