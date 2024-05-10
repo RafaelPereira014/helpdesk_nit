@@ -296,7 +296,6 @@ def send_message():
     data = request.json
     ticket_id = data['ticket_id']
     message = bleach.clean(data['message'], tags=['p', 'strong', 'em','a','href','span'], attributes={'p': ['class']})
-    attachment = request.files.get('attachment')  # Get the attachment file from the request
     
     # Get the user's ID from the session
     user_id = session.get('user_id')
@@ -315,8 +314,8 @@ def send_message():
     cursor = connection.cursor()
     cursor.execute("INSERT INTO messages (ticket_id, message, sender_type, sender_name) VALUES (%s, %s, %s, %s)",
                    (ticket_id, message, sender_type, sender_name))
-    message_id = cursor.lastrowid  # Get the ID of the inserted message
     connection.commit()
+    cursor.close()
     
     # If the sender is an admin, send the message to the email of the ticket creator
     if sender_type == 'admin':
@@ -340,17 +339,7 @@ def send_message():
                 <p>Helpdesk: <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a></p>
             """
             mail.send(msg)
-    if attachment:
-        filename = secure_filename(attachment.filename)  # Ensure filename security
-        attachment_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)  # Define the path to save the attachment
-        attachment.save(attachment_path)  # Save the attachment to the server
-        
-        # Insert the attachment details into the database
-        cursor.execute("INSERT INTO attachments (message_id, filename, filepath) VALUES (%s, %s, %s)",
-                       (message_id, filename, attachment_path))
-        connection.commit()
-            
-    cursor.close()
+    
     
     return jsonify({'success': True})
 
