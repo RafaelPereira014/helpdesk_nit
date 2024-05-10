@@ -265,10 +265,13 @@
                 var messageContent = tinymce.get('message').getContent();
                 // Check if message is not empty
                 if (messageContent.trim() !== '') {
+                    // Append the message to the message container
+                    //appendMessage(messageContent, 'admin', 'You', new Date().toLocaleString());
                     // Send the message
                     sendMessage(messageContent);
                 }
             });
+
     
             var closeTicketButton = document.getElementById('close-ticket-btn');
             if (closeTicketButton && currentAdminId === "{{ ticket_details.admin_id }}") {
