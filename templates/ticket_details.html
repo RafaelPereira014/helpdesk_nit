@@ -208,16 +208,20 @@
                 messageContainer.scrollTop = messageContainer.scrollHeight;
             }
 
-
-
-
-
-
             // Function to send a message
             function sendMessage(message) {
                 // Convert HTML entities to their corresponding characters
                 var decodedMessage = decodeHtmlEntities(message);
                 
+                // Get the sender's name
+
+
+                // Append the message to the message container with the sender's name
+                appendMessage(decodedMessage, 'admin', 'you', new Date().toLocaleString());
+
+                // Clear the content of the TinyMCE editor
+                tinymce.get('message').setContent("");
+
                 // Send the decoded message to the server
                 fetch('/send_message', {
                     method: 'POST',
@@ -237,17 +241,18 @@
                     return response.json();
                 })
                 .then(data => {
-                    // Message sent successfully, append it to the message container
-                    appendMessage(decodedMessage, 'admin', 'You', new Date().toLocaleString()); // Display 'You' as sender
-                    // Show popup and reload after 2 seconds
-                    setTimeout(() => {
-                        location.reload();
-                    }, 0);
+                    // Message sent successfully
+                    // You can handle the response here if needed
+                    
+                    // Refresh the page
+                    window.location.reload();
                 })
                 .catch(error => {
                     console.error('Error sending message:', error);
                 });
             }
+
+
 
 
             // Function to decode HTML entities
