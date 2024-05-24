@@ -317,31 +317,33 @@ def send_message():
     connection.commit()
     cursor.close()
     
-    # If the sender is an admin, send the message to the email of the ticket creator
-    if sender_type == 'admin':
-        ticket_creator_email = get_user_email_by_ticket(ticket_id)
-        if ticket_creator_email:
-            msg = Message(f'Helpdesk NIT: Atualização no ticket#{ticket_id}', sender='noreply@azores.gov.pt', recipients=[ticket_creator_email])
-            msg.html = f"""
-                <p>Foi registada uma atualização no seu ticket com o numero #<strong>{ ticket_id }</strong>.</p>
-                <p>Verifique as novas atualizações.</p>
-                <p>----------------------------------------------</p>
-                <p><strong>Núcleo de Informática e Telecomunicações</strong></p>
-                <img src="https://github.com/RafaelPereira014/helpdesk_nit/blob/main/static/images/MicrosoftTeams-image.png" alt="Description of the image">
-                <p><strong>Secretaria Regional da Educação, Cultura e Desporto</strong></p>
-                <p>Paços da Junta Geral</p>
-                <p>Rua Carreira dos Cavalos</p>
-                <p>9700 – 167 Angra do Heroísmo</p>
-                <p>Telefone: 295 40 11 32</p>
-                <p>Telefone VOIP GRA: 310 380</p>
-                <p>E-mail GRA: sre.nit@azores.gov.pt</p>
-                <p>E-mail EDU: sre.nit@edu.azores.gov.pt</p>
-                <p>Helpdesk: <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a></p>
-            """
-            mail.send(msg)
-    
+    # Check if the message contains specific phrases
+    if "Este ticket foi aceite com sucesso." not in message.lower() and "Este ticket foi fechado com sucesso." not in message.lower():
+        # If the sender is an admin, send the message to the email of the ticket creator
+        if sender_type == 'admin':
+            ticket_creator_email = get_user_email_by_ticket(ticket_id)
+            if ticket_creator_email:
+                msg = Message(f'Helpdesk NIT: Atualização no ticket#{ticket_id}', sender='noreply@azores.gov.pt', recipients=[ticket_creator_email])
+                msg.html = f"""
+                    <p>Foi registada uma atualização no seu ticket com o numero #<strong>{ ticket_id }</strong>.</p>
+                    <p>Verifique as novas atualizações.</p>
+                    <p>----------------------------------------------</p>
+                    <p><strong>Núcleo de Informática e Telecomunicações</strong></p>
+                    <img src="https://github.com/RafaelPereira014/helpdesk_nit/blob/main/static/images/MicrosoftTeams-image.png" alt="Description of the image">
+                    <p><strong>Secretaria Regional da Educação, Cultura e Desporto</strong></p>
+                    <p>Paços da Junta Geral</p>
+                    <p>Rua Carreira dos Cavalos</p>
+                    <p>9700 – 167 Angra do Heroísmo</p>
+                    <p>Telefone: 295 40 11 32</p>
+                    <p>Telefone VOIP GRA: 310 380</p>
+                    <p>E-mail GRA: sre.nit@azores.gov.pt</p>
+                    <p>E-mail EDU: sre.nit@edu.azores.gov.pt</p>
+                    <p>Helpdesk: <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a></p>
+                """
+                mail.send(msg)
     
     return jsonify({'success': True})
+    
 
 
 
@@ -651,4 +653,5 @@ def dump_database():
 
     return send_file(file_path, as_attachment=True)
 if __name__ == '__main__':
-    app.run(host='172.22.130.4',port=9000)
+    app.run(host='127.0.0.1')
+
