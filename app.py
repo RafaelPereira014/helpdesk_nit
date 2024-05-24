@@ -41,8 +41,8 @@ mail=Mail(app)
 config = {
     'host': 'localhost',
     'user': 'root',
-    'password': '',
-    'database': 'helpdesk5'
+    'password': 'passroot',
+    'database': 'helpdesk4'
 }
 
 connection = mysql.connector.connect(**config)
@@ -366,6 +366,40 @@ def admin_panel():
 
     return render_template('admin_pannel.html', tickets=tickets,open_tickets=open_tickets,closed_tickets=closed_tickets,executing_tickets=executing_tickets,attributed_name=attributed_name)
 
+@app.route('/topicos', methods=['GET', 'POST'])
+@admin_required
+def topicos():
+    
+    if request.method == 'POST':
+        # If the request is POST, it means we are adding a new topic
+        key_word = request.form.get('keyword')
+        group_id = request.form.get('group')
+        
+        # Check if the key_word already exists
+        if topic_exists(key_word):
+            flash('A keyword with that name already exists.', 'error')
+        else:
+            # If the key_word does not exist, insert the new topic
+            try:
+                insert_topic(key_word, group_id)
+                flash('Topic added successfully.', 'success')
+            except Exception as e:
+                flash('An error occurred while adding the topic.', 'error')
+
+        return redirect(url_for('topicos'))  # Redirect to the topicos route to refresh the page
+    
+    else:
+        # If the request is GET, it means we are just rendering the template
+        topics = get_topics()
+        return render_template('new_forms/topicos.html', topics=topics)
+    
+@app.route('/delete_topic', methods=['POST'])
+def delete_topic_route():
+    if request.method == 'POST':
+        topic_id = request.form.get('id')
+        delete_topic(topic_id)
+    return redirect(url_for('topicos'))  # Redirect to the topicos route to refresh the page
+
 @app.route('/new_user', methods=['GET', 'POST'])
 @admin_required
 def new_user():
@@ -609,7 +643,7 @@ def dump_database():
         for query in queries:
             dump_command = [
                 'mysql',
-                '-u', 'root',
+                '-u', 'root','-p','passroot',
                 'helpdesk4',
                 '-e', query
             ]
@@ -617,4 +651,4 @@ def dump_database():
 
     return send_file(file_path, as_attachment=True)
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='172.22.130.4',port=9000)
