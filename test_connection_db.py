@@ -5,7 +5,7 @@ from db_operations import *
 config = {
     'host': 'localhost',
     'user': 'root',
-    'password': '',
+    'password': 'passroot',
     'database': 'helpdesk4'
 }
 
@@ -28,8 +28,8 @@ try:
         super_admin = is_super_admin('16')
         
 
-        cursor.execute("SELECT name from users order by ASC")
-        name = cursor.fetchall()
+        cursor.execute("SELECT * from tickets")
+        name = search_topics('tablet')
         print(name)
         # Fetch all rows (tickets) from the result set
 

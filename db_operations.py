@@ -392,13 +392,67 @@ def assign_ticket_to_user(ticket_id,user_name):
 
 # Miscellaneous Operations
 
+
+##-------topicos---------##
 def get_topics():
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT key_word FROM Topics")
-    topics = cursor.fetchone()
+    cursor.execute("SELECT * FROM Topics")
+    topics = cursor.fetchall()
     cursor.close()
+    conn.close()
     return topics
+
+
+def topic_exists(key_word):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT 1 FROM Topics WHERE key_word = %s", (key_word,))
+    exists = cursor.fetchone() is not None
+    cursor.close()
+    conn.close()
+    return exists
+
+
+def insert_topic(keyword, group_id):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO Topics (key_word, group_id) VALUES (%s, %s)", (keyword, group_id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
+def delete_topic(topic_id):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM Topics WHERE id = %s", (topic_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    
+def search_topics(keyword):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM Topics WHERE key_word LIKE %s", ('%' + keyword + '%',))
+    topics = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
+    # Convert each tuple to a dictionary
+    topics_dict = []
+    for topic in topics:
+        topic_dict = {
+            'id': topic[0],
+            'key_word': topic[1],
+            'group_id': topic[2]
+        }
+        topics_dict.append(topic_dict)
+    
+    return topics_dict
+
+
+##---------------------------------##   
 
 def get_user_details(ticket_id):
     conn = connect_to_database()

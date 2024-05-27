@@ -318,7 +318,7 @@ def send_message():
     cursor.close()
     
     # Check if the message contains specific phrases
-    if "Este ticket foi aceite com sucesso." not in message.lower() and "Este ticket foi fechado com sucesso." not in message.lower():
+    if "este ticket foi aceite com sucesso." not in message.lower() and "este ticket foi fechado com sucesso." not in message.lower():
         # If the sender is an admin, send the message to the email of the ticket creator
         if sender_type == 'admin':
             ticket_creator_email = get_user_email_by_ticket(ticket_id)
@@ -343,6 +343,7 @@ def send_message():
                 mail.send(msg)
     
     return jsonify({'success': True})
+
     
 
 
@@ -368,39 +369,40 @@ def admin_panel():
 
     return render_template('admin_pannel.html', tickets=tickets,open_tickets=open_tickets,closed_tickets=closed_tickets,executing_tickets=executing_tickets,attributed_name=attributed_name)
 
-@app.route('/topicos', methods=['GET', 'POST'])
+@app.route('/gerirtopicos', methods=['GET', 'POST'])
 @admin_required
 def topicos():
-    
     if request.method == 'POST':
-        # If the request is POST, it means we are adding a new topic
-        key_word = request.form.get('keyword')
-        group_id = request.form.get('group')
-        
-        # Check if the key_word already exists
-        if topic_exists(key_word):
-            flash('A keyword with that name already exists.', 'error')
-        else:
-            # If the key_word does not exist, insert the new topic
-            try:
-                insert_topic(key_word, group_id)
-                flash('Topic added successfully.', 'success')
-            except Exception as e:
-                flash('An error occurred while adding the topic.', 'error')
-
-        return redirect(url_for('topicos'))  # Redirect to the topicos route to refresh the page
-    
+        keyword = request.form.get('keyword')
+        topics = search_topics(keyword)
+        return render_template('new_forms/gerirtopicos.html', topics=topics)
     else:
-        # If the request is GET, it means we are just rendering the template
-        topics = get_topics()
-        return render_template('new_forms/topicos.html', topics=topics)
-    
-@app.route('/delete_topic', methods=['POST'])
-def delete_topic_route():
+        # Return None or simply render the template without passing any topics data
+        return render_template('new_forms/gerirtopicos.html')
+
+
+@app.route('/delete_topic/<int:topic_id>', methods=['POST'])
+def delete_topic_route(topic_id):
     if request.method == 'POST':
-        topic_id = request.form.get('id')
         delete_topic(topic_id)
     return redirect(url_for('topicos'))  # Redirect to the topicos route to refresh the page
+
+
+@app.route('/add_topic', methods=['POST'])
+@admin_required
+def add_topic():
+    if request.method == 'POST':
+        new_keyword = request.form.get('new_keyword')
+        new_group_id = request.form.get('new_group_id')
+        insert_topic(new_keyword, new_group_id)
+        return redirect(url_for('topicos'))
+    
+@app.route('/get_topics')
+def get_topics_route():
+    topics = get_topics()  # Call the existing get_topics function
+    print(topics)
+    # Assuming topics is a list of dictionaries where each dictionary represents a topic
+    return jsonify(topics)
 
 @app.route('/new_user', methods=['GET', 'POST'])
 @admin_required
@@ -436,8 +438,6 @@ def new_user():
 
     # Render the form for adding a new user
     return render_template('new_forms/novo_utilizador.html')
-    
-    
     
 
 @app.route('/pannel_group')
@@ -653,5 +653,6 @@ def dump_database():
 
     return send_file(file_path, as_attachment=True)
 if __name__ == '__main__':
-    app.run(host='127.0.0.1')
+    app.run(debug=True)
+
 
