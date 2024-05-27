@@ -313,10 +313,14 @@ def get_ticketid(description):
     conn = connect_to_database()
     cursor = conn.cursor()
     cursor.execute("SELECT id FROM tickets WHERE description = %s", (description,))
-    ticket_ids = [row[0] for row in cursor.fetchall()]  # Fetch all rows
+    ticket_id = cursor.fetchone()  # Fetch the first row
     cursor.close()
     conn.close()
-    return ticket_ids
+    if ticket_id:
+        return ticket_id[0]  # Return the first ticket ID if found
+    else:
+        return None  # Return None if no ticket is found with the given description
+
 
 def claim_ticket(user_id, ticket_id):
     try:
