@@ -331,7 +331,6 @@ def send_message():
                     <p>Verifique as novas atualizações.</p>
                     <hr></hr>
                     <p><strong>Núcleo de Informática e Telecomunicações</strong></p>
-                    <img src="https://github.com/RafaelPereira014/helpdesk_nit/blob/main/static/images/MicrosoftTeams-image.png" alt="Description of the image">
                     <p><strong>Secretaria Regional da Educação, Cultura e Desporto</strong></p>
                     <p>Paços da Junta Geral</p>
                     <p>Rua Carreira dos Cavalos</p>
@@ -499,7 +498,6 @@ def close_ticket_route(ticket_id):
             <h2>O seu ticket com o número #{ticket_id} foi concluído com sucesso.</h2>
             <hr></hr>
             <p><strong>Núcleo de Informática e Telecomunicações</strong></p>
-            <img src="https://github.com/RafaelPereira014/helpdesk_nit/blob/main/static/images/MicrosoftTeams-image.png" alt="Description of the image">
             <p><strong>Secretaria Regional da Educação, Cultura e Desporto</strong></p>
             <p>Paços da Junta Geral</p>
             <p>Rua Carreira dos Cavalos</p>
@@ -540,9 +538,8 @@ def accept_ticket_route(ticket_id):
         msg = Message(f'Helpdesk NIT: Ticket aceite #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
         msg.html = f"""
             <h2>O seu ticket com o número #{ticket_id} foi aceite e encontra-se neste momento em execução.</h2>
-            <p>----------------------------------------------</p>
+                <hr></hr>
                 <p><strong>Núcleo de Informática e Telecomunicações</strong></p>
-                <img src="https://github.com/RafaelPereira014/helpdesk_nit/blob/main/static/images/MicrosoftTeams-image.png" alt="Description of the image">
                 <p><strong>Secretaria Regional da Educação, Cultura e Desporto</strong></p>
                 <p>Paços da Junta Geral</p>
                 <p>Rua Carreira dos Cavalos</p>
