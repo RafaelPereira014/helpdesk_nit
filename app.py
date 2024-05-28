@@ -135,8 +135,10 @@ def admin_init():
     
     user_id = session['user_id']
     super_admin = is_super_admin(user_id)
+    tickets_created_today = tickets_today()
+    tickets_solved = tickets_solved_today()
     
-    return render_template('admin_init.html',super_admin=super_admin)
+    return render_template('admin_init.html',super_admin=super_admin,tickets_created_today=tickets_created_today,tickets_solved=tickets_solved)
 
 
 
@@ -200,7 +202,7 @@ def new_ticket():
                 <p>Poderá, a qualquer momento, acompanhar em <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a> a evolução do seu pedido:</p>
                 <p>Assunto: {title}</p>
                 <p>{description}</p>
-                <p>----------------------------------------------</p>
+                <hr></hr>
                 <p><strong>Núcleo de Informática e Telecomunicações</strong></p>
                 <img src="https://github.com/RafaelPereira014/helpdesk_nit/blob/main/static/images/MicrosoftTeams-image.png" alt="Description of the image">
                 <p><strong>Secretaria Regional da Educação, Cultura e Desporto</strong></p>
@@ -327,7 +329,7 @@ def send_message():
                 msg.html = f"""
                     <p>Foi registada uma atualização no seu ticket com o numero #<strong>{ ticket_id }</strong>.</p>
                     <p>Verifique as novas atualizações.</p>
-                    <p>----------------------------------------------</p>
+                    <hr></hr>
                     <p><strong>Núcleo de Informática e Telecomunicações</strong></p>
                     <img src="https://github.com/RafaelPereira014/helpdesk_nit/blob/main/static/images/MicrosoftTeams-image.png" alt="Description of the image">
                     <p><strong>Secretaria Regional da Educação, Cultura e Desporto</strong></p>
@@ -495,7 +497,7 @@ def close_ticket_route(ticket_id):
         msg = Message(f'Helpdesk NIT: Ticket fechado #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
         msg.html = f"""
             <h2>O seu ticket com o número #{ticket_id} foi concluído com sucesso.</h2>
-           <p>----------------------------------------------</p>
+            <hr></hr>
             <p><strong>Núcleo de Informática e Telecomunicações</strong></p>
             <img src="https://github.com/RafaelPereira014/helpdesk_nit/blob/main/static/images/MicrosoftTeams-image.png" alt="Description of the image">
             <p><strong>Secretaria Regional da Educação, Cultura e Desporto</strong></p>

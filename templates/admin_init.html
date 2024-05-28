@@ -12,25 +12,22 @@
     <link href='https://unpkg.com/css.gg@2.0.0/icons/css/log-out.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
 </head>
 <body>
     <div class="sidenav">
         <img src="{{ url_for('static', filename='images/NIT_logo.png') }}" alt="logo-main" class="logo-main">
         <div class="menu-item">
-            <a href="/new_ticket"><i class="fa fa-dashboard"></i>Abrir novo ticket</a>
+            <a href="/new_ticket"><i class="fa fa-ticket"></i> Abrir novo ticket</a>
         </div>
         <div class="menu-item">
             <a href="/admin_pannel"><i class="fa fa-dashboard"></i> Painel de administração</a>
         </div>
         <div class="menu-item">
-            <a href="/pannel_group"><i class="fa fa-users"></i>Painel de grupo</a>
+            <a href="/pannel_group"><i class="fa fa-users"></i> Painel de grupo</a>
         </div>
-
         <div class="menu-item">
-            <a href="/gerirtopicos"><i class="fa fa-list-alt"></i>Gerir tópicos</a>
-        </div> 
-        
+            <a href="/gerirtopicos"><i class="fa fa-list-alt"></i> Gerir tópicos</a>
+        </div>
         <div class="menu-item">
             <a href="/my_profile"><i class="fa fa-user"></i> Meu perfil</a>
         </div>
@@ -39,91 +36,163 @@
         </div>
         <div class="menu-item">
             <a href="/logout"><i class="gg-log-out"></i> Terminar sessão</a>
-        </div> 
+        </div>
     </div>
 
     <div class="main">
         <div class="container">
-            <h1>Bem-vindo ao sistema de apoio do Núcleo de Informática e Telecomunicações</h1>
-            
+            <h1>Administração</h1>
 
-            {% if super_admin %}
-            <div class="dump-database">
-                <form action="/dump_database" method="post">
-                    <fieldset>
-                        <legend>Dump da Base de Dados</legend>
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="users" name="users" value="users">
-                            <label for="users">Utilizadores</label><br>
-                            <div class="sub-checkboxes">
-                                <input type="checkbox" id="id" name="id" value="id">
-                                <label for="user_id">ID do Utilizador</label><br>
-                                <input type="checkbox" id="name" name="name" value="name">
-                                <label for="username">Nome do Utilizador</label><br>
-                                <input type="checkbox" id="email" name="email" value="email">
-                                <label for="created_at">Data de criação</label><br>
-                                <input type="checkbox" id="created_at" name="created_at" value="created_at">
-                                <label for="email">Email</label><br>
-                                <input type="checkbox" id="group_id" name="group_id" value="group_id">
-                                <label for="group_id">ID do Grupo</label><br>
-                                <input type="checkbox" id="type" name="type" value="type">
-                                <label for="user_type">Tipo de utilizador</label><br>
-                                <input type="submit" value="Gerar Dump">
-                            </div>
-                        </div>
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="tickets" name="tickets" value="tickets">
-                            <label for="tickets">Tickets</label><br>
-                            <div class="sub-checkboxes">
-                                <input type="checkbox" id="id" name="id" value="id">
-                                <label for="ticket_id">ID do Ticket</label><br>
-                                <input type="checkbox" id="title" name="title" value="title">
-                                <label for="title">Título</label><br>
-                                <input type="checkbox" id="description" name="description" value="description">
-                                <label for="descricao">Descrição</label><br>
-                                <input type="checkbox" id="created_by_user" name="created_by_user" value="created_by_user">
-                                <label for="created_by">Criado Por</label><br>
-                                <input type="checkbox" id="state" name="state" value="state">
-                                <label for="state">Estado</label><br>
-                                <input type="checkbox" id="closed_by" name="closed_by" value="closed_by">
-                                <label for="closed_by">Fechado por </label><br>
-                                <input type="submit" value="Gerar Dump">
-                            </div>
-                        </div>
-                        <!-- Actions Section 
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="topics" name="topics" value="topics">
-                            <label for="topics">Tópicos</label><br>
-                            <div class="sub-checkboxes">
-                                <input type="checkbox" id="id" name="id" value="id">
-                                <label for="topic_id">ID do Tópico</label><br>
-                                <input type="checkbox" id="key_word" name="key_word" value="key_word">
-                                <label for="topic_name">Nome do Tópico</label><br>
-                                <input type="checkbox" id="group_id" name="group_id" value="group_id">
-                                <label for="group_id">Grupo do Tópico</label><br>
-                                <input type="submit" value="Gerar Dump">
-                            </div>
-                        </div>
-                        <div class="checkbox-group">
-                            <input type="checkbox" id="groups" name="groups" value="groups">
-                            <label for="groups">Grupos</label><br>
-                            <div class="sub-checkboxes">
-                                <input type="checkbox" id="group_id" name="group_id" value="group_id">
-                                <label for="group_id">ID do Grupo</label><br>
-                                <input type="checkbox" id="group_name" name="group_name" value="group_name">
-                                <label for="group_name">Nome do Grupo</label><br>
-                                <input type="submit" value="Gerar Dump">
-                                
-                            </div>
-                        </div>
-                        -->
-                    </fieldset>
+            <div class="dashboard">
+                <div class="card">
+                    <h2>Tickets recebidos hoje</h2>
+                    <h3>{{ tickets_created_today }}</h3>
                     
-                </form>
+                </div>
+                <div class="card">
+                    <h2>Tickets resolvidos hoje</h2>
+                    <h3>{{ tickets_solved }}</h3>
+                    
+                </div>
                 
+                {% if super_admin %}
+                <div class="card">
+                    <h2>Dump da Base de Dados</h2>
+                    <form action="/dump_database" method="post">
+                        <fieldset>
+                            <legend>Escolha os dados para o dump</legend>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="users" name="users" value="users">
+                                <label for="users">Utilizadores</label><br>
+                                <div class="sub-checkboxes">
+                                    <input type="checkbox" id="id" name="id" value="id">
+                                    <label for="user_id">ID do Utilizador</label><br>
+                                    <input type="checkbox" id="name" name="name" value="name">
+                                    <label for="username">Nome do Utilizador</label><br>
+                                    <input type="checkbox" id="email" name="email" value="email">
+                                    <label for="created_at">Data de criação</label><br>
+                                    <input type="checkbox" id="created_at" name="created_at" value="created_at">
+                                    <label for="email">Email</label><br>
+                                    <input type="checkbox" id="group_id" name="group_id" value="group_id">
+                                    <label for="group_id">ID do Grupo</label><br>
+                                    <input type="checkbox" id="type" name="type" value="type">
+                                    <label for="user_type">Tipo de utilizador</label><br>
+                                </div>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="tickets" name="tickets" value="tickets">
+                                <label for="tickets">Tickets</label><br>
+                                <div class="sub-checkboxes">
+                                    <input type="checkbox" id="id" name="id" value="id">
+                                    <label for="ticket_id">ID do Ticket</label><br>
+                                    <input type="checkbox" id="title" name="title" value="title">
+                                    <label for="title">Título</label><br>
+                                    <input type="checkbox" id="description" name="description" value="description">
+                                    <label for="descricao">Descrição</label><br>
+                                    <input type="checkbox" id="created_by_user" name="created_by_user" value="created_by_user">
+                                    <label for="created_by">Criado Por</label><br>
+                                    <input type="checkbox" id="state" name="state" value="state">
+                                    <label for="state">Estado</label><br>
+                                    <input type="checkbox" id="closed_by" name="closed_by" value="closed_by">
+                                    <label for="closed_by">Fechado por </label><br>
+                                </div>
+                            </div>
+                            <input type="submit" value="Gerar Dump" class="btn-submit">
+                        </fieldset>
+                    </form>
+                </div>
+                {% endif %}
+                
+                {% if not super_admin %}
+                <div class="admin-section">
+                    <h2>Paineis</h2>
+                    <div class="cards">
+                        <div class="card">
+                            <h3>Gerir Utilizadores</h3>
+                            <p>Adicionar, remover e atualizar informações dos utilizadores.</p>
+                            <a href="" class="btn">Gerir Utilizadores</a>
+                        </div>
+                        <div class="card">
+                            <h3>Visualizar Relatórios</h3>
+                            <p>Acesse e visualize relatórios detalhados dos tickets.</p>
+                            <a href="" class="btn">Visualizar Relatórios</a>
+                        </div>
+                        <div class="card">
+                            <h3>Gerir Tickets</h3>
+                            <p>Monitorar e gerenciar todos os tickets abertos.</p>
+                            <a href="" class="btn">Gerir Tickets</a>
+                        </div>
+                        <div class="card">
+                            <h3>Gerir Tickets</h3>
+                            <p>Monitorar e gerenciar todos os tickets abertos.</p>
+                            <a href="" class="btn">Gerir Tickets</a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
     </div>
+    <style>
+        .container {
+            text-align: center;
+        }
+        .dashboard {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 300px;
+            text-align: left;
+        }
+        .card h2, .card h3 {
+            margin-top: 0;
+        }
+        .card p {
+            margin: 10px 0;
+        }
+        .btn {
+            background: #00A4BD;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .btn-submit {
+            background: #00A4BD;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 10px;
+            border: none;
+            cursor: pointer;
+            
+        }
+        .btn-submit:hover, .btn:hover {
+            background: #007B9E;
+        }
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .checkbox-group {
+            margin-bottom: 15px;
+        }
+        .sub-checkboxes {
+            padding-left: 20px;
+        }
+    </style>
 </body>
 </html>

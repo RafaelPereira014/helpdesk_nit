@@ -29,7 +29,7 @@ try:
         
 
         cursor.execute("SELECT * from tickets")
-        name = search_topics('tablet')
+        name = tickets_solved_today()
         print(name)
         # Fetch all rows (tickets) from the result set
 

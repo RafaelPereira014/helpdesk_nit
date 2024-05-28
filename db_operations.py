@@ -1,5 +1,6 @@
 # Database Operations
 
+from datetime import datetime
 from config import DB_CONFIG  # Import the database configuration
 from flask import session
 import mysql.connector  # Import MySQL Connector Python module
@@ -320,7 +321,38 @@ def get_ticketid(description):
         return ticket_id[0]  # Return the first ticket ID if found
     else:
         return None  # Return None if no ticket is found with the given description
+    
+def tickets_today():
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    
+    # Get today's date in YYYY-MM-DD format
+    today = datetime.now().strftime("%Y-%m-%d")
+    
+    # Query to count tickets created today
+    cursor.execute("SELECT COUNT(*) FROM tickets WHERE DATE(date) = %s", (today,))
+    tickets_today = cursor.fetchone()[0]
+    
+    cursor.close()
+    conn.close()
+    
+    return tickets_today
 
+def tickets_solved_today():
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    
+    # Get today's date in YYYY-MM-DD format
+    today = datetime.now().strftime("%Y-%m-%d")
+    
+    # Query to count tickets created today
+    cursor.execute("SELECT COUNT(*) FROM tickets WHERE DATE(date) = %s and state='Fechado'", (today,))
+    tickets_solved_today = cursor.fetchone()[0]
+    
+    cursor.close()
+    conn.close()
+    
+    return tickets_solved_today
 
 
 def claim_ticket(user_id, ticket_id):
