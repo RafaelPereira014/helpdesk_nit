@@ -429,6 +429,37 @@ def assign_ticket_to_user(ticket_id,user_name):
         return "Ticket assigned to user successfully"
     else:
         return "User not found"
+    
+    
+
+def get_open_tickets_count_by_admin(username):
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT COUNT(*) AS open_tickets_count FROM tickets WHERE created_by_user = %s", (username,))
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return result['open_tickets_count'] if result else 0
+
+def get_closed_tickets_count_by_admin(username):
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT COUNT(*) AS closed_tickets_count FROM tickets WHERE closed_by = %s", (username,))
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return result['closed_tickets_count'] if result else 0
+
+def get_executing_tickets_count_by_admin(username):
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT COUNT(*) AS executing_tickets_count FROM tickets WHERE state='Em execução' AND attributed_to_name = %s", (username,))
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return result['executing_tickets_count'] if result else 0
+
+
 
 
 # Miscellaneous Operations

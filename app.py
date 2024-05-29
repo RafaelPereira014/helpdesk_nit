@@ -105,6 +105,10 @@ def profile_page():
 
     message = None  # Initialize message variable
     
+    tickets_closed_by = get_closed_tickets_count_by_admin(user_name)
+    tickets_open_by = get_open_tickets_count_by_admin(user_name)
+    tickets_executing_by = get_executing_tickets_count_by_admin(user_name)
+    
 
     if request.method == 'POST':
         password = request.form['password']
@@ -124,7 +128,7 @@ def profile_page():
         else:
             message = {'type': 'error', 'content': 'Password incorreta!'}
 
-    return render_template('new_forms/my_profile.html', user_name=user_name, is_admin=admin_status, message=message)
+    return render_template('new_forms/my_profile.html', user_name=user_name, is_admin=admin_status, message=message, tickets_closed_by= tickets_closed_by,tickets_open_by=tickets_open_by,tickets_executing_by=tickets_executing_by)
 
 
 

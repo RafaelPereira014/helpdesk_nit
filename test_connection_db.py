@@ -29,7 +29,8 @@ try:
         
 
         cursor.execute("SELECT * from tickets")
-        name = gra_topics()
+        name = get_closed_tickets_count_by_admin('Teresa Cota')
+        #name = get_username(9)
         print(name)
         # Fetch all rows (tickets) from the result set
 
