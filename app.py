@@ -239,7 +239,7 @@ def new_ticket():
                         <td>
                             <p>Criado por: {user_name}</p>
                             <p>Unidade organica: {uni_org}</p>
-                            <p>----------------------------------------------</p>
+                            <hr></hr>                           
                             <p>Foi recebido um novo ticket com o número #<strong>{ticket_id}</strong> e com assunto <strong>{title}</strong>.</p>
                             <p>Descrição: {description}</p>
                         </td>
