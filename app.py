@@ -151,6 +151,9 @@ def new_ticket():
     is_edu = check_email_contains_edu(user_id) 
     admin_status = is_admin(user_id)
     all_users = get_all_users()
+    edu_topics_list = edu_topics()
+    gra_topics_list = gra_topics()
+    all_topics = get_topics()
 
     if request.method == 'POST':
         topic_id = request.form['topic_id']
@@ -252,7 +255,7 @@ def new_ticket():
         else:
             return redirect(url_for('my_tickets'))
 
-    return render_template('new_ticket.html', is_edu=is_edu,admin_status=admin_status,all_users=all_users)
+    return render_template('new_ticket.html', is_edu=is_edu,admin_status=admin_status,all_users=all_users,edu_topics_list=edu_topics_list,gra_topics_list=gra_topics_list,all_topics=all_topics)
 
 
 

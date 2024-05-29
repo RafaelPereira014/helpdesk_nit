@@ -355,6 +355,8 @@ def tickets_solved_today():
     return tickets_solved_today
 
 
+
+
 def claim_ticket(user_id, ticket_id):
     try:
         conn = connect_to_database()
@@ -434,11 +436,12 @@ def assign_ticket_to_user(ticket_id,user_name):
 def get_topics():
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM Topics")
+    cursor.execute("SELECT * FROM Topics ORDER BY key_word ASC")
     topics = cursor.fetchall()
     cursor.close()
     conn.close()
     return topics
+
 
 
 def topic_exists(key_word):
@@ -487,6 +490,47 @@ def search_topics(keyword):
         topics_dict.append(topic_dict)
     
     return topics_dict
+
+def edu_topics():
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    keyword = 'EDU'
+    
+    # Query to select topics containing the keyword 'EDU'
+    cursor.execute("SELECT id,key_word FROM Topics WHERE key_word LIKE %s", ('%' + keyword + '%',))
+    
+    # Fetch all matching rows
+    edu_tickets = cursor.fetchall()
+    
+    # Extract the first element from each tuple in the list
+    
+    
+    cursor.close()
+    conn.close()
+    
+    return edu_tickets
+
+def gra_topics():
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    keyword = 'EDU'
+    
+    # Query to select topics containing the keyword 'EDU'
+    cursor.execute("SELECT id,key_word FROM Topics WHERE key_word NOT LIKE %s", ('%' + keyword + '%',))
+    
+    # Fetch all matching rows
+    gra_tickets = cursor.fetchall()
+    
+    # Extract the first element from each tuple in the list
+    
+    
+    cursor.close()
+    conn.close()
+    
+    return gra_tickets
+
+
+
 
 
 ##---------------------------------##   

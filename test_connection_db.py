@@ -29,7 +29,7 @@ try:
         
 
         cursor.execute("SELECT * from tickets")
-        name = tickets_solved_today()
+        name = gra_topics()
         print(name)
         # Fetch all rows (tickets) from the result set
 
