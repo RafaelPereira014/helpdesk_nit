@@ -420,7 +420,7 @@ def assign_ticket_to_user(ticket_id,user_name):
     if assigned_user_id:
         conn = connect_to_database()
         cursor = conn.cursor()
-        cursor.execute("UPDATE tickets SET created_by = %s WHERE id = %s", (assigned_user_id, ticket_id))
+        cursor.execute("UPDATE tickets SET created_by = %s WHERE id = %s ", (assigned_user_id, ticket_id))
         conn.commit()
         cursor.close()
         conn.close()
@@ -497,7 +497,7 @@ def edu_topics():
     keyword = 'EDU'
     
     # Query to select topics containing the keyword 'EDU'
-    cursor.execute("SELECT id,key_word FROM Topics WHERE key_word LIKE %s", ('%' + keyword + '%',))
+    cursor.execute("SELECT id,key_word FROM Topics WHERE key_word LIKE %s ORDER BY key_word ASC", ('%' + keyword + '%',))
     
     # Fetch all matching rows
     edu_tickets = cursor.fetchall()
@@ -516,7 +516,7 @@ def gra_topics():
     keyword = 'EDU'
     
     # Query to select topics containing the keyword 'EDU'
-    cursor.execute("SELECT id,key_word FROM Topics WHERE key_word NOT LIKE %s", ('%' + keyword + '%',))
+    cursor.execute("SELECT id,key_word FROM Topics WHERE key_word NOT LIKE %s ORDER BY key_word ASC", ('%' + keyword + '%',))
     
     # Fetch all matching rows
     gra_tickets = cursor.fetchall()
