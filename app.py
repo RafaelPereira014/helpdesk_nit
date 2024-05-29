@@ -442,7 +442,20 @@ def new_user():
 
     # Render the form for adding a new user
     return render_template('new_forms/novo_utilizador.html')
+
+
+@app.route('/change_password', methods=['POST'])
+def change_user_password():
+    email = request.form['email_change']
     
+    # Call the change_password function to update the user's password
+    change_pass = change_password(email)
+    
+    # Provide feedback to the user
+    flash('Password alterada para password%100 para o utilizador com o email: {}'.format(email))
+    
+    return redirect(url_for('new_user'))
+
 
 @app.route('/pannel_group')
 def group_panel():

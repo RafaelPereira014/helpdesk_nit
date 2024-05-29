@@ -109,11 +109,13 @@ def get_all_users():
     
     return users;
 
-
-    
-
-
-
+def change_password(email):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE users SET password='59886fe3e4a390d23717ffc12004fdf754df4084ff23d7be65130205b865926e' WHERE email = %s",  (email,))
+    conn.commit()
+    cursor.close()
+    conn.close()
 
 
 
