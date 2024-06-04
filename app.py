@@ -582,93 +582,69 @@ def create_accountEDU_page():
 
 
 
-####Actions diretly from the DB####
-
 @app.route('/dump_database', methods=['POST'])
 def dump_database():
-    selected_items = []
-    select_fields = []
+    selected_items = {
+        'users': [],
+        'tickets': []
+        # Uncomment and add more tables as needed
+        # 'topics': [],
+        # 'groups': []
+    }
 
-    # Check which items have been selected for dumping
-    if request.form.get('users') == 'users':
-        selected_items.append('users')
-        if request.form.get('id') == 'id':
-            select_fields.append('id')
-        if request.form.get('name') == 'name':
-            select_fields.append('name')
-        if request.form.get('email') == 'email':
-            select_fields.append('email')
-        if request.form.get('created_at') == 'created_at':
-            select_fields.append('created_at')
-        if request.form.get('group_id') == 'group_id':
-            select_fields.append('group_id')
-        if request.form.get('type') == 'type':
-            select_fields.append('type')
-    
-    if request.form.get('tickets') == 'tickets':
-        selected_items.append('tickets')
-        if request.form.get('id') == 'id':
-            select_fields.append('id')
-        if request.form.get('title') == 'title':
-            select_fields.append('title')
-        if request.form.get('description') == 'description':
-            select_fields.append('description')
-        if request.form.get('created_by_user') == 'created_by_user':
-            select_fields.append('created_by_user')
-        if request.form.get('state') == 'state':
-            select_fields.append('state')
-        if request.form.get('closed_by') == 'closed_by':
-            select_fields.append('closed_by')
-    
-    # if request.form.get('topics') == 'topics':
-    #     selected_items.append('topics')
-    #     if request.form.get('id') == 'id':
-    #         select_fields.append('id')
-    #     if request.form.get('key_word') == 'key_word':
-    #         select_fields.append('key_word')
-    #     if request.form.get('group_id') == 'group_id':
-    #         select_fields.append('group_id')
-    
-    # if request.form.get('groups') == 'groups':
-    #     selected_items.append('groups')
-    #     if request.form.get('id') == 'id':
-    #         select_fields.append('id')
-    #     if request.form.get('name') == 'name':
-    #         select_fields.append('name')
+    # Check which fields have been selected for each table
+    for item in selected_items.keys():
+        if request.form.get(item) == item:
+            if request.form.get('id') == 'id':
+                selected_items[item].append('id')
+            if item == 'users':
+                if request.form.get('name') == 'name':
+                    selected_items[item].append('name')
+                if request.form.get('email') == 'email':
+                    selected_items[item].append('email')
+                if request.form.get('created_at') == 'created_at':
+                    selected_items[item].append('created_at')
+                if request.form.get('group_id') == 'group_id':
+                    selected_items[item].append('group_id')
+                if request.form.get('type') == 'type':
+                    selected_items[item].append('type')
+            elif item == 'tickets':
+                if request.form.get('title') == 'title':
+                    selected_items[item].append('title')
+                if request.form.get('description') == 'description':
+                    selected_items[item].append('description')
+                if request.form.get('created_by_user') == 'created_by_user':
+                    selected_items[item].append('created_by_user')
+                if request.form.get('state') == 'state':
+                    selected_items[item].append('state')
+                if request.form.get('closed_by') == 'closed_by':
+                    selected_items[item].append('closed_by')
 
-    if len(selected_items) == 0:
+    if all(len(fields) == 0 for fields in selected_items.values()):
         return "Nenhum item selecionado para exportar."
 
-    # Define the SELECT fields
-    select_string = ", ".join(select_fields)
-
-    # Define the SELECT queries
-    queries = []
-
-    for item in selected_items:
-        if item == 'users':
-            queries.append(f"SELECT {select_string} FROM users")
-        elif item == 'tickets':
-            queries.append(f"SELECT {select_string} FROM tickets")
-        # elif item == 'topics':
-        #     queries.append(f"SELECT {select_string} FROM topics")
-        # elif item == 'groups':
-        #     queries.append(f"SELECT {select_string} FROM `Groups`")
-
-    # Define the CSV file name
+    # Define the CSV file name and path
     file_name = "database_dump.csv"
     file_path = os.path.join(app.config['UPLOAD_FOLDER'], file_name)
 
     # Run the SELECT queries and write to CSV
     with open(file_path, mode='w', newline='') as f:
-        for query in queries:
-            dump_command = [
-                'mysql',
-                '-u', 'root','-p','passroot',
-                'helpdesk4',
-                '-e', query
-            ]
-            subprocess.run(dump_command, stdout=f, text=True)
+        for table, fields in selected_items.items():
+            if fields:
+                select_string = ", ".join(fields)
+                query = f"SELECT {select_string} FROM {table}"
+                dump_command = [
+                    'mysql',
+                    '-u', 'root',
+                    '-ppassroot',  # Note: No space between -p and password
+                    'helpdesk4',
+                    '-e', query
+                ]
+                try:
+                    result = subprocess.run(dump_command, stdout=f, stderr=subprocess.PIPE, text=True, check=True)
+                except subprocess.CalledProcessError as e:
+                    error_message = f"Error executing command: {e}\n{e.stderr}"
+                    return error_message
 
     return send_file(file_path, as_attachment=True)
 if __name__ == '__main__':
