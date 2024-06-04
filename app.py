@@ -199,32 +199,38 @@ def new_ticket():
 
         # Email notifications
         if user_email:
-            # Send email notification to user
+        # Send email notification to user
             msg = Message(f'Helpdesk NIT: {title} #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[user_email])
+            with app.open_resource('static/files/styles.css') as f:
+                css_content = f.read().decode('utf-8')
             msg.html = f"""
-               
-                <h1>Caro(a) {user_name}</h1>
-                <p>O seu pedido de apoio foi registado e foi-lhe atribuída a referência #{ticket_id}.</p>
-                <p>Logo que possível um dos técnicos do Núcleo de Informática e Telecomunicações fará o despiste e irá apoiar na resolução da situação.</p>
-                <p>Poderá, a qualquer momento, acompanhar em <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a> a evolução do seu pedido:</p>
-                <p>Assunto: {title}</p>
-                <p>{description}</p>
-                <hr></hr>
-                <p><strong>Núcleo de Informática e Telecomunicações</strong></p>
-                <img src="https://github.com/RafaelPereira014/helpdesk_nit/blob/main/static/images/MicrosoftTeams-image.png" alt="Description of the image">
-                <p><strong>Secretaria Regional da Educação, Cultura e Desporto</strong></p>
-                <p>Paços da Junta Geral</p>
-                <p>Rua Carreira dos Cavalos</p>
-                <p>9700 – 167 Angra do Heroísmo</p>
-                <p>Telefone: 295 40 11 32</p>
-                <p>Telefone VOIP GRA: 310 380</p>
-                <p>E-mail GRA: sre.nit@azores.gov.pt</p>
-                <p>E-mail EDU: sre.nit@edu.azores.gov.pt</p>
-                <p>Helpdesk: <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a></p>
-            
+                <html>
+                <head>
+                    <style>{css_content}</style>
+                </head>
+                <body>
+                    <h1>Caro(a) {user_name}</h1>
+                    <p>O seu pedido de apoio foi registado e foi-lhe atribuída a referência #{ticket_id}.</p>
+                    <p>Logo que possível um dos técnicos do Núcleo de Informática e Telecomunicações fará o despiste e irá apoiar na resolução da situação.</p>
+                    <p>Poderá, a qualquer momento, acompanhar em <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a> a evolução do seu pedido:</p>
+                    <p>Assunto: {title}</p>
+                    <p>{description}</p>
+                    <hr></hr>
+                    <p><strong>Núcleo de Informática e Telecomunicações</strong></p>
+                    <p><strong>Secretaria Regional da Educação, Cultura e Desporto</strong></p>
+                    <p>Paços da Junta Geral</p>
+                    <p>Rua Carreira dos Cavalos</p>
+                    <p>9700 – 167 Angra do Heroísmo</p>
+                    <p>Telefone: 295 40 11 32</p>
+                    <p>Telefone VOIP GRA: 310 380</p>
+                    <p>E-mail GRA: sre.nit@azores.gov.pt</p>
+                    <p>E-mail EDU: sre.nit@edu.azores.gov.pt</p>
+                    <p>Helpdesk: <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a></p>
+                </body>
+                </html>
             """
-
             mail.send(msg)
+
             
         if admin_emails:
             # Send email notification to admins
@@ -232,27 +238,53 @@ def new_ticket():
             for admin_email in unique_admin_emails:
                 msg = Message(f'Helpdesk NIT: Novo ticket aberto #{ticket_id}', sender='noreply@azores.gov.pt', recipients=[admin_email])
                 msg.html = f"""
-                    <table role="presentation" width="100%">
-                        <tr>
-                            <td bgcolor="#00A4BD" align="center" style="color: white;">
-                                <h1> Novo ticket recebido!</h1>
-                            </td>
-                    </table>
-                    <table role="presentation" border="0" cellpadding="0" cellspacing="10px" style="padding: 30px 30px 30px 60px;">
-                    <tr>
-                        <td>
-                            <p>Criado por: {user_name}</p>
-                            <p>Unidade organica: {uni_org}</p>
-                            <hr></hr>                           
-                            <p>Foi recebido um novo ticket com o número #<strong>{ticket_id}</strong> e com assunto <strong>{title}</strong>.</p>
-                            <p>Descrição: {description}</p>
-                        </td>
-                    </tr>
-                    </table>
-                    <p>Obrigado por usar o nosso helpdesk.</p>
-                    <h3><strong>SREC-NIT</strong></h3>
+                    <html>
+                    <head>
+                        <style>
+                            /* CSS styles for email content */
+                            body {{
+                                font-family: Arial, sans-serif;
+                                font-size: 14px;
+                                line-height: 1.6;
+                            }}
+                            h1 {{
+                                color: #333;
+                            }}
+                            p {{
+                                margin-bottom: 10px;
+                            }}
+                            hr {{
+                                border: 1px solid #ccc;
+                                margin: 20px 0;
+                            }}
+                            /* Add more styles as needed */
+                        </style>
+                    </head>
+                    <body>
+                        <table role="presentation" width="100%">
+                            <tr>
+                                <td bgcolor="#00A4BD" align="center" style="color: white;">
+                                    <h1> Novo ticket recebido!</h1>
+                                </td>
+                        </table>
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="10px" style="padding: 30px 30px 30px 60px;">
+                            <tr>
+                                <td>
+                                    <p>Criado por: {user_name}</p>
+                                    <p>Unidade organica: {uni_org}</p>
+                                    <hr></hr>                           
+                                    <p>Foi recebido um novo ticket com o número #<strong>{ticket_id}</strong> e com assunto <strong>{title}</strong>.</p>
+                                    <p>Descrição: {description}</p>
+                                </td>
+                            </tr>
+                        </table>
+                        <p>Obrigado por usar o nosso helpdesk.</p>
+                        <h3><strong>SREC-NIT</strong></h3>
+                    </body>
+                    </html>
                 """
                 mail.send(msg)
+
 
         if is_admin(user_id):
             return redirect(url_for('group_panel'))
