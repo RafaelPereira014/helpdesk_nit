@@ -638,6 +638,8 @@ def dump_database():
                     '-u', 'root',
                     '-ppassroot',  # Note: No space between -p and password
                     'helpdesk4',
+                    '--batch',
+                    '--silent',
                     '-e', query
                 ]
                 try:
