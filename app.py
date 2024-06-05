@@ -189,7 +189,6 @@ def new_ticket():
             filename = "Sem ficheiro."
         
         
-        
 
         create_ticket(topic_id, description, date, state, created_by, contacto, title, uni_org, filename)
 
