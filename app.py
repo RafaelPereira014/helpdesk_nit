@@ -403,10 +403,23 @@ def admin_panel():
     closed_tickets = no_closed_tickets()
     executing_tickets = no_execution_tickets()
     
+    
     for ticket in tickets:
         attributed_name = attributed_to_by_ticket(ticket['id'])
 
     return render_template('admin_pannel.html', tickets=tickets,open_tickets=open_tickets,closed_tickets=closed_tickets,executing_tickets=executing_tickets,attributed_name=attributed_name)
+
+@app.route('/update_group_id/<int:ticket_id>', methods=['POST'])
+def update_group_id(ticket_id):
+    try:
+        data = request.get_json()
+        group_id = data['group_id']
+        update_ticket_group(group_id, ticket_id)
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        # Log the error and return an error response
+        print(f"Error updating group_id for ticket {ticket_id}: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
 
 @app.route('/gerirtopicos', methods=['GET', 'POST'])
 @admin_required

@@ -29,9 +29,10 @@ try:
         
 
         cursor.execute("SELECT * from tickets")
-        name = get_closed_tickets_count_by_admin('Teresa Cota')
+        name = get_ticket_group(240)
+        change = update_ticket_group(240,1)
         #name = get_username(9)
-        print(name)
+        print(change)
         # Fetch all rows (tickets) from the result set
 
         # Close the cursor

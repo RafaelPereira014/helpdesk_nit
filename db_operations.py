@@ -6,6 +6,7 @@ from flask import session
 import mysql.connector  # Import MySQL Connector Python module
 from flask_mail import Message
 import hashlib
+import logging
 
 
 
@@ -460,6 +461,34 @@ def get_executing_tickets_count_by_admin(username):
     return result['executing_tickets_count'] if result else 0
 
 
+def get_ticket_group(ticketid):
+    try:
+        conn = connect_to_database()
+        cursor = conn.cursor()
+        cursor.execute("SELECT group_id FROM tickets WHERE id = %s", (ticketid,))
+        result = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        if result:
+            logging.info(f"Successfully fetched group_id for ticket {ticketid}: {result[0]}")
+            return result[0]
+        else:
+            logging.warning(f"No group_id found for ticket {ticketid}")
+            return None
+    except Exception as e:
+        logging.error(f"Error fetching group_id for ticket {ticketid}: {e}")
+        return None
+
+def update_ticket_group(group_id, ticket_id):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("UPDATE tickets SET group_id = %s WHERE id = %s", (group_id, ticket_id))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
+    
 
 
 # Miscellaneous Operations
