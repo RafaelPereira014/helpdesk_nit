@@ -502,6 +502,23 @@ def get_tickets_for_user(user_id):
     return results
 
 
+def count_executing_tickets_admin(username):
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)  # Use dictionary cursor for better result handling
+    query = """
+        SELECT COUNT(*) AS executing_tickets_count 
+        FROM tickets 
+        WHERE state='Em execução' 
+        AND (attributed_to_name = %s OR created_by_user = %s)
+    """
+    cursor.execute(query, (username, username))
+    result = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return result['executing_tickets_count']
+
+
+
 
 
 
