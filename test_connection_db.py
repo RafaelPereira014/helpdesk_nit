@@ -28,9 +28,7 @@ try:
         super_admin = is_super_admin('16')
         
 
-        cursor.execute("SELECT * from tickets")
-        name = get_ticket_group(240)
-        change = update_ticket_group(240,1)
+        change = get_tickets_for_user("Rafael Pereira")
         #name = get_username(9)
         print(change)
         # Fetch all rows (tickets) from the result set

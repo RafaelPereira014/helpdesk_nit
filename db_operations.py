@@ -487,6 +487,23 @@ def update_ticket_group(group_id, ticket_id):
     cursor.close()
     conn.close()
 
+def get_tickets_for_user(user_id):
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    query = """
+        SELECT * FROM tickets
+        WHERE created_by = %s OR attributed_to = %s OR closed_by = %s
+        ORDER BY id DESC
+    """
+    cursor.execute(query, (user_id, user_id, user_id))
+    results = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return results
+
+
+
+
 
     
 

@@ -521,6 +521,21 @@ def group_panel():
     
     return render_template('pannel_group.html', tickets=tickets,closed_tickets=closed_tickets,opened_tickets=opened_tickets,executing_tickets=executing_tickets)
 
+@app.route('/pannel_personal')
+def personal_panel():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))  # Redirect to login page if user is not logged in
+
+    user_id = session['user_id']
+    # Fetch the group_id associated with the user
+    tickets = get_tickets_for_user(user_id)
+    print(tickets)
+    user_name = get_username(user_id)
+    closed_tickets = get_closed_tickets_count_by_admin(user_name)
+    opened_tickets = get_opened_tickets_count_by_user(user_id)
+    executing_tickets = get_executing_tickets_count_by_admin(user_id)
+    return render_template('personal_pannel.html', tickets=tickets,closed_tickets=closed_tickets,opened_tickets=opened_tickets,executing_tickets=executing_tickets)
+
 
 @app.route('/ticket_details/<int:ticket_id>')
 def ticket_details(ticket_id):

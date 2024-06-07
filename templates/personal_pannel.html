@@ -26,6 +26,7 @@
             <div class="menu-item">
                 <a href="/new_ticket"><i class="fa fa-ticket"></i> Abrir novo ticket</a>
             </div>
+           
             <div class="menu-item">
                 <a href="/admin_pannel"><i class="fa fa-dashboard"></i> Painel de administração</a>
             </div>
@@ -35,6 +36,7 @@
             <div class="menu-item">
                 <a href="/pannel_group"><i class="fa fa-users"></i>Painel de grupo</a>
             </div>
+
 
             <div class="menu-item">
                 <a href="/gerirtopicos"><i class="fa fa-list-alt"></i>Gerir tópicos</a>
@@ -54,7 +56,7 @@
     </div>
 
     <div class="main">
-        <h1>Painel de grupo - Tickets</h1>
+        <h1>Painel pessoal - Tickets</h1>
         <button id="all-btn" class="button-filter">Todos</button>
         <button id="aberto-btn"  class="button-filter">Aberto({{ opened_tickets }})</button>
         <button id="fechado-btn"  class="button-filter">Fechado({{ closed_tickets }})</button>
@@ -101,6 +103,7 @@
                 },
                 {% endfor %}
             ];
+
             var currentPage = 1;
             var ticketsPerPage = 10; // Number of tickets to display per page
             var currentFilter = 'all'; // Default filter option
@@ -147,6 +150,7 @@
                     `;
                     tableBody.appendChild(row);
                 }
+                
         
                 pageNumSpan.textContent = currentPage;
             }
