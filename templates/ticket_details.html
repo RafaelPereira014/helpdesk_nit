@@ -31,7 +31,7 @@
                 <a href="/admin_pannel"><i class="fa fa-dashboard"></i> Painel de administração</a>
             </div>
             <div class="menu-item">
-                <a href="/pannel_personal"><i class="fa fa-user" ></i>Painel pessoal</a>
+                <a href="/pannel_personal"><i class="fa fa-user"></i>Painel pessoal</a>
             </div>
             <div class="menu-item">
                 <a href="/pannel_group"><i class="fa fa-users"></i>Painel de grupo</a>
@@ -121,25 +121,30 @@
                     <div class="message-content">
                         {{ message.message|safe }}
                     </div>
-                    {% for attachment in message_attachments %}
-                        <div class="ticket-info-item">
-                            <span class="info-label">Anexo:</span>
-                            <span class="info-value">
-                                <a href="{{ url_for('download_attachment', attachment_id=attachment.id) }}" download>{{ attachment.filename }}</a>
-                            </span>
-                        </div>
-                    {% endfor %}
+                    {% if message.file %}
+                    <div class="message-attachment">
+                        <span class="info-label">Anexo:</span>
+                        <span class="info-value">
+                            <a href="{{ url_for('static', filename='uploads/' + message.file) }}" download>{{ message.file }}</a>
+                        </span>
+                    </div>
+                    {% endif %}
                 </div>
                 {% endfor %}
+
             </div>
     
-            <form id="message-form">
-                <!-- <textarea id="message" rows="6" name="chat_message"></textarea><br> -->
+            <form id="message-form" enctype="multipart/form-data">
+                <!-- TinyMCE editor container -->
+                <div id="message"></div>
+                
+                <!-- File input -->
+                <input type="file" name="file" id="file">
 
-                <div id="message"></div> <!-- TinyMCE editor container -->
                 
                 <button type="submit" class="button">Publicar resposta</button>
             </form>
+            
             {% if is_admin %}
             <button id="accept-ticket-btn" class="button-accept">Aceitar Ticket</button> <!-- Button to accept the ticket -->
             <button id="close-ticket-btn" class="button">Fechar Ticket</button>
@@ -170,14 +175,45 @@
             // Initialize TinyMCE
             tinymce.init({
                 selector: '#message', // Use the message div as the selector
-                plugins: 'advlist autolink lists link image charmap print preview hr anchor insert file',
+                plugins: 'advlist autolink lists link image charmap print preview hr anchor insertfile',
                 toolbar: 'undo redo | bold italic | removeformat | help | insertfile',
                 height: 300, // Specify the height of the TinyMCE editor
                 forced_root_block: false, // Prevent TinyMCE from adding <p> tags
                 apply_source_formatting: true, // Keep the formatting as per the source
                 remove_linebreaks: false, // Prevent TinyMCE from removing line breaks
-                convert_newlines_to_brs: true // Convert new lines to <br> tags
+                convert_newlines_to_brs: true, // Convert new lines to <br> tags
+                file_picker_callback: function (callback, value, meta) {
+                    // Create an input element to select files
+                    var input = document.createElement('input');
+                    input.setAttribute('type', 'file');
+                    input.setAttribute('accept', '*/*'); // Set the file types you want to allow
+            
+                    // When a file is selected, upload it
+                    input.onchange = function () {
+                        var file = input.files[0];
+                        var formData = new FormData();
+                        formData.append('file', file);
+            
+                        // Upload the file to the server
+                        fetch('/upload_file', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Get the URL of the uploaded file
+                            var fileUrl = data.file_url;
+                            callback(fileUrl, { title: file.name });
+                        })
+                        .catch(error => {
+                            console.error('File upload failed:', error);
+                        });
+                    };
+            
+                    input.click();
+                }
             });
+            
             
     
             // Function to render messages
@@ -280,6 +316,13 @@
                 event.preventDefault(); // Prevent form submission
                 // Get message content from TinyMCE editor
                 var messageContent = tinymce.get('message').getContent();
+                var fileInput = document.getElementById('file');
+                var file = fileInput.files[0];
+                var formData = new FormData();
+                formData.append('file', file); // Append the file to form data
+                formData.append('message', messageContent); // Append the message content to form data
+                formData.append('ticket_id', "{{ ticket_details.id }}"); // Append the ticket ID to form data
+
                 // Check if message is not empty
                 if (messageContent.trim() !== '') {
                     // Append the message to the message container
@@ -408,6 +451,5 @@
             }
         });
     </script>
-    
 </body>
 </html>

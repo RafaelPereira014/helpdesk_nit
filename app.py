@@ -335,7 +335,14 @@ def my_tickets():
 def send_message():
     data = request.json
     ticket_id = data['ticket_id']
-    message = bleach.clean(data['message'], tags=['p', 'strong', 'em','a','href','span','br'], attributes={'p': ['class']})
+    message = bleach.clean(
+        data['message'], 
+        tags=['p', 'strong', 'em', 'a', 'span', 'br'], 
+        attributes={
+            'p': ['class'],
+            'a': ['href']
+        }
+    )
     
     # Get the user's ID from the session
     user_id = session.get('user_id')
@@ -350,13 +357,26 @@ def send_message():
     sender_type = user_type[0] if user_type else 'user'  # Default to 'user' if no type is found
     sender_name = get_username(user_id)
     
-    # Insert the message into the database
-    cursor = connection.cursor()
-    cursor.execute("INSERT INTO messages (ticket_id, message, sender_type, sender_name) VALUES (%s, %s, %s, %s)",
-                   (ticket_id, message, sender_type, sender_name))
-    connection.commit()
-    cursor.close()
-    
+    if 'file' in request.files:
+        file = request.files['file']
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))  # Save file to upload folder
+        file_url = os.path.join(app.config['UPLOAD_FOLDER'], filename)  # Store file URL in database or message
+        cursor = connection.cursor()
+        cursor.execute("INSERT INTO messages (ticket_id, message, sender_type, sender_name,file) VALUES (%s, %s, %s, %s,%s)",
+                    (ticket_id, message, sender_type, sender_name,file_url))
+        connection.commit()
+        cursor.close()
+    else:
+        # Insert the message into the database
+        cursor = connection.cursor()
+        cursor.execute("INSERT INTO messages (ticket_id, message, sender_type, sender_name) VALUES (%s, %s, %s, %s)",
+                    (ticket_id, message, sender_type, sender_name))
+        connection.commit()
+        cursor.close()
+        
+        
+
     # Check if the message contains specific phrases
     if "este ticket foi aceite com sucesso." not in message.lower() and "este ticket foi fechado com sucesso." not in message.lower():
         # If the sender is an admin, send the message to the email of the ticket creator
@@ -382,6 +402,22 @@ def send_message():
                 mail.send(msg)
     
     return jsonify({'success': True})
+
+@app.route('/upload_file', methods=['POST'])
+def upload_file():
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+
+    file = request.files['file']
+
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
+
+    if file:
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        file_url = url_for('static', filename='uploads/' + filename)
+        return jsonify({'file_url': file_url}), 200
 
     
 
