@@ -3,45 +3,44 @@ Gabinete SRECD
 DREAE
 DRD
 DRAC
----------------------------------------
 Conservatório Regional Ponta Delgada
+EBI Arrifes
+EBI Canto Maia
+EBI Francisco Ferreira Drummond
+EBI Ginetes
+EBI Horta
+EBI Lagoa
+EBI Maia
+EBI Ponta Garça
+EBI Rabo Peixe
+EBI Ribeira Grande
+EBI Roberto Ivens
+EBI Vila Capelas
+EBI Vila Topo
 EBI da Praia da Vitória
 EBI de Angra do Heroísmo
 EBI dos Biscoitos
-EBI Francisco Ferreira Drummond
-EBI Horta
+EBI Água Pau
+EBS Lajes Flores
+EBS Lajes do Pico
+EBS Mouzinho Silveira
+EBS Nordeste
+EBS Povoação
+EBS S.Roque do Pico
+EBS Santa Maria
+EBS Tomás de Borba
+EBS Topo
+EBS Vila Franca Campo
 EBS da Calheta
 EBS da Graciosa
 EBS da Madalena
 EBS das Flores
 EBS das Velas
-EBS Lajes do Pico
-EBS Lajes Flores
-EBS Mouzinho Silveira
-EBS S.Roque do Pico
-EBS Santa Maria
-EBS Tomás de Borba
-EBS Topo
+ES Antero Quental
+ES Domingos Rebelo
 ES Jerónimo Emiliano Andrade
+ES Lagoa
+ES Laranjeiras
 ES Manuel Arriaga
-Escola Básica Integrada Água Pau
-Escola Básica Integrada Arrifes
-Escola Básica Integrada Canto Maia
-Escola Básica Integrada Ginetes
-Escola Básica Integrada Lagoa
-Escola Básica Integrada Maia
-Escola Básica Integrada Ponta Garça
-Escola Básica Integrada Rabo Peixe
-Escola Básica Integrada Ribeira Grande
-Escola Básica Integrada Roberto Ivens
-Escola Básica Integrada Vila Capelas
-Escola Básica Integrada Vila Topo
-Escola Básica Secundária Nordeste
-Escola Básica Secundária Povoação
-Escola Básica Secundária Vila Franca Campo
+ES Ribeira Grande
 Escola Profissional Capelas
-Escola Secundária Antero Quental
-Escola Secundária Domingos Rebelo
-Escola Secundária Lagoa
-Escola Secundária Laranjeiras
-Escola Secundária Ribeira Grande
