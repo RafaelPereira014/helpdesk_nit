@@ -15,6 +15,24 @@
     <link href='https://unpkg.com/css.gg@2.0.0/icons/css/log-out.css' rel='stylesheet'>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        /* Hide the default file input */
+        #file {
+            display: none;
+        }
+        
+        /* Style the custom button */
+        .custom-file-upload {
+            display: inline-block;
+            padding: 8px 1px;
+            cursor: pointer;
+            background-color: #white;
+            color: white;
+            border: none;
+            border-radius: 4px;
+
+        }
+    </style>
 </head>
 <body>
     <!-- Side Navigation Menu -->
@@ -138,7 +156,9 @@
                 <!-- TinyMCE editor container -->
                 <div id="message"></div>
                 
-
+                <!-- File input -->
+                <label for="file" class="custom-file-upload"></label>
+                <input type="file" name="file" id="file">
                 
                 <button type="submit" class="button">Publicar resposta</button>
             </form>
