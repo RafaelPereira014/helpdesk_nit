@@ -517,8 +517,14 @@ def count_executing_tickets_admin(username):
     conn.close()
     return result['executing_tickets_count']
 
-
-
+def search_tickets(keyword):
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM tickets WHERE title LIKE %s ORDER BY id DESC", ('%' + keyword + '%',))
+    tickets = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return tickets
 
 
 

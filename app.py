@@ -434,16 +434,23 @@ def admin_required(f):
 @app.route('/admin_pannel')
 @admin_required
 def admin_panel():
-    tickets = get_all_tickets()  # Fetch all tickets from the database
+    search_keyword = request.args.get('search')
+    
+    if search_keyword:
+        tickets = search_tickets(search_keyword)  # Search for tickets matching the keyword
+        print(tickets)
+    else:
+        tickets = get_all_tickets()  # Fetch all tickets from the database
+
     open_tickets = no_open_tickets()
     closed_tickets = no_closed_tickets()
     executing_tickets = no_execution_tickets()
     
-    
     for ticket in tickets:
-        attributed_name = attributed_to_by_ticket(ticket['id'])
+        ticket['attributed_name'] = attributed_to_by_ticket(ticket['id'])
+        
 
-    return render_template('admin_pannel.html', tickets=tickets,open_tickets=open_tickets,closed_tickets=closed_tickets,executing_tickets=executing_tickets,attributed_name=attributed_name)
+    return render_template('admin_pannel.html', tickets=tickets, open_tickets=open_tickets, closed_tickets=closed_tickets, executing_tickets=executing_tickets)
 
 @app.route('/update_group_id/<int:ticket_id>', methods=['POST'])
 def update_group_id(ticket_id):

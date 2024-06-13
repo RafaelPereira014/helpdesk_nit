@@ -3,6 +3,7 @@ Gabinete SRECD
 DREAE
 DRD
 DRAC
+IRE
 Conservatório Regional Ponta Delgada
 EBI Arrifes
 EBI Canto Maia
