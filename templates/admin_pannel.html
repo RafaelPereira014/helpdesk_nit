@@ -104,15 +104,17 @@
         <button id="aberto-btn" class="button-filter">Aberto({{ open_tickets }})</button>
         <button id="fechado-btn" class="button-filter">Fechado({{ closed_tickets }})</button>
         <button id="executing-btn" class="button-filter">Em execucao({{ executing_tickets }})</button>
+        
         <form id="searchForm" class="search-form" method="GET" action="{{ url_for('admin_panel') }}">
-            <input type="text" name="search_id" class="search-input" placeholder="Procurar por ID..." value="{{ search_id }}">
-            <input type="text" name="search_title" class="search-input" placeholder="Procurar por título..." value="{{ search_title }}">
-            <input type="text" name="search_date" class="search-input" placeholder="Procurar por data..." value="{{ search_date }}">
-            <input type="text" name="search_user" class="search-input" placeholder="Procurar por utilizador..." value="{{ search_user }}">
-            <input type="text" name="search_unidade" class="search-input" placeholder="Procurar por UO..." value="{{ search_unidade }}">
+            <input type="text" id="search_id" name="search_id" class="search-input" placeholder="Procurar por ID..." value="{{ search_id }}">
+            <input type="text" id="search_title" name="search_title" class="search-input" placeholder="Procurar por título..." value="{{ search_title }}">
+            <input type="text" id="search_date" name="search_date" class="search-input" placeholder="Procurar por data..." value="{{ search_date }}">
+            <input type="text" id="search_user" name="search_user" class="search-input" placeholder="Procurar por utilizador..." value="{{ search_user }}">
+            <input type="text" id="search_unidade" name="search_unidade" class="search-input" placeholder="Procurar por UO..." value="{{ search_unidade }}">
             <button type="submit">Procurar</button>
             <button type="button" onclick="clearSearch()">Limpar</button>
         </form>
+        
 
         <table id="ticket-table">
             <thead>
@@ -158,8 +160,7 @@
             var currentPage = 1;
             var ticketsPerPage = 10; // Number of tickets to display per page
             var currentFilter = 'all'; // Default filter option
-            var searchTerm = ''; // Default search term
-    
+        
             var tableBody = document.getElementById('ticket-table-body');
             var prevButton = document.getElementById('prev-btn');
             var nextButton = document.getElementById('next-btn');
@@ -168,13 +169,18 @@
             var fechadoButton = document.getElementById('fechado-btn');
             var executingButton = document.getElementById('executing-btn');
             var allButton = document.getElementById('all-btn');
-            var searchInput = document.getElementById('searchInput');
+        
+            var searchIdInput = document.getElementById('search_id');
+            var searchTitleInput = document.getElementById('search_title');
+            var searchDateInput = document.getElementById('search_date');
+            var searchUserInput = document.getElementById('search_user');
+            var searchUnidadeInput = document.getElementById('search_unidade');
             var searchForm = document.getElementById('searchForm');
-    
-            // Function to display tickets for the current page based on the selected filter option
+        
+            // Function to display tickets for the current page based on the selected filter option and search criteria
             function displayTickets() {
                 var filteredTickets = tickets;
-    
+        
                 // Apply filter
                 if (currentFilter === 'aberto') {
                     filteredTickets = filteredTickets.filter(ticket => ticket.state === 'Aberto');
@@ -183,17 +189,27 @@
                 } else if (currentFilter === 'em execucao') {
                     filteredTickets = filteredTickets.filter(ticket => ticket.state.toLowerCase().includes('execucao'));
                 }
-    
-                // Apply search term
-                if (searchTerm) {
-                    filteredTickets = filteredTickets.filter(ticket => ticket.title.toLowerCase().includes(searchTerm.toLowerCase()));
-                }
-    
+        
+                // Apply search criteria
+                var searchId = searchIdInput.value.trim().toLowerCase();
+                var searchTitle = searchTitleInput.value.trim().toLowerCase();
+                var searchDate = searchDateInput.value.trim().toLowerCase();
+                var searchUser = searchUserInput.value.trim().toLowerCase();
+                var searchUnidade = searchUnidadeInput.value.trim().toLowerCase();
+        
+                filteredTickets = filteredTickets.filter(ticket => {
+                    return (searchId === '' || ticket.id.toLowerCase().includes(searchId)) &&
+                           (searchTitle === '' || ticket.title.toLowerCase().includes(searchTitle)) &&
+                           (searchDate === '' || ticket.date.toLowerCase().includes(searchDate)) &&
+                           (searchUser === '' || ticket.created_by_user.toLowerCase().includes(searchUser)) &&
+                           (searchUnidade === '' || ticket.UnidadeOrg.toLowerCase().includes(searchUnidade));
+                });
+        
                 var startIdx = (currentPage - 1) * ticketsPerPage;
                 var endIdx = Math.min(startIdx + ticketsPerPage, filteredTickets.length);
-    
+        
                 tableBody.innerHTML = ''; // Clear previous entries
-    
+        
                 for (var i = startIdx; i < endIdx; i++) {
                     var ticket = filteredTickets[i];
                     var row = document.createElement('tr');
@@ -217,10 +233,10 @@
                     `;
                     tableBody.appendChild(row);
                 }
-    
+        
                 pageNumSpan.textContent = currentPage;
             }
-    
+        
             // Function to navigate to the previous page
             function goToPrevPage() {
                 if (currentPage > 1) {
@@ -228,7 +244,7 @@
                     displayTickets();
                 }
             }
-    
+        
             // Function to navigate to the next page
             function goToNextPage() {
                 var totalPages = Math.ceil(tickets.length / ticketsPerPage);
@@ -237,7 +253,7 @@
                     displayTickets();
                 }
             }
-    
+        
             // Function to update group_id
             function updateGroupId(ticketId, newGroupId) {
                 fetch(`/update_group_id/${ticketId}`, {
@@ -257,52 +273,54 @@
                     }
                 });
             }
-    
+        
             // Event listeners for pagination buttons
             prevButton.addEventListener('click', goToPrevPage);
             nextButton.addEventListener('click', goToNextPage);
-    
+        
             // Event listeners for filter buttons
             abertoButton.addEventListener('click', function () {
                 currentFilter = 'aberto';
                 currentPage = 1; // Reset page number when changing filter
                 displayTickets();
             });
-    
+        
             fechadoButton.addEventListener('click', function () {
                 currentFilter = 'fechado';
                 currentPage = 1; // Reset page number when changing filter
                 displayTickets();
             });
-    
+        
             executingButton.addEventListener('click', function () {
                 currentFilter = 'em execucao';
                 currentPage = 1; // Reset page number when changing filter
                 displayTickets();
             });
-    
+        
             allButton.addEventListener('click', function () {
                 currentFilter = 'all';
                 currentPage = 1; // Reset page number when changing filter
                 displayTickets();
             });
-    
+        
             // Event listener for the search form submission
             searchForm.addEventListener('submit', function (event) {
                 event.preventDefault(); // Prevent form submission
-                searchTerm = searchInput.value.trim(); // Get search term and trim whitespace
                 currentPage = 1; // Reset page number when searching
                 displayTickets();
             });
-    
+        
+            // Function to clear search
             function clearSearch() {
-                searchInput.value = ''; // Clear the search input field
-                searchTerm = ''; // Clear search term variable
+                searchIdInput.value = '';
+                searchTitleInput.value = '';
+                searchDateInput.value = '';
+                searchUserInput.value = '';
+                searchUnidadeInput.value = '';
                 currentPage = 1; // Reset page number
                 displayTickets(); // Display all tickets
             }
-            
-    
+        
             // Event listener for update buttons
             tableBody.addEventListener('click', function (event) {
                 if (event.target.classList.contains('update-group-id-btn')) {
@@ -312,10 +330,11 @@
                     updateGroupId(ticketId, newGroupId);
                 }
             });
-    
+        
             // Initial display
             displayTickets();
         });
+        
     </script>
     
     

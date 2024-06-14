@@ -150,7 +150,7 @@
                     <label for="description">Descrição:</label>
                     <!-- Replace textarea with div for Quill -->
                     <div id="quill_editor" style="height: 300px;"></div>
-                    <input type="hidden" name="description" id="description">
+                    <input type="hidden" name="description" id="description" required>
                 </div>
 
                 <label for="contacto">Contacto (VOIP ou outro):</label>
@@ -328,8 +328,17 @@
         
         // Handle form submission
         document.getElementById('ticket_form').addEventListener('submit', function(event) {
-            document.getElementById('description').value = quill.root.innerHTML;
+            var quillEditorContent = quill.root.innerHTML;
+            var quillEditorText = quill.getText().trim();
+        
+            if (quillEditorText === '') {
+                event.preventDefault();  // Prevent form submission
+                alert('Descrição é obrigatória!');  // Show error message
+            } else {
+                document.getElementById('description').value = quillEditorContent;
+            }
         });
+        
         
         
         

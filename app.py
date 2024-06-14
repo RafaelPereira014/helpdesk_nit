@@ -499,6 +499,7 @@ def admin_required(f):
 def admin_panel():
     search_keyword = request.args.get('search')
     
+    
     if search_keyword:
         tickets = search_tickets(search_keyword)  # Search for tickets matching the keyword
         print(tickets)
