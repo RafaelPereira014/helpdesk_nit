@@ -155,6 +155,7 @@ def new_ticket():
     is_edu = check_email_contains_edu(user_id) 
     admin_status = is_admin(user_id)
     all_users = get_all_users()
+    all_unidades = get_all_unidades()
     edu_topics_list = edu_topics()
     gra_topics_list = gra_topics()
     all_topics = get_topics()
@@ -194,7 +195,7 @@ def new_ticket():
 
         ticket_id = get_ticketid(description)
         user_email = get_user_email_by_user(created_by)
-        admin_emails = get_emails_by_group(topic_id)
+        admin_emails = get_emails_by_group(ticket_id)
 
         # Email notifications
         if user_email:
@@ -290,7 +291,7 @@ def new_ticket():
         else:
             return redirect(url_for('my_tickets'))
 
-    return render_template('new_ticket.html', is_edu=is_edu,admin_status=admin_status,all_users=all_users,edu_topics_list=edu_topics_list,gra_topics_list=gra_topics_list,all_topics=all_topics)
+    return render_template('new_ticket.html', is_edu=is_edu,admin_status=admin_status,all_users=all_users,edu_topics_list=edu_topics_list,gra_topics_list=gra_topics_list,all_topics=all_topics,all_unidades=all_unidades)
 
 
 
@@ -363,8 +364,8 @@ def send_message():
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))  # Save file to upload folder
         file_url = os.path.join(app.config['UPLOAD_FOLDER'], filename)  # Store file URL in database or message
         cursor = connection.cursor()
-        cursor.execute("INSERT INTO messages (ticket_id, message, sender_type, sender_name,file) VALUES (%s, %s, %s, %s,%s)",
-                    (ticket_id, message, sender_type, sender_name,file_url))
+        cursor.execute("INSERT INTO messages (ticket_id, message, sender_type, sender_name, file) VALUES (%s, %s, %s, %s, %s)",
+                    (ticket_id, message, sender_type, sender_name, file_url))
         connection.commit()
         cursor.close()
     else:
@@ -375,7 +376,8 @@ def send_message():
         connection.commit()
         cursor.close()
         
-        
+    admin_emails = get_emails_by_group(ticket_id)
+    print(admin_emails)
 
     # Check if the message contains specific phrases
     if "este ticket foi aceite com sucesso." not in message.lower() and "este ticket foi fechado com sucesso." not in message.lower():
@@ -383,10 +385,14 @@ def send_message():
         if sender_type == 'admin':
             ticket_creator_email = get_user_email_by_ticket(ticket_id)
             if ticket_creator_email:
-                msg = Message(f'Helpdesk NIT: Atualização no ticket#{ticket_id}', sender='noreply@azores.gov.pt', recipients=[ticket_creator_email])
+                msg = Message(
+                    f'Helpdesk NIT: Atualização no ticket#{ticket_id}', 
+                    sender='noreply@azores.gov.pt', 
+                    recipients=[ticket_creator_email]
+                )
                 msg.html = f"""
-                    <p>Foi registada uma atualização no seu ticket com o numero #<strong>{ ticket_id }</strong>.</p>
-                    <p>Verifique as novas atualizações.</p>
+                    <p>Foi registada a seguinte atualização no seu ticket com o numero #<strong>{ticket_id}</strong>.</p>
+                    <p>Mensagem: {message}</p>
                     <hr></hr>
                     <p><strong>Núcleo de Informática e Telecomunicações</strong></p>
                     <p><strong>Secretaria Regional da Educação, Cultura e Desporto</strong></p>
@@ -400,8 +406,65 @@ def send_message():
                     <p>Helpdesk: <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a></p>
                 """
                 mail.send(msg)
+        else:
+            # Send email notification to unique admin emails
+            if admin_emails:
+                unique_admin_emails = set(admin_emails)
+                for admin_email in unique_admin_emails:
+                    msg = Message(
+                        f'Helpdesk NIT: Atualização no ticket#{ticket_id}', 
+                        sender='noreply@azores.gov.pt', 
+                        recipients=[admin_email]
+                    )
+                    msg.html = f"""
+                        <html>
+                            <head>
+                                <style>
+                                    /* CSS styles for email content */
+                                    body {{
+                                        font-family: Arial, sans-serif;
+                                        font-size: 14px;
+                                        line-height: 1.6;
+                                    }}
+                                    h1 {{
+                                        color: #333;
+                                    }}
+                                    p {{
+                                        margin-bottom: 10px;
+                                    }}
+                                    hr {{
+                                        border: 1px solid #ccc;
+                                        margin: 20px 0;
+                                    }}
+                                    /* Add more styles as needed */
+                                </style>
+                            </head>
+                            <body>
+                                <table role="presentation" width="100%">
+                                    <tr>
+                                        <td bgcolor="#00A4BD" align="center" style="color: white;">
+                                            <h1>Atualização no ticket!</h1>
+                                        </td>
+                                </table>
+                                <table role="presentation" border="0" cellpadding="0" cellspacing="10px" style="padding: 30px 30px 30px 60px;">
+                                    <tr>
+                                        <td>
+                                            <h4>Foi registada a seguinte atualização no ticket com o numero #<strong>{ticket_id}</strong>.</h4>
+                                            <p>Mensagem: {message}</p>
+                                            <hr></hr>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p>Obrigado por usar o nosso helpdesk.</p>
+                                <h3><strong>SREC-NIT</strong></h3>
+                            </body>
+                        </html>
+                    """
+                    mail.send(msg)
     
     return jsonify({'success': True})
+
+
 
 @app.route('/upload_file', methods=['POST'])
 def upload_file():

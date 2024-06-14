@@ -110,6 +110,16 @@ def get_all_users():
     
     return users;
 
+def get_all_unidades():
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT name FROM unidadesorganicas ORDER BY name ASC")
+    unidades = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    
+    return unidades;
+
 def change_password(email):
     conn = connect_to_database()
     cursor = conn.cursor()
@@ -526,7 +536,42 @@ def search_tickets(keyword):
     conn.close()
     return tickets
 
+def search_id(id):
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM tickets WHERE id LIKE %s ORDER BY id DESC", ('%' + id + '%',))
+    tickets_id = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return tickets_id
 
+
+def search_unidadeorg(unidadeorg):
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM tickets WHERE UnidadeOrg LIKE %s ORDER BY id DESC", ('%' + unidadeorg + '%',))
+    tickets_unidadeorg = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return tickets_unidadeorg
+
+def search_for_user(user):
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM tickets WHERE created_by_user LIKE %s ORDER BY id DESC", ('%' + user + '%',))
+    tickets_by_user = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return tickets_by_user
+
+def search_for_date(date):
+    conn = connect_to_database()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM tickets WHERE date LIKE %s ORDER BY id DESC", ('%' + date + '%',))
+    tickets_by_user = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return tickets_by_user
 
     
 
@@ -543,6 +588,18 @@ def get_topics():
     cursor.close()
     conn.close()
     return topics
+
+def get_topic_id(ticket_id):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    # Use a parameterized query to avoid SQL injection
+    query = "SELECT id FROM Topics WHERE ticket_id = %s ORDER BY key_word ASC"
+    cursor.execute(query, (ticket_id,))
+    topic_id = cursor.fetchone()  # Fetch the first (and only) row returned by the query
+    cursor.close()
+    conn.close()
+    return topic_id[0] if topic_id else None  # Return the topic_id or None if no topic found
+
 
 
 
@@ -630,6 +687,8 @@ def gra_topics():
     conn.close()
     
     return gra_tickets
+
+
 
 
 
@@ -775,11 +834,11 @@ def get_user_email_by_ticket(ticket_id):
     # If ticket_creator is None or user_email is None, return None
     return None
 
-def get_emails_by_group(topic_id):
+def get_emails_by_group(ticket_id):
     conn = connect_to_database()
     cursor = conn.cursor()
-    cursor.execute("SELECT group_id FROM tickets WHERE topic_id = %s", (topic_id,))
-    group_ids = cursor.fetchall()  # Fetch all group IDs for the given topic
+    cursor.execute("SELECT group_id FROM tickets WHERE id = %s", (ticket_id,))
+    group_ids = cursor.fetchall()  # Fetch all group IDs for the given ticket
     
     # Extract group IDs from the result
     group_ids = [row[0] for row in group_ids]
@@ -796,6 +855,7 @@ def get_emails_by_group(topic_id):
     email_list = [row[0] for row in emails]  # Extract emails from the result
     
     return email_list
+
 
 def is_super_admin(user_id):
     """Checks if the user is an Super Admin"""

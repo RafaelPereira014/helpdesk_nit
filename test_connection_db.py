@@ -28,7 +28,7 @@ try:
         super_admin = is_super_admin('16')
         
 
-        change = get_tickets_for_user("Rafael Pereira")
+        change = get_all_unidades()
         #name = get_username(9)
         print(change)
         # Fetch all rows (tickets) from the result set

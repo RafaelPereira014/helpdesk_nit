@@ -95,11 +95,7 @@
 
     <div class="main">
         <h1>Painel de administração - Tickets</h1>
-        <form id="searchForm" method="GET" action="{{ url_for('admin_panel') }}">
-            <input type="text" name="search" id="searchInput" placeholder="Procurar por assunto..." value="{{ search_keyword }}">
-            <button type="submit">Procurar</button>
-            <button type="button" onclick="clearSearch()">Limpar</button>
-        </form>
+        
         
         
         
@@ -108,6 +104,15 @@
         <button id="aberto-btn" class="button-filter">Aberto({{ open_tickets }})</button>
         <button id="fechado-btn" class="button-filter">Fechado({{ closed_tickets }})</button>
         <button id="executing-btn" class="button-filter">Em execucao({{ executing_tickets }})</button>
+        <form id="searchForm" class="search-form" method="GET" action="{{ url_for('admin_panel') }}">
+            <input type="text" name="search_id" class="search-input" placeholder="Procurar por ID..." value="{{ search_id }}">
+            <input type="text" name="search_title" class="search-input" placeholder="Procurar por título..." value="{{ search_title }}">
+            <input type="text" name="search_date" class="search-input" placeholder="Procurar por data..." value="{{ search_date }}">
+            <input type="text" name="search_user" class="search-input" placeholder="Procurar por utilizador..." value="{{ search_user }}">
+            <input type="text" name="search_unidade" class="search-input" placeholder="Procurar por UO..." value="{{ search_unidade }}">
+            <button type="submit">Procurar</button>
+            <button type="button" onclick="clearSearch()">Limpar</button>
+        </form>
 
         <table id="ticket-table">
             <thead>
