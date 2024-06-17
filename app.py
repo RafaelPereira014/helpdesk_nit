@@ -287,7 +287,7 @@ def new_ticket():
 
 
         if is_admin(user_id):
-            return redirect(url_for('group_panel'))
+            return redirect(url_for('admin_pannel'))
         else:
             return redirect(url_for('my_tickets'))
 

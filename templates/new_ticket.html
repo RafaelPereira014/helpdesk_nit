@@ -288,8 +288,12 @@
             // Hide the popup after 3 seconds (3000 milliseconds)
             setTimeout(function() {
                 popup.style.display = 'none';
-                // Reload the page after the popup disappears
-                location.reload();
+                // Redirect based on admin status
+                if (is_admin) {
+                    window.location.href = '/admin_pannel';
+                } else {
+                    window.location.href = '/my_tickets';
+                }
             }, 3000); // Adjust the duration as needed
         }
 
@@ -345,7 +349,7 @@
                 alert('Descrição é obrigatória!');  // Show error message
             } else {
                 document.getElementById('description').value = quillEditorContent;
-                showPopup();  // Show popup and reload page after 3 seconds
+                showPopup();  // Show popup and redirect after 3 seconds
             }
         });
     </script>
