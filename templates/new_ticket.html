@@ -95,7 +95,7 @@
                 
                 {% if admin_status %}
                     <label for="assigned_to">Atribuir ticket a:</label>
-                    <select id="assigned_to" name="assigned_to">
+                    <select id="assigned_to" name="assigned_to" required>
                         <option value="">- Selecione utilizador -</option>
                         {% for user_tuple in all_users %}
                             {% set user = user_tuple[0] %}
@@ -106,7 +106,7 @@
 
                 <label for="topic">Tópico de ajuda:</label>
                 <select id="topic_id" name="topic_id" required>
-                    <option value="0">-Selecione um tópico de ajuda-</option>
+                <option value="0">-Selecione um tópico de ajuda-</option>
 
                     {% if admin_status %}
                         {% for topic in all_topics %}
@@ -280,6 +280,7 @@
             "ES Ribeira Grande",
             "Escola Profissional Capelas"
         ];
+
         function showPopup() {
             var popup = document.getElementById('popup-message');
             popup.style.display = 'block';
@@ -287,8 +288,11 @@
             // Hide the popup after 3 seconds (3000 milliseconds)
             setTimeout(function() {
                 popup.style.display = 'none';
+                // Reload the page after the popup disappears
+                location.reload();
             }, 3000); // Adjust the duration as needed
         }
+
         function validateTopicSelection(selectElement) {
             if (selectElement.value === "") {
                 selectElement.setCustomValidity('Selecione um tópico de ajuda.');
@@ -296,9 +300,6 @@
                 selectElement.setCustomValidity('');
             }
         }
-    
-        
-
 
         function fetchUnidadeOrganica() {
             var ilhaDropdown = document.getElementById('ilha');
@@ -338,16 +339,15 @@
         document.getElementById('ticket_form').addEventListener('submit', function(event) {
             var quillEditorContent = quill.root.innerHTML;
             var quillEditorText = quill.getText().trim();
-        
+
             if (quillEditorText === '') {
                 event.preventDefault();  // Prevent form submission
                 alert('Descrição é obrigatória!');  // Show error message
             } else {
                 document.getElementById('description').value = quillEditorContent;
+                showPopup();  // Show popup and reload page after 3 seconds
             }
         });
-
-        
     </script>
 </body>
 </html>
