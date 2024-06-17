@@ -289,7 +289,15 @@
                 popup.style.display = 'none';
             }, 3000); // Adjust the duration as needed
         }
-
+        function validateTopicSelection(selectElement) {
+            if (selectElement.value === "") {
+                selectElement.setCustomValidity('Selecione um tópico de ajuda.');
+            } else {
+                selectElement.setCustomValidity('');
+            }
+        }
+    
+        
 
 
         function fetchUnidadeOrganica() {
@@ -338,9 +346,7 @@
                 document.getElementById('description').value = quillEditorContent;
             }
         });
-        
-        
-        
+
         
     </script>
 </body>
