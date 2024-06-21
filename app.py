@@ -377,7 +377,8 @@ def send_message():
         cursor.close()
         
     admin_emails = get_emails_by_group(ticket_id)
-    print(admin_emails)
+
+    title = get_title(ticket_id)    
 
     # Check if the message contains specific phrases
     if "este ticket foi aceite com sucesso." not in message.lower() and "este ticket foi fechado com sucesso." not in message.lower():
@@ -391,7 +392,7 @@ def send_message():
                     recipients=[ticket_creator_email]
                 )
                 msg.html = f"""
-                    <p>Foi registada a seguinte atualização no seu ticket com o numero #<strong>{ticket_id}</strong>.</p>
+                    <p>Foi registada a seguinte atualização no seu ticket com o numero #<strong>{ticket_id}|{title}</strong>.</p>
                     <p>Mensagem: {message}</p>
                     <hr></hr>
                     <p><strong>Núcleo de Informática e Telecomunicações</strong></p>

@@ -158,6 +158,8 @@ def get_all_tickets():
     conn.close()
     return tickets
 
+
+
 def get_all_tickets_group(group_id):
     """Fetches all tickets from the database."""
     conn = connect_to_database()
@@ -332,6 +334,17 @@ def get_ticketid(description):
     conn.close()
     if ticket_id:
         return ticket_id[0]  # Return the first ticket ID if found
+    else:
+        return None  # Return None if no ticket is found with the given description
+def get_title(ticket_id):
+    conn = connect_to_database()
+    cursor = conn.cursor()
+    cursor.execute("SELECT title FROM tickets WHERE id = %s LIMIT 1", (ticket_id,))
+    title = cursor.fetchone()  # Fetch the first row
+    cursor.close()
+    conn.close()
+    if title:
+        return title[0]  # Return the first ticket ID if found
     else:
         return None  # Return None if no ticket is found with the given description
     
