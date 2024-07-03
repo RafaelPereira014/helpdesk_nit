@@ -106,7 +106,7 @@
 
                 <label for="topic">Tópico de ajuda:</label>
                 <select id="topic_id" name="topic_id" required>
-                <option value="0">-Selecione um tópico de ajuda-</option>
+                <option value="">-Selecione um tópico de ajuda-</option> <!-- Updated default option -->
 
                     {% if admin_status %}
                         {% for topic in all_topics %}
