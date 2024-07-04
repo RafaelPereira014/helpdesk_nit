@@ -221,8 +221,8 @@ def new_ticket():
                     <p>Paços da Junta Geral</p>
                     <p>Rua Carreira dos Cavalos</p>
                     <p>9700 – 167 Angra do Heroísmo</p>
-                    <p>Telefone: 295 40 11 32</p>
-                    <p>Telefone VOIP GRA: 310 380</p>
+                    <p>Telefones: 295 401 125,295 401 130,295 401 135,295 401 131, 295 401 173</p>
+                    <p>Telefones VOIP GRA:310 390,310 385,310 381,310 383,310 382</p>
                     <p>E-mail GRA: sre.nit@azores.gov.pt</p>
                     <p>E-mail EDU: sre.nit@edu.azores.gov.pt</p>
                     <p>Helpdesk: <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a></p>
@@ -400,8 +400,8 @@ def send_message():
                     <p>Paços da Junta Geral</p>
                     <p>Rua Carreira dos Cavalos</p>
                     <p>9700 – 167 Angra do Heroísmo</p>
-                    <p>Telefone: 295 40 11 32</p>
-                    <p>Telefone VOIP GRA: 310 380</p>
+                    <p>Telefones: 295 401 125,295 401 130,295 401 135,295 401 131, 295 401 173</p>
+                    <p>Telefones VOIP GRA:310 390,310 385,310 381,310 383,310 382</p>
                     <p>E-mail GRA: sre.nit@azores.gov.pt</p>
                     <p>E-mail EDU: sre.nit@edu.azores.gov.pt</p>
                     <p>Helpdesk: <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a></p>
@@ -688,8 +688,8 @@ def close_ticket_route(ticket_id):
             <p>Paços da Junta Geral</p>
             <p>Rua Carreira dos Cavalos</p>
             <p>9700 – 167 Angra do Heroísmo</p>
-            <p>Telefone: 295 40 11 32</p>
-            <p>Telefone VOIP GRA: 310 380</p>
+            <p>Telefones: 295 401 125,295 401 130,295 401 135,295 401 131, 295 401 173</p>
+            <p>Telefones VOIP GRA:310 390,310 385,310 381,310 383,310 382</p>
             <p>E-mail GRA: sre.nit@azores.gov.pt</p>
             <p>E-mail EDU: sre.nit@edu.azores.gov.pt</p>
             <p>Helpdesk: <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a></p>
@@ -730,8 +730,8 @@ def accept_ticket_route(ticket_id):
                 <p>Paços da Junta Geral</p>
                 <p>Rua Carreira dos Cavalos</p>
                 <p>9700 – 167 Angra do Heroísmo</p>
-                <p>Telefone: 295 40 11 32</p>
-                <p>Telefone VOIP GRA: 310 380</p>
+                <p>Telefones: 295 401 125,295 401 130,295 401 135,295 401 131, 295 401 173</p>
+                <p>Telefones VOIP GRA:310 390,310 385,310 381,310 383,310 382</p>
                 <p>E-mail GRA: sre.nit@azores.gov.pt</p>
                 <p>E-mail EDU: sre.nit@edu.azores.gov.pt</p>
                 <p>Helpdesk: <a href="https://helpdesk.edu.azores.gov.pt">https://helpdesk.edu.azores.gov.pt</a></p>
