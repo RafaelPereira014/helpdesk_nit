@@ -136,7 +136,7 @@ def get_ticket_details(ticket_id):
     """Fetches ticket details and associated messages from the database based on the ticket ID."""
     conn = connect_to_database()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT id, description, date, state, created_by, attributed_to, contacto, title,closed_by,file FROM tickets WHERE id = %s", (ticket_id,))
+    cursor.execute("SELECT id, description, date, state, created_by, attributed_to, contacto, title,closed_by,file,UnidadeOrg FROM tickets WHERE id = %s", (ticket_id,))
     ticket_details = cursor.fetchone()
     
     # Fetch messages associated with the ticket
