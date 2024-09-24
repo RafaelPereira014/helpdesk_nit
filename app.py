@@ -287,7 +287,7 @@ def new_ticket():
 
 
         if is_admin(user_id):
-            return redirect(url_for('admin_pannel'))
+            return redirect(url_for('admin_panel'))
         else:
             return redirect(url_for('my_tickets'))
 
@@ -409,6 +409,11 @@ def send_message():
                 mail.send(msg)
         else:
             # Send email notification to unique admin emails
+            cursor = connection.cursor()
+            cursor.execute("UPDATE tickets SET state = 'em execucao' WHERE id = %s", (ticket_id,))
+            connection.commit()
+            cursor.close()
+            
             if admin_emails:
                 unique_admin_emails = set(admin_emails)
                 for admin_email in unique_admin_emails:
