@@ -1,36 +1,48 @@
+/* global.css */
+
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #f4f4f4;
+    margin: 0; /* Added to ensure no default margin */
 }
 
 .container {
     max-width: 800px;
-    margin: 0 auto;
+    margin: 20px auto; /* Added top margin for spacing */
     padding: 20px;
     position: relative;
+    background-color: #fff; /* Added background for the container */
+    border-radius: 8px; /* Rounded corners for the container */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
 }
 
 h1 {
     text-align: center;
     color: #333;
+    font-size: 24px; /* Larger font size */
+    margin-bottom: 20px; /* Space below header */
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    border: 1px solid #ddd;
-    background-color: #fff;
+    margin-top: 20px; /* Added spacing above the table */
 }
 
 th, td {
     border: 1px solid #ddd;
     padding: 12px;
     text-align: left;
+    transition: background-color 0.3s; /* Smooth transition for hover effects */
 }
 
 th {
     background-color: #f2f2f2;
     color: #333;
+}
+
+th:hover {
+    background-color: #e2e2e2; /* Light hover effect for table headers */
 }
 
 .message-container {
@@ -41,18 +53,19 @@ th {
     margin-bottom: 20px;
     padding: 15px;
     border-radius: 10px;
+    position: relative; /* For absolute positioning of close button */
 }
 
 .user-message {
     background-color: #ebebeb;
-    color: rgb(0, 0, 0);
+    color: #000;
     float: left;
     clear: both;
 }
 
 .admin-message {
-    background-color: #d4d4d4e1;
-    color: rgb(0, 0, 0);
+    background-color: #d4d4d4;
+    color: #000;
     float: right;
     clear: both;
 }
@@ -95,6 +108,12 @@ textarea {
     border-radius: 6px;
     box-sizing: border-box;
     font-size: 16px;
+    transition: border-color 0.3s; /* Smooth transition for focus */
+}
+
+textarea:focus {
+    border-color: #007bff; /* Highlight border on focus */
+    outline: none; /* Remove default outline */
 }
 
 .claim-ticket-btn {
@@ -104,12 +123,13 @@ textarea {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s; /* Added transform for button lift effect */
     font-size: 16px;
 }
 
 .claim-ticket-btn:hover {
     background-color: #0056b3;
+    transform: translateY(-2px); /* Lift effect on hover */
 }
 
 .footer {
@@ -119,7 +139,6 @@ textarea {
     color: #888;
 }
 
-/* Popup styles */
 /* Popup styles */
 .popup {
     position: fixed;
@@ -132,23 +151,43 @@ textarea {
     border-radius: 5px;
     display: none;
     z-index: 999;
+    animation: slideIn 0.3s ease; /* Animation added to popup */
 }
 
 /* Animation for showing popup */
 @keyframes slideIn {
     from {
-        top: -50px; /* Adjust top position */
+        top: -50px; /* Initial top position for animation */
     }
     to {
-        top: 20px; /* Adjust top position */
+        top: 20px; /* Final top position */
     }
 }
-
 
 .close-popup {
     position: absolute;
     top: 5px;
     right: 10px;
     cursor: pointer;
+    font-weight: bold; /* Made the close button bold */
+    color: #fff; /* Ensure visibility */
 }
 
+/* Responsive Styles */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 20px; /* Smaller header on mobile */
+    }
+
+    .container {
+        padding: 15px; /* Reduced padding for mobile */
+    }
+
+    .claim-ticket-btn {
+        font-size: 14px; /* Adjust button font size for smaller screens */
+    }
+
+    textarea {
+        font-size: 14px; /* Adjust textarea font size */
+    }
+}

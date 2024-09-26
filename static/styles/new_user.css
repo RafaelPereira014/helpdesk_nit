@@ -1,47 +1,52 @@
+/* Profile Section Styles */
 .container {
     margin: 0 auto;
     padding: 20px;
-    max-width: 600px;
+    max-width: 600px; /* Sets a maximum width for the container */
 }
 
 .button:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* Darker shade for button hover effect */
 }
 
 .profile-info {
-    margin-top: 20px;
+    margin-top: 20px; /* Space above profile info section */
 }
 
 .profile-info form {
-    margin-top: 20px;
+    margin-top: 20px; /* Space above form */
 }
 
+/* Label Styles */
 .profile-info label {
-    display: block;
-    margin-bottom: 5px;
+    display: block; /* Ensures labels stack on their own line */
+    margin-bottom: 5px; /* Space below labels */
+    font-weight: bold; /* Optional: makes labels stand out */
 }
 
+/* Input and Select Styles */
 .profile-info input,
 .profile-info select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
+    width: 100%; /* Full width */
+    padding: 8px; /* Padding inside inputs */
+    margin-bottom: 10px; /* Space below inputs */
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+    box-sizing: border-box; /* Ensures padding is included in total width */
+    font-size: 16px; /* Improved font size for readability */
 }
 
+/* Button Styles */
 .profile-info button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    padding: 10px 20px; /* Padding around button text */
+    background-color: #007bff; /* Primary button color */
+    color: #fff; /* Text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Cursor changes to pointer on hover */
+    transition: background-color 0.3s; /* Smooth transition on hover */
 }
 
 .profile-info button:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* Darker shade for button hover effect */
 }
-
-

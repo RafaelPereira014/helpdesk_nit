@@ -1,39 +1,57 @@
 /* side_menu.css */
 
+:root {
+    --primary-bg: #2c2c2c;
+    --secondary-bg: #3c3c3c;
+    --hover-bg: #444444;
+    --text-color: #ccc;
+    --text-hover-color: #fff;
+    --logo-size: 40px; /* Size for the logo */
+}
+
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4; /* Light background for contrast */
+}
+
 .sidenav {
     height: 100%;
     width: 270px;
     position: fixed;
-    z-index: 1;
     top: 0;
     left: 0;
-    background-color: #333333;
+    background-color: var(--primary-bg);
     overflow-x: hidden;
     padding-top: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px; /* Spacing between menu items */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5); /* Subtle shadow for depth */
+    transition: width 0.3s ease; /* Smooth transition */
 }
 
 .menu-item {
-    padding: 10px 16px;
-    transition: background-color 0.3s; /* Smooth transition */
+    padding: 15px 20px; /* Increased padding for better touch targets */
+    border-radius: 5px; /* Rounded corners for a modern look */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+}
+
+.menu-item:hover {
+    background-color: var(--hover-bg); /* Highlight on hover */
+    transform: translateX(5px); /* Slight shift effect on hover */
 }
 
 .menu-item a {
     display: flex;
     align-items: center;
-    color: #ccc;
+    color: var(--text-color);
     text-decoration: none;
     transition: color 0.3s; /* Smooth transition */
 }
 
 .menu-item a:hover {
-    background-color: #444; /* Highlight on hover */
-}
-
-.menu-item a:hover span {
-    color: #fff; /* Change text color on hover */
+    color: var(--text-hover-color); /* Change text color on hover */
 }
 
 .menu-item a span {
@@ -41,21 +59,48 @@
 }
 
 .menu-item a i {
-    color: #ccc;
+    color: var(--text-color);
     margin-right: 10px; /* Spacing between icon and text */
 }
 
 #logout-button {
-    margin-top: 380px; /* Aligns the button to the bottom */
+    margin-top: auto; /* Aligns the button to the bottom */
     padding: 10px 16px;
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#logout-button:hover {
+    background-color: var(--hover-bg);
 }
 
 .main {
-    margin-left: 250px; /* Adjust to match side menu width */
+    margin-left: 270px; /* Adjust to match side menu width */
     padding: 16px;
+    transition: margin-left 0.3s; /* Smooth transition */
 }
 
 .logo-main {
-    margin-left: 15px; /* Adjust as needed */
-    margin-bottom: 20px; /* Adjust as needed */
+    margin: 15px; /* Adjust as needed */
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .sidenav {
+        width: 100%; /* Full width on mobile */
+        height: auto; /* Auto height for content */
+    }
+
+    .main {
+        margin-left: 0; /* Reset margin for mobile */
+    }
+
+    .menu-item {
+        padding: 12px; /* Smaller padding for mobile */
+    }
 }

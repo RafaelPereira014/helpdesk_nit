@@ -1,3 +1,5 @@
+/* global.css */
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f4f4;
@@ -11,56 +13,65 @@ body {
     padding: 20px;
     background-color: #f4faff; /* Light blue background */
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    transition: box-shadow 0.3s; /* Transition for hover effect */
+}
+
+.container:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Enhanced shadow on hover */
 }
 
 h1 {
     text-align: center;
     color: #333;
     margin-bottom: 20px;
+    font-size: 24px; /* Larger font size */
 }
 
 label {
     display: block;
     margin-bottom: 10px;
     font-weight: bold;
+    color: #555; /* Slightly lighter color for labels */
 }
 
 select,
 input[type="text"],
 textarea {
     width: 100%;
-    padding: 10px;
+    padding: 12px; /* Increased padding for comfort */
     margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    transition: border-color 0.3s; /* Smooth border transition */
+}
+
+select:focus,
+input[type="text"]:focus,
+textarea:focus {
+    border-color: #007bff; /* Highlight border on focus */
+    outline: none; /* Remove default outline */
 }
 
 button {
     width: 100%;
-    padding: 10px;
+    padding: 12px; /* Increased padding */
     background-color: #007bff;
     color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    font-size: 16px; /* Larger font size */
+    transition: background-color 0.3s ease, transform 0.2s; /* Added transform transition */
 }
 
 button:hover {
     background-color: #0056b3;
+    transform: translateY(-2px); /* Lift effect on hover */
 }
 
-#file_download1 {
-    display: none;
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-}
-
+#file_download1,
 #file_download2 {
     display: none;
     margin-top: 10px;
@@ -68,13 +79,35 @@ button:hover {
     background-color: #f5f5f5;
     border: 1px solid #ddd;
     border-radius: 5px;
+    transition: background-color 0.3s; /* Smooth background transition */
+}
+
+#file_download1:hover,
+#file_download2:hover {
+    background-color: #eaeaea; /* Highlight on hover */
 }
 
 #file_download a {
-    color: #656d76;
+    color: #007bff; /* Changed to primary color */
     text-decoration: none;
     font-weight: bold;
 }
+
 #file_download a:hover {
     text-decoration: underline;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px; /* Reduced padding for mobile */
+    }
+
+    button {
+        font-size: 14px; /* Adjust font size for smaller screens */
+    }
+
+    label {
+        font-size: 14px; /* Adjust label font size */
+    }
 }
