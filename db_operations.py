@@ -299,6 +299,22 @@ def get_creator_name(ticket_id):
     finally:
         cursor.close()
         conn.close()
+    
+def get_unidadeOrg(ticket_id):
+    try:
+        conn = connect_to_database()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT UnidadeOrg
+            FROM tickets where id=%s
+        """, (ticket_id,))
+        creator_name = cursor.fetchone()
+        return creator_name[0] if creator_name else None  # Return None if no user found
+    except Exception as e:
+        print("Error:", e)
+    finally:
+        cursor.close()
+        conn.close()
 
 def no_open_tickets():
     conn = connect_to_database()

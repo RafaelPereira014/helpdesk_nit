@@ -378,8 +378,10 @@ def send_message():
         
     admin_emails = get_emails_by_group(ticket_id)
 
-    title = get_title(ticket_id)    
-
+    title = get_title(ticket_id)
+    criado_por = get_creator_name(ticket_id)
+    unidade_org = get_unidadeOrg(ticket_id)
+    attributed_user = attributed_to_by_ticket(ticket_id)
     # Check if the message contains specific phrases
     if "este ticket foi aceite com sucesso." not in message.lower() and "este ticket foi fechado com sucesso." not in message.lower():
         # If the sender is an admin, send the message to the email of the ticket creator
@@ -456,7 +458,10 @@ def send_message():
                                     <tr>
                                         <td>
                                             <h4>Foi registada a seguinte atualização no ticket com o numero #<strong>{ticket_id}</strong>.</h4>
-                                            <p>Mensagem: {message}</p>
+                                            <p><strong>Criado por</strong>: {criado_por}</p>
+                                            <p><strong>Unidade Orgânica</strong>: {unidade_org} </p>
+                                            <p><strong>Atribuido a</strong>: {attributed_user}</p>
+                                            <p><strong>Mensagem</strong>: \n{message}</p>
                                             <hr></hr>
                                         </td>
                                     </tr>
