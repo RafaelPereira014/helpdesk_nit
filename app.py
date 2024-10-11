@@ -382,6 +382,7 @@ def send_message():
     criado_por = get_creator_name(ticket_id)
     unidade_org = get_unidadeOrg(ticket_id)
     attributed_user = attributed_to_by_ticket(ticket_id)
+    info = get_ticket_details(ticket_id)
     # Check if the message contains specific phrases
     if "este ticket foi aceite com sucesso." not in message.lower() and "este ticket foi fechado com sucesso." not in message.lower():
         # If the sender is an admin, send the message to the email of the ticket creator
@@ -411,10 +412,11 @@ def send_message():
                 mail.send(msg)
         else:
             # Send email notification to unique admin emails
-            cursor = connection.cursor()
-            cursor.execute("UPDATE tickets SET state = 'em execucao' WHERE id = %s", (ticket_id,))
-            connection.commit()
-            cursor.close()
+            if info.get('state') == 'Fechado':
+                cursor = connection.cursor()
+                cursor.execute("UPDATE tickets SET state = 'em execucao' WHERE id = %s", (ticket_id,))
+                connection.commit()
+                cursor.close()
             
             if admin_emails:
                 unique_admin_emails = set(admin_emails)
