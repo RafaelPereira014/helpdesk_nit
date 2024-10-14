@@ -94,7 +94,8 @@ def check_email_contains_edu(user_id):
     cursor.close()
     conn.close()
 
-    if user_email and "@edu" in user_email[0]:
+    # Check if the user_email is not None and if it contains @edu or @inforpereira
+    if user_email and ("@edu" in user_email[0] or "@inforpereira" in user_email[0]):
         return True
     else:
         return False
