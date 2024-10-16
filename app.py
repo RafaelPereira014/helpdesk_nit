@@ -418,6 +418,16 @@ def send_message():
                 connection.commit()
                 cursor.close()
             
+            print(attributed_user)
+            
+            if attributed_user is None :
+                cursor = connection.cursor()
+                cursor.execute("UPDATE tickets SET state = 'Aberto' WHERE id = %s", (ticket_id,))
+                connection.commit()
+                cursor.close()
+                attributed_user = "-"
+                
+            
             if admin_emails:
                 unique_admin_emails = set(admin_emails)
                 for admin_email in unique_admin_emails:
